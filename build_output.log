@@ -1,0 +1,81 @@
+
+> nextjs@0.1.0 build
+> next build
+
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+   Creating an optimized production build...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (122kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⚠ Compiled with warnings
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./node_modules/@supabase/ssr/dist/main/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/main/index.js
+./lib/supabase/client.ts
+./app/page.tsx
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./node_modules/@supabase/ssr/dist/main/createServerClient.js
+./node_modules/@supabase/ssr/dist/main/index.js
+./lib/supabase/client.ts
+./app/sitemap.ts
+./node_modules/next/dist/build/webpack/loaders/next-metadata-route-loader.js?page=%2Fsitemap.xml%2Froute&isDynamic=1!./app/sitemap.ts?__next_metadata_route__
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./app/api/health/route.ts
+
+./node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+A Node.js API is used (process.versions at line: 38) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+./node_modules/@supabase/realtime-js/dist/module/index.js
+./node_modules/@supabase/supabase-js/dist/module/index.js
+./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+./node_modules/@supabase/supabase-js/dist/module/index.js
+A Node.js API is used (process.version at line: 23) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/supabase-js/dist/module/index.js
+./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+   Skipping linting
+   Checking validity of types...
+Failed to compile.
+
+./lib/supabase/client.ts:51:3
+Type error: An object literal cannot have multiple properties with the same name.
+
+[0m [90m 49 | [39m  }[33m,[39m[0m
+[0m [90m 50 | [39m  [90m// Add fetch with timeout to prevent hanging requests[39m[0m
+[0m[31m[1m>[22m[39m[90m 51 | [39m  global[33m:[39m {[0m
+[0m [90m    | [39m  [31m[1m^[22m[39m[0m
+[0m [90m 52 | [39m    fetch[33m:[39m (url[33m:[39m [33mRequestInfo[39m [33m|[39m [33mURL[39m[33m,[39m options[33m:[39m [33mRequestInit[39m [33m=[39m {}) [33m=>[39m {[0m
+[0m [90m 53 | [39m      [36mconst[39m controller [33m=[39m [36mnew[39m [33mAbortController[39m()[33m;[39m[0m
+[0m [90m 54 | [39m      [36mconst[39m timeoutId [33m=[39m setTimeout(() [33m=>[39m controller[33m.[39mabort()[33m,[39m [35m5000[39m)[33m;[39m [90m// 5 second timeout[39m[0m

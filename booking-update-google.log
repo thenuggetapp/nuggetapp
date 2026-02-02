@@ -1,0 +1,2082 @@
+[dotenv@17.2.3] injecting env (3) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+Fetching all restaurants without booking URLs...
+
+=== Found 450 restaurants without booking URLs ===
+
+
+[1/450] Processing: Bella Italia - Birmingham (Birmingham)
+Searching Google Places for: Bella Italia - Birmingham
+✗ No results found for Bella Italia - Birmingham
+
+[2/450] Processing: Sushi Monster (Birmingham)
+Searching Google Places for: Sushi Monster
+✗ No results found for Sushi Monster
+
+[3/450] Processing: Purple Patch (Brighton)
+Searching Google Places for: Purple Patch
+✗ No results found for Purple Patch
+
+[4/450] Processing: Bella Italia - Bristol Baldwin Street (Bristol)
+Searching Google Places for: Bella Italia - Bristol Baldwin Street
+✗ No results found for Bella Italia - Bristol Baldwin Street
+
+[5/450] Processing: The PlayGarten + Bluebird Market (Bristol)
+Searching Google Places for: The PlayGarten + Bluebird Market
+✗ No results found for The PlayGarten + Bluebird Market
+
+[6/450] Processing: American Girl Place - Chicago (Chicago)
+Searching Google Places for: American Girl Place - Chicago
+✗ No results found for American Girl Place - Chicago
+
+[7/450] Processing: AO Hawaiian Hideout (Chicago)
+Searching Google Places for: AO Hawaiian Hideout
+✗ No results found for AO Hawaiian Hideout
+
+[8/450] Processing: Avli on The Park (Chicago)
+Searching Google Places for: Avli on The Park
+✗ No results found for Avli on The Park
+
+[9/450] Processing: Avli River North (Chicago)
+Searching Google Places for: Avli River North
+✗ No results found for Avli River North
+
+[10/450] Processing: Cheesie's Pub & Grub - Lakeview (Chicago)
+Searching Google Places for: Cheesie's Pub & Grub - Lakeview
+✗ No results found for Cheesie's Pub & Grub - Lakeview
+
+--- Progress Update ---
+Processed: 10/450
+Updated: 0
+Not found: 10
+Success rate: 0.0%
+
+[11/450] Processing: Cheesie's Pub & Grub - Wicker Park (Chicago)
+Searching Google Places for: Cheesie's Pub & Grub - Wicker Park
+✗ No results found for Cheesie's Pub & Grub - Wicker Park
+
+[12/450] Processing: Chicago Pizza and Oven Grinder Company (Chicago)
+Searching Google Places for: Chicago Pizza and Oven Grinder Company
+✗ No results found for Chicago Pizza and Oven Grinder Company
+
+[13/450] Processing: Connie's Pizza (Chicago)
+Searching Google Places for: Connie's Pizza
+✗ No results found for Connie's Pizza
+
+[14/450] Processing: Connie's Pizza (Chicago)
+Searching Google Places for: Connie's Pizza
+✗ No results found for Connie's Pizza
+
+[15/450] Processing: Cooper’s Hawk Winery & Restaurant (Chicago)
+Searching Google Places for: Cooper’s Hawk Winery & Restaurant
+✗ No results found for Cooper’s Hawk Winery & Restaurant
+
+[16/450] Processing: GEMINI (Chicago)
+Searching Google Places for: GEMINI
+✗ No results found for GEMINI
+
+[17/450] Processing: Greek Islands (Chicago)
+Searching Google Places for: Greek Islands
+✗ No results found for Greek Islands
+
+[18/450] Processing: Ina Mae (Chicago)
+Searching Google Places for: Ina Mae
+✗ No results found for Ina Mae
+
+[19/450] Processing: Jerry's Sandwiches (Chicago)
+Searching Google Places for: Jerry's Sandwiches
+✗ No results found for Jerry's Sandwiches
+
+[20/450] Processing: Little Bad Wolf (Chicago)
+Searching Google Places for: Little Bad Wolf
+✗ No results found for Little Bad Wolf
+
+--- Progress Update ---
+Processed: 20/450
+Updated: 0
+Not found: 20
+Success rate: 0.0%
+
+[21/450] Processing: Lou Mitchell's (Chicago)
+Searching Google Places for: Lou Mitchell's
+✗ No results found for Lou Mitchell's
+
+[22/450] Processing: Margie's Candies (Chicago)
+Searching Google Places for: Margie's Candies
+✗ No results found for Margie's Candies
+
+[23/450] Processing: Moretti's Ristorante & Pizzeria (Chicago)
+Searching Google Places for: Moretti's Ristorante & Pizzeria
+✗ No results found for Moretti's Ristorante & Pizzeria
+
+[24/450] Processing: Native Foods (Chicago)
+Searching Google Places for: Native Foods
+✗ No results found for Native Foods
+
+[25/450] Processing: Nutella Cafe Chicago (Chicago)
+Searching Google Places for: Nutella Cafe Chicago
+✗ No results found for Nutella Cafe Chicago
+
+[26/450] Processing: Old Irving Brewing Co. (Chicago)
+Searching Google Places for: Old Irving Brewing Co.
+✗ No results found for Old Irving Brewing Co.
+
+[27/450] Processing: Old Pueblo Cantina (Chicago)
+Searching Google Places for: Old Pueblo Cantina
+✗ No results found for Old Pueblo Cantina
+
+[28/450] Processing: Park & Field (Chicago)
+Searching Google Places for: Park & Field
+✗ No results found for Park & Field
+
+[29/450] Processing: PB&J: Pizza Beer and Jukebox (Chicago)
+Searching Google Places for: PB&J: Pizza Beer and Jukebox
+✗ No results found for PB&J: Pizza Beer and Jukebox
+
+[30/450] Processing: Pinstripes (Chicago)
+Searching Google Places for: Pinstripes
+✗ No results found for Pinstripes
+
+--- Progress Update ---
+Processed: 30/450
+Updated: 0
+Not found: 30
+Success rate: 0.0%
+
+[31/450] Processing: R.J. Grunts (Chicago)
+Searching Google Places for: R.J. Grunts
+✗ No results found for R.J. Grunts
+
+[32/450] Processing: Replay Andersonville (Chicago)
+Searching Google Places for: Replay Andersonville
+✗ No results found for Replay Andersonville
+
+[33/450] Processing: Roots Handmade Pizza - South Loop (Chicago)
+Searching Google Places for: Roots Handmade Pizza - South Loop
+✗ No results found for Roots Handmade Pizza - South Loop
+
+[34/450] Processing: Roots Handmade Pizza - West Town (Chicago)
+Searching Google Places for: Roots Handmade Pizza - West Town
+✗ No results found for Roots Handmade Pizza - West Town
+
+[35/450] Processing: Shake Shack Chicago Athletic Association (Chicago)
+Searching Google Places for: Shake Shack Chicago Athletic Association
+✗ No results found for Shake Shack Chicago Athletic Association
+
+[36/450] Processing: Shake Shack River North (Chicago)
+Searching Google Places for: Shake Shack River North
+✗ No results found for Shake Shack River North
+
+[37/450] Processing: Shake Shack West Loop (Chicago)
+Searching Google Places for: Shake Shack West Loop
+✗ No results found for Shake Shack West Loop
+
+[38/450] Processing: Shake Shack Willis Tower (Chicago)
+Searching Google Places for: Shake Shack Willis Tower
+✗ No results found for Shake Shack Willis Tower
+
+[39/450] Processing: Shake Shack Wrigleyville (Chicago)
+Searching Google Places for: Shake Shack Wrigleyville
+✗ No results found for Shake Shack Wrigleyville
+
+[40/450] Processing: Snakes & Lattes Chicago (Chicago)
+Searching Google Places for: Snakes & Lattes Chicago
+✗ No results found for Snakes & Lattes Chicago
+
+--- Progress Update ---
+Processed: 40/450
+Updated: 0
+Not found: 40
+Success rate: 0.0%
+
+[41/450] Processing: Spacca Napoli Pizzeria (Chicago)
+Searching Google Places for: Spacca Napoli Pizzeria
+✗ No results found for Spacca Napoli Pizzeria
+
+[42/450] Processing: Stay and Play Game Cafe (Chicago)
+Searching Google Places for: Stay and Play Game Cafe
+✗ No results found for Stay and Play Game Cafe
+
+[43/450] Processing: Sugar Factory Chicago River North (Chicago)
+Searching Google Places for: Sugar Factory Chicago River North
+✗ No results found for Sugar Factory Chicago River North
+
+[44/450] Processing: Summer House Santa Monica (Chicago)
+Searching Google Places for: Summer House Santa Monica
+✗ No results found for Summer House Santa Monica
+
+[45/450] Processing: Superdawg Drive-In (Chicago)
+Searching Google Places for: Superdawg Drive-In
+✗ No results found for Superdawg Drive-In
+
+[46/450] Processing: Sushi Plus Rotary Sushi Bar - Chinatown (Chicago)
+Searching Google Places for: Sushi Plus Rotary Sushi Bar - Chinatown
+✗ No results found for Sushi Plus Rotary Sushi Bar - Chinatown
+
+[47/450] Processing: Sushi Plus Rotary Sushi Bar Boystown (Chicago)
+Searching Google Places for: Sushi Plus Rotary Sushi Bar Boystown
+✗ No results found for Sushi Plus Rotary Sushi Bar Boystown
+
+[48/450] Processing: Sweet Mandy B's Bakery (Chicago)
+Searching Google Places for: Sweet Mandy B's Bakery
+✗ No results found for Sweet Mandy B's Bakery
+
+[49/450] Processing: Sweetwater Tavern & Grille (Michigan Plaza - Chicago) (Chicago)
+Searching Google Places for: Sweetwater Tavern & Grille (Michigan Plaza - Chicago)
+✗ No results found for Sweetwater Tavern & Grille (Michigan Plaza - Chicago)
+
+[50/450] Processing: The Bad Apple (Chicago)
+Searching Google Places for: The Bad Apple
+✗ No results found for The Bad Apple
+
+--- Progress Update ---
+Processed: 50/450
+Updated: 0
+Not found: 50
+Success rate: 0.0%
+
+[51/450] Processing: The Dock at Montrose Beach (Chicago)
+Searching Google Places for: The Dock at Montrose Beach
+✗ No results found for The Dock at Montrose Beach
+
+[52/450] Processing: The Perch Kitchen and Tap (Chicago)
+Searching Google Places for: The Perch Kitchen and Tap
+✗ No results found for The Perch Kitchen and Tap
+
+[53/450] Processing: Tied House (Chicago)
+Searching Google Places for: Tied House
+✗ No results found for Tied House
+
+[54/450] Processing: UncommonGround - Lakeview (Chicago)
+Searching Google Places for: UncommonGround - Lakeview
+✗ No results found for UncommonGround - Lakeview
+
+[55/450] Processing: Wagyu House by The X Pot Chicago 和牛放题（日式涮涮锅/烤肉） (Chicago)
+Searching Google Places for: Wagyu House by The X Pot Chicago 和牛放题（日式涮涮锅/烤肉）
+✗ No results found for Wagyu House by The X Pot Chicago 和牛放题（日式涮涮锅/烤肉）
+
+[56/450] Processing: Wildberry Pancakes and Cafe (Chicago)
+Searching Google Places for: Wildberry Pancakes and Cafe
+✗ No results found for Wildberry Pancakes and Cafe
+
+[57/450] Processing: Wings and Ringsss (Chicago)
+Searching Google Places for: Wings and Ringsss
+✗ No results found for Wings and Ringsss
+
+[58/450] Processing: The Choo Choo (Des Plaines)
+Searching Google Places for: The Choo Choo
+✗ No results found for The Choo Choo
+
+[59/450] Processing: Independent Pizza Company (Dublin)
+Searching Google Places for: Independent Pizza Company
+✗ No results found for Independent Pizza Company
+
+[60/450] Processing: The Hub Cafe (Edinburgh)
+Searching Google Places for: The Hub Cafe
+✗ No results found for The Hub Cafe
+
+--- Progress Update ---
+Processed: 60/450
+Updated: 0
+Not found: 60
+Success rate: 0.0%
+
+[61/450] Processing: 3rd St. Market Hall (Enfield)
+Searching Google Places for: 3rd St. Market Hall
+✗ No results found for 3rd St. Market Hall
+
+[62/450] Processing: Colonel Saab, High Holborn (Étretat)
+Searching Google Places for: Colonel Saab, High Holborn
+✗ No results found for Colonel Saab, High Holborn
+
+[63/450] Processing: La Flottille (Étretat)
+Searching Google Places for: La Flottille
+✗ No results found for La Flottille
+
+[64/450] Processing: Le Lann-Bihoué (Étretat)
+Searching Google Places for: Le Lann-Bihoué
+✗ No results found for Le Lann-Bihoué
+
+[65/450] Processing: Café Corazón (Fécamp)
+Searching Google Places for: Café Corazón
+✗ No results found for Café Corazón
+
+[66/450] Processing: Tower Mangal (Fécamp)
+Searching Google Places for: Tower Mangal
+✗ No results found for Tower Mangal
+
+[67/450] Processing: The Junction Diner - The Train Restaurant (Forest Park)
+Searching Google Places for: The Junction Diner - The Train Restaurant
+✗ No results found for The Junction Diner - The Train Restaurant
+
+[68/450] Processing: 2Toots Train Whistle Grill (Glen Ellyn)
+Searching Google Places for: 2Toots Train Whistle Grill
+✗ No results found for 2Toots Train Whistle Grill
+
+[69/450] Processing: Bill's Guildford Restaurant (Guildford)
+Searching Google Places for: Bill's Guildford Restaurant
+✗ No results found for Bill's Guildford Restaurant
+
+[70/450] Processing: Cafe Murano St James (Guildford)
+Searching Google Places for: Cafe Murano St James
+✗ No results found for Cafe Murano St James
+
+--- Progress Update ---
+Processed: 70/450
+Updated: 0
+Not found: 70
+Success rate: 0.0%
+
+[71/450] Processing: The Guildford Townhouse, Coppa Club (Guildford)
+Searching Google Places for: The Guildford Townhouse, Coppa Club
+✗ No results found for The Guildford Townhouse, Coppa Club
+
+[72/450] Processing: Urban Social (Guildford)
+Searching Google Places for: Urban Social
+✗ No results found for Urban Social
+
+[73/450] Processing: Paws For Coffee (Hampton)
+Searching Google Places for: Paws For Coffee
+✗ No results found for Paws For Coffee
+
+[74/450] Processing: Hungry Horse (Iver)
+Searching Google Places for: Hungry Horse
+✗ No results found for Hungry Horse
+
+[75/450] Processing: Bella Italia - Lancaster (Lancaster)
+Searching Google Places for: Bella Italia - Lancaster
+✗ No results found for Bella Italia - Lancaster
+
+[76/450] Processing: Weber Grill Restaurant & Cooking School (Lombard)
+Searching Google Places for: Weber Grill Restaurant & Cooking School
+✗ No results found for Weber Grill Restaurant & Cooking School
+
+[77/450] Processing: Abeno (London)
+Searching Google Places for: Abeno
+✗ No results found for Abeno
+
+[78/450] Processing: Alexander The Great Restaurant (London)
+Searching Google Places for: Alexander The Great Restaurant
+✗ No results found for Alexander The Great Restaurant
+
+[79/450] Processing: Andy’s Greek Taverna (London)
+Searching Google Places for: Andy’s Greek Taverna
+✗ No results found for Andy’s Greek Taverna
+
+[80/450] Processing: Anilo’s Kitchen (London)
+Searching Google Places for: Anilo’s Kitchen
+✗ No results found for Anilo’s Kitchen
+
+--- Progress Update ---
+Processed: 80/450
+Updated: 0
+Not found: 80
+Success rate: 0.0%
+
+[81/450] Processing: Arado Restaurant (London)
+Searching Google Places for: Arado Restaurant
+✗ No results found for Arado Restaurant
+
+[82/450] Processing: Ayllu (London)
+Searching Google Places for: Ayllu
+✗ No results found for Ayllu
+
+[83/450] Processing: Azzurro (London)
+Searching Google Places for: Azzurro
+✗ No results found for Azzurro
+
+[84/450] Processing: Babur (London)
+Searching Google Places for: Babur
+✗ No results found for Babur
+
+[85/450] Processing: BAO Soho (London)
+Searching Google Places for: BAO Soho
+✗ No results found for BAO Soho
+
+[86/450] Processing: Bar 61 Restaurant (London)
+Searching Google Places for: Bar 61 Restaurant
+✗ No results found for Bar 61 Restaurant
+
+[87/450] Processing: Barbican Kitchen (London)
+Searching Google Places for: Barbican Kitchen
+✗ No results found for Barbican Kitchen
+
+[88/450] Processing: Barbounia (London)
+Searching Google Places for: Barbounia
+✗ No results found for Barbounia
+
+[89/450] Processing: Bayleaf Restaurant (London)
+Searching Google Places for: Bayleaf Restaurant
+✗ No results found for Bayleaf Restaurant
+
+[90/450] Processing: Beam (London)
+Searching Google Places for: Beam
+✗ No results found for Beam
+
+--- Progress Update ---
+Processed: 90/450
+Updated: 0
+Not found: 90
+Success rate: 0.0%
+
+[91/450] Processing: Beans & Barley (London)
+Searching Google Places for: Beans & Barley
+✗ No results found for Beans & Barley
+
+[92/450] Processing: Bear + Wolf Cafe (London)
+Searching Google Places for: Bear + Wolf Cafe
+✗ No results found for Bear + Wolf Cafe
+
+[93/450] Processing: BEER + BURGER (London)
+Searching Google Places for: BEER + BURGER
+✗ No results found for BEER + BURGER
+
+[94/450] Processing: Bella Italia - Brighton Market Street (London)
+Searching Google Places for: Bella Italia - Brighton Market Street
+✗ No results found for Bella Italia - Brighton Market Street
+
+[95/450] Processing: Bella Vita - Broadway (London)
+Searching Google Places for: Bella Vita - Broadway
+✗ No results found for Bella Vita - Broadway
+
+[96/450] Processing: Best Place at the Historic Pabst Brewery (London)
+Searching Google Places for: Best Place at the Historic Pabst Brewery
+✗ No results found for Best Place at the Historic Pabst Brewery
+
+[97/450] Processing: Big City Dog (London)
+Searching Google Places for: Big City Dog
+✗ No results found for Big City Dog
+
+[98/450] Processing: Big Penny Social (London)
+Searching Google Places for: Big Penny Social
+✗ No results found for Big Penny Social
+
+[99/450] Processing: Biscuiteers (London)
+Searching Google Places for: Biscuiteers
+✗ No results found for Biscuiteers
+
+[100/450] Processing: Black Husky Brewing (London)
+Searching Google Places for: Black Husky Brewing
+✗ No results found for Black Husky Brewing
+
+--- Progress Update ---
+Processed: 100/450
+Updated: 0
+Not found: 100
+Success rate: 0.0%
+
+[101/450] Processing: Blue & Gold Brewing (London)
+Searching Google Places for: Blue & Gold Brewing
+✗ No results found for Blue & Gold Brewing
+
+[102/450] Processing: Bocconcino Soho (London)
+Searching Google Places for: Bocconcino Soho
+✗ No results found for Bocconcino Soho
+
+[103/450] Processing: Borough Market (London)
+Searching Google Places for: Borough Market
+✗ No results found for Borough Market
+
+[104/450] Processing: Brags and Brams (London)
+Searching Google Places for: Brags and Brams
+✗ No results found for Brags and Brams
+
+[105/450] Processing: Bread & Oregano (London)
+Searching Google Places for: Bread & Oregano
+✗ No results found for Bread & Oregano
+
+[106/450] Processing: Brew & Barrel (London)
+Searching Google Places for: Brew & Barrel
+✗ No results found for Brew & Barrel
+
+[107/450] Processing: Brew Street Cafe & Bar at Timber Lodge (London)
+Searching Google Places for: Brew Street Cafe & Bar at Timber Lodge
+✗ No results found for Brew Street Cafe & Bar at Timber Lodge
+
+[108/450] Processing: Broken Bat Brewing Co. (London)
+Searching Google Places for: Broken Bat Brewing Co.
+✗ No results found for Broken Bat Brewing Co.
+
+[109/450] Processing: Brother Marcus South Kensington (London)
+Searching Google Places for: Brother Marcus South Kensington
+✗ No results found for Brother Marcus South Kensington
+
+[110/450] Processing: Café Amisha (London)
+Searching Google Places for: Café Amisha
+✗ No results found for Café Amisha
+
+--- Progress Update ---
+Processed: 110/450
+Updated: 0
+Not found: 110
+Success rate: 0.0%
+
+[111/450] Processing: Café Hollander - Downer (London)
+Searching Google Places for: Café Hollander - Downer
+✗ No results found for Café Hollander - Downer
+
+[112/450] Processing: Camden Market (London)
+Searching Google Places for: Camden Market
+✗ No results found for Camden Market
+
+[113/450] Processing: Casa Tua King's Cross (London)
+Searching Google Places for: Casa Tua King's Cross
+✗ No results found for Casa Tua King's Cross
+
+[114/450] Processing: Cavita (London)
+Searching Google Places for: Cavita
+✗ No results found for Cavita
+
+[115/450] Processing: Chamisse (London)
+Searching Google Places for: Chamisse
+✗ No results found for Chamisse
+
+[116/450] Processing: Chimichurris (London)
+Searching Google Places for: Chimichurris
+✗ No results found for Chimichurris
+
+[117/450] Processing: Chin Chin Dessert Club (Chin Chin Ice Cream) (London)
+Searching Google Places for: Chin Chin Dessert Club (Chin Chin Ice Cream)
+✗ No results found for Chin Chin Dessert Club (Chin Chin Ice Cream)
+
+[118/450] Processing: Corrochio's (London)
+Searching Google Places for: Corrochio's
+✗ No results found for Corrochio's
+
+[119/450] Processing: Côte Kensington (London)
+Searching Google Places for: Côte Kensington
+✗ No results found for Côte Kensington
+
+[120/450] Processing: Crème de la Crêpe (London)
+Searching Google Places for: Crème de la Crêpe
+✗ No results found for Crème de la Crêpe
+
+--- Progress Update ---
+Processed: 120/450
+Updated: 0
+Not found: 120
+Success rate: 0.0%
+
+[121/450] Processing: CuppaPug (London)
+Searching Google Places for: CuppaPug
+✗ No results found for CuppaPug
+
+[122/450] Processing: De Vine (London)
+Searching Google Places for: De Vine
+✗ No results found for De Vine
+
+[123/450] Processing: Del74 Tacos (London)
+Searching Google Places for: Del74 Tacos
+✗ No results found for Del74 Tacos
+
+[124/450] Processing: Delicious Pho (London)
+Searching Google Places for: Delicious Pho
+✗ No results found for Delicious Pho
+
+[125/450] Processing: Diabola Market Bar (London)
+Searching Google Places for: Diabola Market Bar
+✗ No results found for Diabola Market Bar
+
+[126/450] Processing: Draughts - Waterloo (London)
+Searching Google Places for: Draughts - Waterloo
+✗ No results found for Draughts - Waterloo
+
+[127/450] Processing: Dreami Play Café (London)
+Searching Google Places for: Dreami Play Café
+✗ No results found for Dreami Play Café
+
+[128/450] Processing: Duck & Waffle (London)
+Searching Google Places for: Duck & Waffle
+✗ No results found for Duck & Waffle
+
+[129/450] Processing: East Street by Tampopo Fitzrovia (London)
+Searching Google Places for: East Street by Tampopo Fitzrovia
+✗ No results found for East Street by Tampopo Fitzrovia
+
+[130/450] Processing: Eggbreak (London)
+Searching Google Places for: Eggbreak
+✗ No results found for Eggbreak
+
+--- Progress Update ---
+Processed: 130/450
+Updated: 0
+Not found: 130
+Success rate: 0.0%
+
+[131/450] Processing: El Faro Restaurant - Cala Torret (London)
+Searching Google Places for: El Faro Restaurant - Cala Torret
+✗ No results found for El Faro Restaurant - Cala Torret
+
+[132/450] Processing: Ev Restaurant (London)
+Searching Google Places for: Ev Restaurant
+✗ No results found for Ev Restaurant
+
+[133/450] Processing: Everest Inn (London)
+Searching Google Places for: Everest Inn
+✗ No results found for Everest Inn
+
+[134/450] Processing: Fallow (London)
+Searching Google Places for: Fallow
+✗ No results found for Fallow
+
+[135/450] Processing: Farm Girl - South Kensington (London)
+Searching Google Places for: Farm Girl - South Kensington
+✗ No results found for Farm Girl - South Kensington
+
+[136/450] Processing: Faros Oxford Circus (London)
+Searching Google Places for: Faros Oxford Circus
+✗ No results found for Faros Oxford Circus
+
+[137/450] Processing: Fifth Floor Café & Terrace (London)
+Searching Google Places for: Fifth Floor Café & Terrace
+✗ No results found for Fifth Floor Café & Terrace
+
+[138/450] Processing: Fiore Dell Amore Italian Restaurant Shoreditch (London)
+Searching Google Places for: Fiore Dell Amore Italian Restaurant Shoreditch
+✗ No results found for Fiore Dell Amore Italian Restaurant Shoreditch
+
+[139/450] Processing: Five Guys Piccadilly Circus (London)
+Searching Google Places for: Five Guys Piccadilly Circus
+✗ No results found for Five Guys Piccadilly Circus
+
+[140/450] Processing: Four Hundred Rabbits: Pizza Restaurant Crystal Palace (London)
+Searching Google Places for: Four Hundred Rabbits: Pizza Restaurant Crystal Palace
+✗ No results found for Four Hundred Rabbits: Pizza Restaurant Crystal Palace
+
+--- Progress Update ---
+Processed: 140/450
+Updated: 0
+Not found: 140
+Success rate: 0.0%
+
+[141/450] Processing: Franco Manca (London)
+Searching Google Places for: Franco Manca
+✗ No results found for Franco Manca
+
+[142/450] Processing: Franco Manca Balham (London)
+Searching Google Places for: Franco Manca Balham
+✗ No results found for Franco Manca Balham
+
+[143/450] Processing: Franco Manca Chiswick (London)
+Searching Google Places for: Franco Manca Chiswick
+✗ No results found for Franco Manca Chiswick
+
+[144/450] Processing: Franco Manca Kilburn (London)
+Searching Google Places for: Franco Manca Kilburn
+✗ No results found for Franco Manca Kilburn
+
+[145/450] Processing: Frankie & Benny's (London)
+Searching Google Places for: Frankie & Benny's
+✗ No results found for Frankie & Benny's
+
+[146/450] Processing: Frankie & Benny's (London)
+Searching Google Places for: Frankie & Benny's
+✗ No results found for Frankie & Benny's
+
+[147/450] Processing: Frizzante (London)
+Searching Google Places for: Frizzante
+✗ No results found for Frizzante
+
+[148/450] Processing: Frizzante Proseccheria (London)
+Searching Google Places for: Frizzante Proseccheria
+✗ No results found for Frizzante Proseccheria
+
+[149/450] Processing: Gallio (London)
+Searching Google Places for: Gallio
+✗ No results found for Gallio
+
+[150/450] Processing: Gelatorino (London)
+Searching Google Places for: Gelatorino
+✗ No results found for Gelatorino
+
+--- Progress Update ---
+Processed: 150/450
+Updated: 0
+Not found: 150
+Success rate: 0.0%
+
+[151/450] Processing: Giraffe, Victoria (London)
+Searching Google Places for: Giraffe, Victoria
+✗ No results found for Giraffe, Victoria
+
+[152/450] Processing: Gloria (London)
+Searching Google Places for: Gloria
+✗ No results found for Gloria
+
+[153/450] Processing: Golden Chippy (London)
+Searching Google Places for: Golden Chippy
+✗ No results found for Golden Chippy
+
+[154/450] Processing: Golden Dragon (Chinatown) (London)
+Searching Google Places for: Golden Dragon (Chinatown)
+✗ No results found for Golden Dragon (Chinatown)
+
+[155/450] Processing: Good City Brewing | Downtown (London)
+Searching Google Places for: Good City Brewing | Downtown
+✗ No results found for Good City Brewing | Downtown
+
+[156/450] Processing: Gordon Ramsay Street Burger - Charing Cross Road (London)
+Searching Google Places for: Gordon Ramsay Street Burger - Charing Cross Road
+✗ No results found for Gordon Ramsay Street Burger - Charing Cross Road
+
+[157/450] Processing: Gordon Ramsay Street Burger x Street Pizza - Kensington High Street (London)
+Searching Google Places for: Gordon Ramsay Street Burger x Street Pizza - Kensington High Street
+✗ No results found for Gordon Ramsay Street Burger x Street Pizza - Kensington High Street
+
+[158/450] Processing: Gott's Ferry Building (London)
+Searching Google Places for: Gott's Ferry Building
+✗ No results found for Gott's Ferry Building
+
+[159/450] Processing: Gouqi (London)
+Searching Google Places for: Gouqi
+✗ No results found for Gouqi
+
+[160/450] Processing: Gourmet Pizza Co (London)
+Searching Google Places for: Gourmet Pizza Co
+✗ No results found for Gourmet Pizza Co
+
+--- Progress Update ---
+Processed: 160/450
+Updated: 0
+Not found: 160
+Success rate: 0.0%
+
+[161/450] Processing: Granary Square Brasserie (London)
+Searching Google Places for: Granary Square Brasserie
+✗ No results found for Granary Square Brasserie
+
+[162/450] Processing: Granger & Co. Marylebone (London)
+Searching Google Places for: Granger & Co. Marylebone
+✗ No results found for Granger & Co. Marylebone
+
+[163/450] Processing: Grumpy's Bar + Wood Fired Pizza (London)
+Searching Google Places for: Grumpy's Bar + Wood Fired Pizza
+✗ No results found for Grumpy's Bar + Wood Fired Pizza
+
+[164/450] Processing: Hacha Dalston (London)
+Searching Google Places for: Hacha Dalston
+✗ No results found for Hacha Dalston
+
+[165/450] Processing: Hakata Ramen + Bar (London)
+Searching Google Places for: Hakata Ramen + Bar
+✗ No results found for Hakata Ramen + Bar
+
+[166/450] Processing: Happy Dough Lucky Donuts + Arcade (London)
+Searching Google Places for: Happy Dough Lucky Donuts + Arcade
+✗ No results found for Happy Dough Lucky Donuts + Arcade
+
+[167/450] Processing: Happy Face Pizza King's Cross (London)
+Searching Google Places for: Happy Face Pizza King's Cross
+✗ No results found for Happy Face Pizza King's Cross
+
+[168/450] Processing: Hard Rock Cafe Piccadilly Circus (London)
+Searching Google Places for: Hard Rock Cafe Piccadilly Circus
+✗ No results found for Hard Rock Cafe Piccadilly Circus
+
+[169/450] Processing: Harrods Food Halls (London)
+Searching Google Places for: Harrods Food Halls
+✗ No results found for Harrods Food Halls
+
+[170/450] Processing: Harvester Grange Park Northampton (London)
+Searching Google Places for: Harvester Grange Park Northampton
+✗ No results found for Harvester Grange Park Northampton
+
+--- Progress Update ---
+Processed: 170/450
+Updated: 0
+Not found: 170
+Success rate: 0.0%
+
+[171/450] Processing: Harvester Lakewood (London)
+Searching Google Places for: Harvester Lakewood
+✗ No results found for Harvester Lakewood
+
+[172/450] Processing: Heddon Street Kitchen (London)
+Searching Google Places for: Heddon Street Kitchen
+✗ No results found for Heddon Street Kitchen
+
+[173/450] Processing: Hiba Street Food (London)
+Searching Google Places for: Hiba Street Food
+✗ No results found for Hiba Street Food
+
+[174/450] Processing: High Road Brasserie (London)
+Searching Google Places for: High Road Brasserie
+✗ No results found for High Road Brasserie
+
+[175/450] Processing: Holborn Dining Room (London)
+Searching Google Places for: Holborn Dining Room
+✗ No results found for Holborn Dining Room
+
+[176/450] Processing: Homeslice Marylebone (London)
+Searching Google Places for: Homeslice Marylebone
+✗ No results found for Homeslice Marylebone
+
+[177/450] Processing: Honey & Co. Bloomsbury (London)
+Searching Google Places for: Honey & Co. Bloomsbury
+✗ No results found for Honey & Co. Bloomsbury
+
+[178/450] Processing: Hong Kong Restaurant (London)
+Searching Google Places for: Hong Kong Restaurant
+✗ No results found for Hong Kong Restaurant
+
+[179/450] Processing: Hoppers (London)
+Searching Google Places for: Hoppers
+✗ No results found for Hoppers
+
+[180/450] Processing: House of Prime Rib (London)
+Searching Google Places for: House of Prime Rib
+✗ No results found for House of Prime Rib
+
+--- Progress Update ---
+Processed: 180/450
+Updated: 0
+Not found: 180
+Success rate: 0.0%
+
+[181/450] Processing: Hoxton Grill (London)
+Searching Google Places for: Hoxton Grill
+✗ No results found for Hoxton Grill
+
+[182/450] Processing: Il Portico (London)
+Searching Google Places for: Il Portico
+✗ No results found for Il Portico
+
+[183/450] Processing: Inamo Covent Garden (London)
+Searching Google Places for: Inamo Covent Garden
+✗ No results found for Inamo Covent Garden
+
+[184/450] Processing: Indeed Brewing Company | Pilot Brewery & Taproom of Walker's Point, Milwaukee (London)
+Searching Google Places for: Indeed Brewing Company | Pilot Brewery & Taproom of Walker's Point, Milwaukee
+✗ No results found for Indeed Brewing Company | Pilot Brewery & Taproom of Walker's Point, Milwaukee
+
+[185/450] Processing: Indian Express (London)
+Searching Google Places for: Indian Express
+✗ No results found for Indian Express
+
+[186/450] Processing: INIS (London)
+Searching Google Places for: INIS
+✗ No results found for INIS
+
+[187/450] Processing: ITJL Colindale Station (London)
+Searching Google Places for: ITJL Colindale Station
+✗ No results found for ITJL Colindale Station
+
+[188/450] Processing: Jefferson's Ice Cream Brixton (London)
+Searching Google Places for: Jefferson's Ice Cream Brixton
+✗ No results found for Jefferson's Ice Cream Brixton
+
+[189/450] Processing: Jollibee Leicester Square (London)
+Searching Google Places for: Jollibee Leicester Square
+✗ No results found for Jollibee Leicester Square
+
+[190/450] Processing: Kachori (London)
+Searching Google Places for: Kachori
+✗ No results found for Kachori
+
+--- Progress Update ---
+Processed: 190/450
+Updated: 0
+Not found: 190
+Success rate: 0.0%
+
+[191/450] Processing: King's Dog Daycare (London)
+Searching Google Places for: King's Dog Daycare
+✗ No results found for King's Dog Daycare
+
+[192/450] Processing: Koya Ko Hackney (London)
+Searching Google Places for: Koya Ko Hackney
+✗ No results found for Koya Ko Hackney
+
+[193/450] Processing: Kricket Brixton (London)
+Searching Google Places for: Kricket Brixton
+✗ No results found for Kricket Brixton
+
+[194/450] Processing: Kricket Soho (London)
+Searching Google Places for: Kricket Soho
+✗ No results found for Kricket Soho
+
+[195/450] Processing: Kricket White City (London)
+Searching Google Places for: Kricket White City
+✗ No results found for Kricket White City
+
+[196/450] Processing: La Cave du Salut (London)
+Searching Google Places for: La Cave du Salut
+✗ No results found for La Cave du Salut
+
+[197/450] Processing: La Gamba - Spanish Tapas Bar & Restaurant (London)
+Searching Google Places for: La Gamba - Spanish Tapas Bar & Restaurant
+✗ No results found for La Gamba - Spanish Tapas Bar & Restaurant
+
+[198/450] Processing: La Gelatiera - Covent Garden (London)
+Searching Google Places for: La Gelatiera - Covent Garden
+✗ No results found for La Gelatiera - Covent Garden
+
+[199/450] Processing: La Porchetta Pollo Bar (London)
+Searching Google Places for: La Porchetta Pollo Bar
+✗ No results found for La Porchetta Pollo Bar
+
+[200/450] Processing: Las Iguanas - London - Stratford Westfield (London)
+Searching Google Places for: Las Iguanas - London - Stratford Westfield
+✗ No results found for Las Iguanas - London - Stratford Westfield
+
+--- Progress Update ---
+Processed: 200/450
+Updated: 0
+Not found: 200
+Success rate: 0.0%
+
+[201/450] Processing: Latino Hits (London)
+Searching Google Places for: Latino Hits
+✗ No results found for Latino Hits
+
+[202/450] Processing: Latitude Restaurant (London)
+Searching Google Places for: Latitude Restaurant
+✗ No results found for Latitude Restaurant
+
+[203/450] Processing: Laughing Halibut (London)
+Searching Google Places for: Laughing Halibut
+✗ No results found for Laughing Halibut
+
+[204/450] Processing: Le Bistretatais (London)
+Searching Google Places for: Le Bistretatais
+✗ No results found for Le Bistretatais
+
+[205/450] Processing: Le Favole Ristorante (London)
+Searching Google Places for: Le Favole Ristorante
+✗ No results found for Le Favole Ristorante
+
+[206/450] Processing: LE RED ROCK (London)
+Searching Google Places for: LE RED ROCK
+✗ No results found for LE RED ROCK
+
+[207/450] Processing: Leafwild Cafe (London)
+Searching Google Places for: Leafwild Cafe
+✗ No results found for Leafwild Cafe
+
+[208/450] Processing: Leafy Bean Coffee & Cocktail Bar (London)
+Searching Google Places for: Leafy Bean Coffee & Cocktail Bar
+✗ No results found for Leafy Bean Coffee & Cocktail Bar
+
+[209/450] Processing: Lina Stores Italian Restaurant & Deli King's Cross (London)
+Searching Google Places for: Lina Stores Italian Restaurant & Deli King's Cross
+✗ No results found for Lina Stores Italian Restaurant & Deli King's Cross
+
+[210/450] Processing: Lina Stores Italian Restaurant & Deli Marylebone (London)
+Searching Google Places for: Lina Stores Italian Restaurant & Deli Marylebone
+✗ No results found for Lina Stores Italian Restaurant & Deli Marylebone
+
+--- Progress Update ---
+Processed: 210/450
+Updated: 0
+Not found: 210
+Success rate: 0.0%
+
+[211/450] Processing: Lina Stores Shoreditch - Italian Restaurant & Bar (London)
+Searching Google Places for: Lina Stores Shoreditch - Italian Restaurant & Bar
+✗ No results found for Lina Stores Shoreditch - Italian Restaurant & Bar
+
+[212/450] Processing: Lizzie's Cucina - Italian Restaurant (London)
+Searching Google Places for: Lizzie's Cucina - Italian Restaurant
+✗ No results found for Lizzie's Cucina - Italian Restaurant
+
+[213/450] Processing: Love my Human Townhouse (London)
+Searching Google Places for: Love my Human Townhouse
+✗ No results found for Love my Human Townhouse
+
+[214/450] Processing: Luci (London)
+Searching Google Places for: Luci
+✗ No results found for Luci
+
+[215/450] Processing: Maharaja of India (London)
+Searching Google Places for: Maharaja of India
+✗ No results found for Maharaja of India
+
+[216/450] Processing: Mallow Canary Wharf (London)
+Searching Google Places for: Mallow Canary Wharf
+✗ No results found for Mallow Canary Wharf
+
+[217/450] Processing: Mama Restaurant London (London)
+Searching Google Places for: Mama Restaurant London
+✗ No results found for Mama Restaurant London
+
+[218/450] Processing: Mamma Dough - Peckham (London)
+Searching Google Places for: Mamma Dough - Peckham
+✗ No results found for Mamma Dough - Peckham
+
+[219/450] Processing: Manuel's Italian and Mediterranean Restaurant and Bar (London)
+Searching Google Places for: Manuel's Italian and Mediterranean Restaurant and Bar
+✗ No results found for Manuel's Italian and Mediterranean Restaurant and Bar
+
+[220/450] Processing: Mare Street Market (London)
+Searching Google Places for: Mare Street Market
+✗ No results found for Mare Street Market
+
+--- Progress Update ---
+Processed: 220/450
+Updated: 0
+Not found: 220
+Success rate: 0.0%
+
+[221/450] Processing: Mare Street Market King's Cross (London)
+Searching Google Places for: Mare Street Market King's Cross
+✗ No results found for Mare Street Market King's Cross
+
+[222/450] Processing: Margot (London)
+Searching Google Places for: Margot
+✗ No results found for Margot
+
+[223/450] Processing: Market Halls Oxford Street (London)
+Searching Google Places for: Market Halls Oxford Street
+✗ No results found for Market Halls Oxford Street
+
+[224/450] Processing: Martha Dear (London)
+Searching Google Places for: Martha Dear
+✗ No results found for Martha Dear
+
+[225/450] Processing: Marugame Udon / 丸亀製麺 Strand (London)
+Searching Google Places for: Marugame Udon / 丸亀製麺 Strand
+✗ No results found for Marugame Udon / 丸亀製麺 Strand
+
+[226/450] Processing: Masala Zone Covent Garden (London)
+Searching Google Places for: Masala Zone Covent Garden
+✗ No results found for Masala Zone Covent Garden
+
+[227/450] Processing: Maxwell's Bar & Grill (London)
+Searching Google Places for: Maxwell's Bar & Grill
+✗ No results found for Maxwell's Bar & Grill
+
+[228/450] Processing: Maynard Arms (London)
+Searching Google Places for: Maynard Arms
+✗ No results found for Maynard Arms
+
+[229/450] Processing: Megan's on the High Street Restaurant (Kensington) (London)
+Searching Google Places for: Megan's on the High Street Restaurant (Kensington)
+✗ No results found for Megan's on the High Street Restaurant (Kensington)
+
+[230/450] Processing: Mersea Restaurant, Bar and Venue (London)
+Searching Google Places for: Mersea Restaurant, Bar and Venue
+✗ No results found for Mersea Restaurant, Bar and Venue
+
+--- Progress Update ---
+Processed: 230/450
+Updated: 0
+Not found: 230
+Success rate: 0.0%
+
+[231/450] Processing: Meson Don Felipe (London)
+Searching Google Places for: Meson Don Felipe
+✗ No results found for Meson Don Felipe
+
+[232/450] Processing: Milwaukee Brewing & Distilling Company (London)
+Searching Google Places for: Milwaukee Brewing & Distilling Company
+✗ No results found for Milwaukee Brewing & Distilling Company
+
+[233/450] Processing: Monkey Temple (London)
+Searching Google Places for: Monkey Temple
+✗ No results found for Monkey Temple
+
+[234/450] Processing: Monmouth Coffee Company (London)
+Searching Google Places for: Monmouth Coffee Company
+✗ No results found for Monmouth Coffee Company
+
+[235/450] Processing: Morty & Bob's (London)
+Searching Google Places for: Morty & Bob's
+✗ No results found for Morty & Bob's
+
+[236/450] Processing: Mothership (London)
+Searching Google Places for: Mothership
+✗ No results found for Mothership
+
+[237/450] Processing: Mount St. Restaurant (London)
+Searching Google Places for: Mount St. Restaurant
+✗ No results found for Mount St. Restaurant
+
+[238/450] Processing: My Old Dutch (London)
+Searching Google Places for: My Old Dutch
+✗ No results found for My Old Dutch
+
+[239/450] Processing: Namaste Lounge (London)
+Searching Google Places for: Namaste Lounge
+✗ No results found for Namaste Lounge
+
+[240/450] Processing: Nando's Westfield London (London)
+Searching Google Places for: Nando's Westfield London
+✗ No results found for Nando's Westfield London
+
+--- Progress Update ---
+Processed: 240/450
+Updated: 0
+Not found: 240
+Success rate: 0.0%
+
+[241/450] Processing: Nobu London (Old Park Lane) (London)
+Searching Google Places for: Nobu London (Old Park Lane)
+✗ No results found for Nobu London (Old Park Lane)
+
+[242/450] Processing: Nonnos Pizza (Crouch End) (London)
+Searching Google Places for: Nonnos Pizza (Crouch End)
+✗ No results found for Nonnos Pizza (Crouch End)
+
+[243/450] Processing: Ô Gourmet Libanais (London)
+Searching Google Places for: Ô Gourmet Libanais
+✗ No results found for Ô Gourmet Libanais
+
+[244/450] Processing: Octagreen (London)
+Searching Google Places for: Octagreen
+✗ No results found for Octagreen
+
+[245/450] Processing: Ope! Brewing Company (London)
+Searching Google Places for: Ope! Brewing Company
+✗ No results found for Ope! Brewing Company
+
+[246/450] Processing: OXO Tower Brasserie (London)
+Searching Google Places for: OXO Tower Brasserie
+✗ No results found for OXO Tower Brasserie
+
+[247/450] Processing: Pako Taco (London)
+Searching Google Places for: Pako Taco
+✗ No results found for Pako Taco
+
+[248/450] Processing: Parliament Hill Cafe (London)
+Searching Google Places for: Parliament Hill Cafe
+✗ No results found for Parliament Hill Cafe
+
+[249/450] Processing: Parliament Hill Fields Lido Café (London)
+Searching Google Places for: Parliament Hill Fields Lido Café
+✗ No results found for Parliament Hill Fields Lido Café
+
+[250/450] Processing: Pasta Louise (London)
+Searching Google Places for: Pasta Louise
+✗ No results found for Pasta Louise
+
+--- Progress Update ---
+Processed: 250/450
+Updated: 0
+Not found: 250
+Success rate: 0.0%
+
+[251/450] Processing: Pasta Remoli Ealing Broadway (London)
+Searching Google Places for: Pasta Remoli Ealing Broadway
+✗ No results found for Pasta Remoli Ealing Broadway
+
+[252/450] Processing: Pastaio Pasta Restaurant Carnaby (London)
+Searching Google Places for: Pastaio Pasta Restaurant Carnaby
+✗ No results found for Pastaio Pasta Restaurant Carnaby
+
+[253/450] Processing: Pausa Cafe (Dunelm) Erdington (London)
+Searching Google Places for: Pausa Cafe (Dunelm) Erdington
+✗ No results found for Pausa Cafe (Dunelm) Erdington
+
+[254/450] Processing: Pawsitive Cafe (London)
+Searching Google Places for: Pawsitive Cafe
+✗ No results found for Pawsitive Cafe
+
+[255/450] Processing: Pho & Bun (London)
+Searching Google Places for: Pho & Bun
+✗ No results found for Pho & Bun
+
+[256/450] Processing: Pizza East (London)
+Searching Google Places for: Pizza East
+✗ No results found for Pizza East
+
+[257/450] Processing: Pizza Pilgrims Waterloo (London)
+Searching Google Places for: Pizza Pilgrims Waterloo
+✗ No results found for Pizza Pilgrims Waterloo
+
+[258/450] Processing: Pizza Union (London)
+Searching Google Places for: Pizza Union
+✗ No results found for Pizza Union
+
+[259/450] Processing: Pizza Union (London)
+Searching Google Places for: Pizza Union
+✗ No results found for Pizza Union
+
+[260/450] Processing: Pizza Union Dalston (London)
+Searching Google Places for: Pizza Union Dalston
+✗ No results found for Pizza Union Dalston
+
+--- Progress Update ---
+Processed: 260/450
+Updated: 0
+Not found: 260
+Success rate: 0.0%
+
+[261/450] Processing: Pizza Union Holborn (London)
+Searching Google Places for: Pizza Union Holborn
+✗ No results found for Pizza Union Holborn
+
+[262/450] Processing: Pizza Union Hoxton (London)
+Searching Google Places for: Pizza Union Hoxton
+✗ No results found for Pizza Union Hoxton
+
+[263/450] Processing: Pizza Union Spitalfields (London)
+Searching Google Places for: Pizza Union Spitalfields
+✗ No results found for Pizza Union Spitalfields
+
+[264/450] Processing: Pizzeria Pappagone (London)
+Searching Google Places for: Pizzeria Pappagone
+✗ No results found for Pizzeria Pappagone
+
+[265/450] Processing: Putt in the Park (London)
+Searching Google Places for: Putt in the Park
+✗ No results found for Putt in the Park
+
+[266/450] Processing: Rail House Victoria (London)
+Searching Google Places for: Rail House Victoria
+✗ No results found for Rail House Victoria
+
+[267/450] Processing: Ray Park Cafe (London)
+Searching Google Places for: Ray Park Cafe
+✗ No results found for Ray Park Cafe
+
+[268/450] Processing: RedFarm (London)
+Searching Google Places for: RedFarm
+✗ No results found for RedFarm
+
+[269/450] Processing: Regency Cafe (London)
+Searching Google Places for: Regency Cafe
+✗ No results found for Regency Cafe
+
+[270/450] Processing: Rice Persian Kitchen (London)
+Searching Google Places for: Rice Persian Kitchen
+✗ No results found for Rice Persian Kitchen
+
+--- Progress Update ---
+Processed: 270/450
+Updated: 0
+Not found: 270
+Success rate: 0.0%
+
+[271/450] Processing: Roast (London)
+Searching Google Places for: Roast
+✗ No results found for Roast
+
+[272/450] Processing: Rocket Baby Bakery (London)
+Searching Google Places for: Rocket Baby Bakery
+✗ No results found for Rocket Baby Bakery
+
+[273/450] Processing: Rondo (London)
+Searching Google Places for: Rondo
+✗ No results found for Rondo
+
+[274/450] Processing: Rosa's Thai Soho (London)
+Searching Google Places for: Rosa's Thai Soho
+✗ No results found for Rosa's Thai Soho
+
+[275/450] Processing: Rossopomodoro Camden (London)
+Searching Google Places for: Rossopomodoro Camden
+✗ No results found for Rossopomodoro Camden
+
+[276/450] Processing: Rossopomodoro Chelsea (London)
+Searching Google Places for: Rossopomodoro Chelsea
+✗ No results found for Rossopomodoro Chelsea
+
+[277/450] Processing: Rossopomodoro Covent Garden (London)
+Searching Google Places for: Rossopomodoro Covent Garden
+✗ No results found for Rossopomodoro Covent Garden
+
+[278/450] Processing: Rossopomodoro Hoxton (London)
+Searching Google Places for: Rossopomodoro Hoxton
+✗ No results found for Rossopomodoro Hoxton
+
+[279/450] Processing: Ruby Violet (London)
+Searching Google Places for: Ruby Violet
+✗ No results found for Ruby Violet
+
+[280/450] Processing: Santo Remedio - Cocina Mexicana London Bridge (London)
+Searching Google Places for: Santo Remedio - Cocina Mexicana London Bridge
+✗ No results found for Santo Remedio - Cocina Mexicana London Bridge
+
+--- Progress Update ---
+Processed: 280/450
+Updated: 0
+Not found: 280
+Success rate: 0.0%
+
+[281/450] Processing: Saona Alameda (London)
+Searching Google Places for: Saona Alameda
+✗ No results found for Saona Alameda
+
+[282/450] Processing: Sartori - Italian Restaurant & Pizzeria (London)
+Searching Google Places for: Sartori - Italian Restaurant & Pizzeria
+✗ No results found for Sartori - Italian Restaurant & Pizzeria
+
+[283/450] Processing: Science Afternoon Tea at The Drawing Rooms (at The Ampersand Hotel) (London)
+Searching Google Places for: Science Afternoon Tea at The Drawing Rooms (at The Ampersand Hotel)
+✗ No results found for Science Afternoon Tea at The Drawing Rooms (at The Ampersand Hotel)
+
+[284/450] Processing: Scoff & Banter Kensington (London)
+Searching Google Places for: Scoff & Banter Kensington
+✗ No results found for Scoff & Banter Kensington
+
+[285/450] Processing: Searcys at The Gherkin (London)
+Searching Google Places for: Searcys at The Gherkin
+✗ No results found for Searcys at The Gherkin
+
+[286/450] Processing: Seven Dials Market (London)
+Searching Google Places for: Seven Dials Market
+✗ No results found for Seven Dials Market
+
+[287/450] Processing: Shake Shack Mansion House (London)
+Searching Google Places for: Shake Shack Mansion House
+✗ No results found for Shake Shack Mansion House
+
+[288/450] Processing: Sherlock Holmes (London)
+Searching Google Places for: Sherlock Holmes
+✗ No results found for Sherlock Holmes
+
+[289/450] Processing: Shoryu Ramen Soho (London)
+Searching Google Places for: Shoryu Ramen Soho
+✗ No results found for Shoryu Ramen Soho
+
+[290/450] Processing: Simply Italian (London)
+Searching Google Places for: Simply Italian
+✗ No results found for Simply Italian
+
+--- Progress Update ---
+Processed: 290/450
+Updated: 0
+Not found: 290
+Success rate: 0.0%
+
+[291/450] Processing: Sizzling Pubs (London)
+Searching Google Places for: Sizzling Pubs
+✗ No results found for Sizzling Pubs
+
+[292/450] Processing: Smith's Bar & Grill (London)
+Searching Google Places for: Smith's Bar & Grill
+✗ No results found for Smith's Bar & Grill
+
+[293/450] Processing: Solar Sisters - Zero Waste - Refill - Café (London)
+Searching Google Places for: Solar Sisters - Zero Waste - Refill - Café
+✗ No results found for Solar Sisters - Zero Waste - Refill - Café
+
+[294/450] Processing: Sonora Taquería (London)
+Searching Google Places for: Sonora Taquería
+✗ No results found for Sonora Taquería
+
+[295/450] Processing: Spaghetti House (London)
+Searching Google Places for: Spaghetti House
+✗ No results found for Spaghetti House
+
+[296/450] Processing: Spagnoletti (London)
+Searching Google Places for: Spagnoletti
+✗ No results found for Spagnoletti
+
+[297/450] Processing: St Pancras Brasserie and Champagne Bar by Searcys (London)
+Searching Google Places for: St Pancras Brasserie and Champagne Bar by Searcys
+✗ No results found for St Pancras Brasserie and Champagne Bar by Searcys
+
+[298/450] Processing: Steak & Lobster Marble Arch (London)
+Searching Google Places for: Steak & Lobster Marble Arch
+✗ No results found for Steak & Lobster Marble Arch
+
+[299/450] Processing: Steak & Lobster Warren Street (London)
+Searching Google Places for: Steak & Lobster Warren Street
+✗ No results found for Steak & Lobster Warren Street
+
+[300/450] Processing: Sticks'n'Sushi Wimbledon (London)
+Searching Google Places for: Sticks'n'Sushi Wimbledon
+✗ No results found for Sticks'n'Sushi Wimbledon
+
+--- Progress Update ---
+Processed: 300/450
+Updated: 0
+Not found: 300
+Success rate: 0.0%
+
+[301/450] Processing: Sticky Mango Tower Bridge (London)
+Searching Google Places for: Sticky Mango Tower Bridge
+✗ No results found for Sticky Mango Tower Bridge
+
+[302/450] Processing: Sugar Maple (London)
+Searching Google Places for: Sugar Maple
+✗ No results found for Sugar Maple
+
+[303/450] Processing: Sushimania (London)
+Searching Google Places for: Sushimania
+✗ No results found for Sushimania
+
+[304/450] Processing: Sweet Maple (London)
+Searching Google Places for: Sweet Maple
+✗ No results found for Sweet Maple
+
+[305/450] Processing: Sweet Thursday (London)
+Searching Google Places for: Sweet Thursday
+✗ No results found for Sweet Thursday
+
+[306/450] Processing: T. Rex Restaurant (London)
+Searching Google Places for: T. Rex Restaurant
+✗ No results found for T. Rex Restaurant
+
+[307/450] Processing: Taj Mahal Indian Cuisine (London)
+Searching Google Places for: Taj Mahal Indian Cuisine
+✗ No results found for Taj Mahal Indian Cuisine
+
+[308/450] Processing: Tapas Brindisa Soho (London)
+Searching Google Places for: Tapas Brindisa Soho
+✗ No results found for Tapas Brindisa Soho
+
+[309/450] Processing: Taqwas Bakery and Restaurant (London)
+Searching Google Places for: Taqwas Bakery and Restaurant
+✗ No results found for Taqwas Bakery and Restaurant
+
+[310/450] Processing: Taste of Nawab (London)
+Searching Google Places for: Taste of Nawab
+✗ No results found for Taste of Nawab
+
+--- Progress Update ---
+Processed: 310/450
+Updated: 0
+Not found: 310
+Success rate: 0.0%
+
+[311/450] Processing: Tavolino Bar & Kitchen (London)
+Searching Google Places for: Tavolino Bar & Kitchen
+✗ No results found for Tavolino Bar & Kitchen
+
+[312/450] Processing: Thai Square Islington (London)
+Searching Google Places for: Thai Square Islington
+✗ No results found for Thai Square Islington
+
+[313/450] Processing: The Admiralty, Trafalgar Square (London)
+Searching Google Places for: The Admiralty, Trafalgar Square
+✗ No results found for The Admiralty, Trafalgar Square
+
+[314/450] Processing: The Approach Tavern (London)
+Searching Google Places for: The Approach Tavern
+✗ No results found for The Approach Tavern
+
+[315/450] Processing: The Avalon (London)
+Searching Google Places for: The Avalon
+✗ No results found for The Avalon
+
+[316/450] Processing: The Blue Boat, Fulham Reach (London)
+Searching Google Places for: The Blue Boat, Fulham Reach
+✗ No results found for The Blue Boat, Fulham Reach
+
+[317/450] Processing: The Campaner (London)
+Searching Google Places for: The Campaner
+✗ No results found for The Campaner
+
+[318/450] Processing: The Churchill Arms, Kensington (London)
+Searching Google Places for: The Churchill Arms, Kensington
+✗ No results found for The Churchill Arms, Kensington
+
+[319/450] Processing: The Clarence Tavern (London)
+Searching Google Places for: The Clarence Tavern
+✗ No results found for The Clarence Tavern
+
+[320/450] Processing: The Coal Shed One Tower Bridge (London)
+Searching Google Places for: The Coal Shed One Tower Bridge
+✗ No results found for The Coal Shed One Tower Bridge
+
+--- Progress Update ---
+Processed: 320/450
+Updated: 0
+Not found: 320
+Success rate: 0.0%
+
+[321/450] Processing: The Copper Turtle Brewery & Taverne (London)
+Searching Google Places for: The Copper Turtle Brewery & Taverne
+✗ No results found for The Copper Turtle Brewery & Taverne
+
+[322/450] Processing: The Crooked Well (London)
+Searching Google Places for: The Crooked Well
+✗ No results found for The Crooked Well
+
+[323/450] Processing: The Crown (London)
+Searching Google Places for: The Crown
+✗ No results found for The Crown
+
+[324/450] Processing: The Delaunay (London)
+Searching Google Places for: The Delaunay
+✗ No results found for The Delaunay
+
+[325/450] Processing: The Depot (London)
+Searching Google Places for: The Depot
+✗ No results found for The Depot
+
+[326/450] Processing: The Duke of Cambridge (London)
+Searching Google Places for: The Duke of Cambridge
+✗ No results found for The Duke of Cambridge
+
+[327/450] Processing: The Duke of Richmond - Hackney (London)
+Searching Google Places for: The Duke of Richmond - Hackney
+✗ No results found for The Duke of Richmond - Hackney
+
+[328/450] Processing: The Explorium Brewpub Third Ward (London)
+Searching Google Places for: The Explorium Brewpub Third Ward
+✗ No results found for The Explorium Brewpub Third Ward
+
+[329/450] Processing: The Four Lanterns (London)
+Searching Google Places for: The Four Lanterns
+✗ No results found for The Four Lanterns
+
+[330/450] Processing: The Goring Dining Room (London)
+Searching Google Places for: The Goring Dining Room
+✗ No results found for The Goring Dining Room
+
+--- Progress Update ---
+Processed: 330/450
+Updated: 0
+Not found: 330
+Success rate: 0.0%
+
+[331/450] Processing: The Hawk's Nest (London)
+Searching Google Places for: The Hawk's Nest
+✗ No results found for The Hawk's Nest
+
+[332/450] Processing: The Hayden Pub & Rooms (London)
+Searching Google Places for: The Hayden Pub & Rooms
+✗ No results found for The Hayden Pub & Rooms
+
+[333/450] Processing: The Holly Tree (London)
+Searching Google Places for: The Holly Tree
+✗ No results found for The Holly Tree
+
+[334/450] Processing: The Hung Drawn & Quartered, EC3 (London)
+Searching Google Places for: The Hung Drawn & Quartered, EC3
+✗ No results found for The Hung Drawn & Quartered, EC3
+
+[335/450] Processing: The Jam (London)
+Searching Google Places for: The Jam
+✗ No results found for The Jam
+
+[336/450] Processing: The Kensington Creperie (London)
+Searching Google Places for: The Kensington Creperie
+✗ No results found for The Kensington Creperie
+
+[337/450] Processing: The Lighterman (London)
+Searching Google Places for: The Lighterman
+✗ No results found for The Lighterman
+
+[338/450] Processing: The Lock Tavern (London)
+Searching Google Places for: The Lock Tavern
+✗ No results found for The Lock Tavern
+
+[339/450] Processing: The Lord Tredegar (London)
+Searching Google Places for: The Lord Tredegar
+✗ No results found for The Lord Tredegar
+
+[340/450] Processing: The MAINE Mayfair Restaurant & Bar (London)
+Searching Google Places for: The MAINE Mayfair Restaurant & Bar
+✗ No results found for The MAINE Mayfair Restaurant & Bar
+
+--- Progress Update ---
+Processed: 340/450
+Updated: 0
+Not found: 340
+Success rate: 0.0%
+
+[341/450] Processing: The Petersham Wine Bar & Deli (London)
+Searching Google Places for: The Petersham Wine Bar & Deli
+✗ No results found for The Petersham Wine Bar & Deli
+
+[342/450] Processing: The Prince of Wales (London)
+Searching Google Places for: The Prince of Wales
+✗ No results found for The Prince of Wales
+
+[343/450] Processing: The Real Greek - Soho (London)
+Searching Google Places for: The Real Greek - Soho
+✗ No results found for The Real Greek - Soho
+
+[344/450] Processing: The Restaurant at Sanderson London (London)
+Searching Google Places for: The Restaurant at Sanderson London
+✗ No results found for The Restaurant at Sanderson London
+
+[345/450] Processing: The Rosendale (London)
+Searching Google Places for: The Rosendale
+✗ No results found for The Rosendale
+
+[346/450] Processing: The Shell (London)
+Searching Google Places for: The Shell
+✗ No results found for The Shell
+
+[347/450] Processing: The Ship & Shovell (London)
+Searching Google Places for: The Ship & Shovell
+✗ No results found for The Ship & Shovell
+
+[348/450] Processing: The Ship Inn (London)
+Searching Google Places for: The Ship Inn
+✗ No results found for The Ship Inn
+
+[349/450] Processing: The Spice (London)
+Searching Google Places for: The Spice
+✗ No results found for The Spice
+
+[350/450] Processing: The Spread Eagle (London)
+Searching Google Places for: The Spread Eagle
+✗ No results found for The Spread Eagle
+
+--- Progress Update ---
+Processed: 350/450
+Updated: 0
+Not found: 350
+Success rate: 0.0%
+
+[351/450] Processing: The Three Crowns (London)
+Searching Google Places for: The Three Crowns
+✗ No results found for The Three Crowns
+
+[352/450] Processing: The Wands & Wizard Exploratorium (London)
+Searching Google Places for: The Wands & Wizard Exploratorium
+✗ No results found for The Wands & Wizard Exploratorium
+
+[353/450] Processing: The Wolseley (London)
+Searching Google Places for: The Wolseley
+✗ No results found for The Wolseley
+
+[354/450] Processing: Third Space Brewing (London)
+Searching Google Places for: Third Space Brewing
+✗ No results found for Third Space Brewing
+
+[355/450] Processing: Toconoco (London)
+Searching Google Places for: Toconoco
+✗ No results found for Toconoco
+
+[356/450] Processing: Tonis Amalfi Italian Restaurant & Pizzeria (London)
+Searching Google Places for: Tonis Amalfi Italian Restaurant & Pizzeria
+✗ No results found for Tonis Amalfi Italian Restaurant & Pizzeria
+
+[357/450] Processing: Tonkotsu Soho (London)
+Searching Google Places for: Tonkotsu Soho
+✗ No results found for Tonkotsu Soho
+
+[358/450] Processing: Trejo’s Tacos (London)
+Searching Google Places for: Trejo’s Tacos
+✗ No results found for Trejo’s Tacos
+
+[359/450] Processing: Tupelo Honey Southern Kitchen & Bar (London)
+Searching Google Places for: Tupelo Honey Southern Kitchen & Bar
+✗ No results found for Tupelo Honey Southern Kitchen & Bar
+
+[360/450] Processing: Tyler's Tender Railroad Restaurant (London)
+Searching Google Places for: Tyler's Tender Railroad Restaurant
+✗ No results found for Tyler's Tender Railroad Restaurant
+
+--- Progress Update ---
+Processed: 360/450
+Updated: 0
+Not found: 360
+Success rate: 0.0%
+
+[361/450] Processing: Udderlicious Covent Garden (London)
+Searching Google Places for: Udderlicious Covent Garden
+✗ No results found for Udderlicious Covent Garden
+
+[362/450] Processing: Urban Harvest Brewing Company (London)
+Searching Google Places for: Urban Harvest Brewing Company
+✗ No results found for Urban Harvest Brewing Company
+
+[363/450] Processing: Uzumaki London (London)
+Searching Google Places for: Uzumaki London
+✗ No results found for Uzumaki London
+
+[364/450] Processing: Verve London Pet Boutique & Cafe (London)
+Searching Google Places for: Verve London Pet Boutique & Cafe
+✗ No results found for Verve London Pet Boutique & Cafe
+
+[365/450] Processing: Wanasa Cafe (London)
+Searching Google Places for: Wanasa Cafe
+✗ No results found for Wanasa Cafe
+
+[366/450] Processing: War Memorial Beer Garden (London)
+Searching Google Places for: War Memorial Beer Garden
+✗ No results found for War Memorial Beer Garden
+
+[367/450] Processing: Waterbar Restaurant (London)
+Searching Google Places for: Waterbar Restaurant
+✗ No results found for Waterbar Restaurant
+
+[368/450] Processing: Well Street Pizza Hackney (London)
+Searching Google Places for: Well Street Pizza Hackney
+✗ No results found for Well Street Pizza Hackney
+
+[369/450] Processing: Wild Thyme London (London)
+Searching Google Places for: Wild Thyme London
+✗ No results found for Wild Thyme London
+
+[370/450] Processing: Wildwood Restaurants Covent Garden (London)
+Searching Google Places for: Wildwood Restaurants Covent Garden
+✗ No results found for Wildwood Restaurants Covent Garden
+
+--- Progress Update ---
+Processed: 370/450
+Updated: 0
+Not found: 370
+Success rate: 0.0%
+
+[371/450] Processing: Wok To Walk Cranbourn St (London)
+Searching Google Places for: Wok To Walk Cranbourn St
+✗ No results found for Wok To Walk Cranbourn St
+
+[372/450] Processing: Yank Sing (Stevenson St.) (London)
+Searching Google Places for: Yank Sing (Stevenson St.)
+✗ No results found for Yank Sing (Stevenson St.)
+
+[373/450] Processing: YORI (Covent Garden) (London)
+Searching Google Places for: YORI (Covent Garden)
+✗ No results found for YORI (Covent Garden)
+
+[374/450] Processing: Zazie (London)
+Searching Google Places for: Zazie
+✗ No results found for Zazie
+
+[375/450] Processing: Fallow (LONDON)
+Searching Google Places for: Fallow
+✗ No results found for Fallow
+
+[376/450] Processing: The Breakfast Club Seven Dials (Loughton)
+Searching Google Places for: The Breakfast Club Seven Dials
+✗ No results found for The Breakfast Club Seven Dials
+
+[377/450] Processing: Franco Manca Piccadilly Gardens Manchester (Manchester)
+Searching Google Places for: Franco Manca Piccadilly Gardens Manchester
+✗ No results found for Franco Manca Piccadilly Gardens Manchester
+
+[378/450] Processing: Homeslice Neal's Yard (Manchester)
+Searching Google Places for: Homeslice Neal's Yard
+✗ No results found for Homeslice Neal's Yard
+
+[379/450] Processing: 1840 Brewing Company (Milwaukee)
+Searching Google Places for: 1840 Brewing Company
+✗ No results found for 1840 Brewing Company
+
+[380/450] Processing: 3 Sheeps Brewing (Milwaukee)
+Searching Google Places for: 3 Sheeps Brewing
+✗ No results found for 3 Sheeps Brewing
+
+--- Progress Update ---
+Processed: 380/450
+Updated: 0
+Not found: 380
+Success rate: 0.0%
+
+[381/450] Processing: Allie Boy's Bagelry & Luncheonette (Milwaukee)
+Searching Google Places for: Allie Boy's Bagelry & Luncheonette
+✗ No results found for Allie Boy's Bagelry & Luncheonette
+
+[382/450] Processing: Amaranth Bakery & Café (Milwaukee)
+Searching Google Places for: Amaranth Bakery & Café
+✗ No results found for Amaranth Bakery & Café
+
+[383/450] Processing: Amorphic Beer (Milwaukee)
+Searching Google Places for: Amorphic Beer
+✗ No results found for Amorphic Beer
+
+[384/450] Processing: Avli Milwaukee (Milwaukee)
+Searching Google Places for: Avli Milwaukee
+✗ No results found for Avli Milwaukee
+
+[385/450] Processing: Blue's Egg (Milwaukee)
+Searching Google Places for: Blue's Egg
+✗ No results found for Blue's Egg
+
+[386/450] Processing: Central Waters Brewing Co. | Brewery District, Milwaukee (Milwaukee)
+Searching Google Places for: Central Waters Brewing Co. | Brewery District, Milwaukee
+✗ No results found for Central Waters Brewing Co. | Brewery District, Milwaukee
+
+[387/450] Processing: City Lights Brewing Co. (Milwaukee)
+Searching Google Places for: City Lights Brewing Co.
+✗ No results found for City Lights Brewing Co.
+
+[388/450] Processing: Colectivo Bay View (Milwaukee)
+Searching Google Places for: Colectivo Bay View
+✗ No results found for Colectivo Bay View
+
+[389/450] Processing: Colectivo Humboldt Blvd. (Milwaukee)
+Searching Google Places for: Colectivo Humboldt Blvd.
+✗ No results found for Colectivo Humboldt Blvd.
+
+[390/450] Processing: Component Brewing Company (Milwaukee)
+Searching Google Places for: Component Brewing Company
+✗ No results found for Component Brewing Company
+
+--- Progress Update ---
+Processed: 390/450
+Updated: 0
+Not found: 390
+Success rate: 0.0%
+
+[391/450] Processing: Dairyland Old-Fashioned Frozen Custard & Hamburgers (Milwaukee)
+Searching Google Places for: Dairyland Old-Fashioned Frozen Custard & Hamburgers
+✗ No results found for Dairyland Old-Fashioned Frozen Custard & Hamburgers
+
+[392/450] Processing: Darwin Brasserie (Milwaukee)
+Searching Google Places for: Darwin Brasserie
+✗ No results found for Darwin Brasserie
+
+[393/450] Processing: Dead Bird Brewing Company (Milwaukee)
+Searching Google Places for: Dead Bird Brewing Company
+✗ No results found for Dead Bird Brewing Company
+
+[394/450] Processing: Eagle Park Brewing Company (Milwaukee)
+Searching Google Places for: Eagle Park Brewing Company
+✗ No results found for Eagle Park Brewing Company
+
+[395/450] Processing: Enlightened Brewing Company (Milwaukee)
+Searching Google Places for: Enlightened Brewing Company
+✗ No results found for Enlightened Brewing Company
+
+[396/450] Processing: Gathering Place Brewing Company (Milwaukee)
+Searching Google Places for: Gathering Place Brewing Company
+✗ No results found for Gathering Place Brewing Company
+
+[397/450] Processing: German Gymnasium Grand Cafe (Milwaukee)
+Searching Google Places for: German Gymnasium Grand Cafe
+✗ No results found for German Gymnasium Grand Cafe
+
+[398/450] Processing: Holy Land Grocery & Bakery (Milwaukee)
+Searching Google Places for: Holy Land Grocery & Bakery
+✗ No results found for Holy Land Grocery & Bakery
+
+[399/450] Processing: La Merenda (Milwaukee)
+Searching Google Places for: La Merenda
+✗ No results found for La Merenda
+
+[400/450] Processing: Lakefront Brewery (Milwaukee)
+Searching Google Places for: Lakefront Brewery
+✗ No results found for Lakefront Brewery
+
+--- Progress Update ---
+Processed: 400/450
+Updated: 0
+Not found: 400
+Success rate: 0.0%
+
+[401/450] Processing: Lers Ros (Milwaukee)
+Searching Google Places for: Lers Ros
+✗ No results found for Lers Ros
+
+[402/450] Processing: Miller: The Brewery (Milwaukee)
+Searching Google Places for: Miller: The Brewery
+✗ No results found for Miller: The Brewery
+
+[403/450] Processing: New Barons Brewing Cooperative (Milwaukee)
+Searching Google Places for: New Barons Brewing Cooperative
+✗ No results found for New Barons Brewing Cooperative
+
+[404/450] Processing: Organ Piper Pizza Palace (Milwaukee)
+Searching Google Places for: Organ Piper Pizza Palace
+✗ No results found for Organ Piper Pizza Palace
+
+[405/450] Processing: Original Joe's (Milwaukee)
+Searching Google Places for: Original Joe's
+✗ No results found for Original Joe's
+
+[406/450] Processing: Orxateria Daniel (Milwaukee)
+Searching Google Places for: Orxateria Daniel
+✗ No results found for Orxateria Daniel
+
+[407/450] Processing: Pilot Project Brewing Milwaukee (Milwaukee)
+Searching Google Places for: Pilot Project Brewing Milwaukee
+✗ No results found for Pilot Project Brewing Milwaukee
+
+[408/450] Processing: Saz's State House (Milwaukee)
+Searching Google Places for: Saz's State House
+✗ No results found for Saz's State House
+
+[409/450] Processing: Supermoon Beer Company (Milwaukee)
+Searching Google Places for: Supermoon Beer Company
+✗ No results found for Supermoon Beer Company
+
+[410/450] Processing: The National Cafe (Milwaukee)
+Searching Google Places for: The National Cafe
+✗ No results found for The National Cafe
+
+--- Progress Update ---
+Processed: 410/450
+Updated: 0
+Not found: 410
+Success rate: 0.0%
+
+[411/450] Processing: Torzala Brewing Co. (Milwaukee)
+Searching Google Places for: Torzala Brewing Co.
+✗ No results found for Torzala Brewing Co.
+
+[412/450] Processing: Vennture Brew Co (Milwaukee)
+Searching Google Places for: Vennture Brew Co
+✗ No results found for Vennture Brew Co
+
+[413/450] Processing: Ippudo Goodge Street (Northwood)
+Searching Google Places for: Ippudo Goodge Street
+✗ No results found for Ippudo Goodge Street
+
+[414/450] Processing: Seasons 52 (Oak Brook)
+Searching Google Places for: Seasons 52
+✗ No results found for Seasons 52
+
+[415/450] Processing: Wildfire (Oak Brook)
+Searching Google Places for: Wildfire
+✗ No results found for Wildfire
+
+[416/450] Processing: Chatora - Modern Indian Restaurant (Richmond)
+Searching Google Places for: Chatora - Modern Indian Restaurant
+✗ No results found for Chatora - Modern Indian Restaurant
+
+[417/450] Processing: Sticks'n'Sushi Richmond (Richmond)
+Searching Google Places for: Sticks'n'Sushi Richmond
+✗ No results found for Sticks'n'Sushi Richmond
+
+[418/450] Processing: Can Santi (Rye)
+Searching Google Places for: Can Santi
+✗ No results found for Can Santi
+
+[419/450] Processing: Pear Tree Cafe (Rye)
+Searching Google Places for: Pear Tree Cafe
+✗ No results found for Pear Tree Cafe
+
+[420/450] Processing: 4505 Burgers & BBQ (San Francisco)
+Searching Google Places for: 4505 Burgers & BBQ
+✗ No results found for 4505 Burgers & BBQ
+
+--- Progress Update ---
+Processed: 420/450
+Updated: 0
+Not found: 420
+Success rate: 0.0%
+
+[421/450] Processing: CAC Brewing (San Francisco)
+Searching Google Places for: CAC Brewing
+✗ No results found for CAC Brewing
+
+[422/450] Processing: Colectivo Foundry (San Francisco)
+Searching Google Places for: Colectivo Foundry
+✗ No results found for Colectivo Foundry
+
+[423/450] Processing: Delarosa Marina (San Francisco)
+Searching Google Places for: Delarosa Marina
+✗ No results found for Delarosa Marina
+
+[424/450] Processing: Giorgio's Pizzeria (San Francisco)
+Searching Google Places for: Giorgio's Pizzeria
+✗ No results found for Giorgio's Pizzeria
+
+[425/450] Processing: Gott's Roadside (San Francisco)
+Searching Google Places for: Gott's Roadside
+✗ No results found for Gott's Roadside
+
+[426/450] Processing: Hikari Bullet Train Sushi & Bar (San Francisco)
+Searching Google Places for: Hikari Bullet Train Sushi & Bar
+✗ No results found for Hikari Bullet Train Sushi & Bar
+
+[427/450] Processing: Joyride Pizza, Union St (San Francisco)
+Searching Google Places for: Joyride Pizza, Union St
+✗ No results found for Joyride Pizza, Union St
+
+[428/450] Processing: Lemonade Restaurant (San Francisco)
+Searching Google Places for: Lemonade Restaurant
+✗ No results found for Lemonade Restaurant
+
+[429/450] Processing: Luisa's Restaurant Wine Bar Since 1959 (San Francisco)
+Searching Google Places for: Luisa's Restaurant Wine Bar Since 1959
+✗ No results found for Luisa's Restaurant Wine Bar Since 1959
+
+[430/450] Processing: Mission Rock Resort (San Francisco)
+Searching Google Places for: Mission Rock Resort
+✗ No results found for Mission Rock Resort
+
+--- Progress Update ---
+Processed: 430/450
+Updated: 0
+Not found: 430
+Success rate: 0.0%
+
+[431/450] Processing: Mount Desert Island Ice Cream (San Francisco)
+Searching Google Places for: Mount Desert Island Ice Cream
+✗ No results found for Mount Desert Island Ice Cream
+
+[432/450] Processing: Osha Thai Restaurant and Bar (Embarcadero) (San Francisco)
+Searching Google Places for: Osha Thai Restaurant and Bar (Embarcadero)
+✗ No results found for Osha Thai Restaurant and Bar (Embarcadero)
+
+[433/450] Processing: Penelope's Coffee & Tea (San Francisco)
+Searching Google Places for: Penelope's Coffee & Tea
+✗ No results found for Penelope's Coffee & Tea
+
+[434/450] Processing: Pica Pica Arepa Kitchen (San Francisco)
+Searching Google Places for: Pica Pica Arepa Kitchen
+✗ No results found for Pica Pica Arepa Kitchen
+
+[435/450] Processing: Pier 23 Cafe Restaurant & Bar (San Francisco)
+Searching Google Places for: Pier 23 Cafe Restaurant & Bar
+✗ No results found for Pier 23 Cafe Restaurant & Bar
+
+[436/450] Processing: R & G Lounge (San Francisco)
+Searching Google Places for: R & G Lounge
+✗ No results found for R & G Lounge
+
+[437/450] Processing: Shadowbrook Restaurant (San Francisco)
+Searching Google Places for: Shadowbrook Restaurant
+✗ No results found for Shadowbrook Restaurant
+
+[438/450] Processing: Sotto Mare (San Francisco)
+Searching Google Places for: Sotto Mare
+✗ No results found for Sotto Mare
+
+[439/450] Processing: Spark Social SF (San Francisco)
+Searching Google Places for: Spark Social SF
+✗ No results found for Spark Social SF
+
+[440/450] Processing: Sprecher Brewing Co. (San Francisco)
+Searching Google Places for: Sprecher Brewing Co.
+✗ No results found for Sprecher Brewing Co.
+
+--- Progress Update ---
+Processed: 440/450
+Updated: 0
+Not found: 440
+Success rate: 0.0%
+
+[441/450] Processing: Seasons 52 (Schaumburg)
+Searching Google Places for: Seasons 52
+✗ No results found for Seasons 52
+
+[442/450] Processing: Weber Grill Restaurant & Cooking School (Schaumburg)
+Searching Google Places for: Weber Grill Restaurant & Cooking School
+✗ No results found for Weber Grill Restaurant & Cooking School
+
+[443/450] Processing: Wildfire (Schaumburg)
+Searching Google Places for: Wildfire
+✗ No results found for Wildfire
+
+[444/450] Processing: Cooper’s Hawk Winery & Restaurant (South Barrington)
+Searching Google Places for: Cooper’s Hawk Winery & Restaurant
+✗ No results found for Cooper’s Hawk Winery & Restaurant
+
+[445/450] Processing: The Blue Ball (Tadworth)
+Searching Google Places for: The Blue Ball
+✗ No results found for The Blue Ball
+
+[446/450] Processing: Chez Melissa (Uxbridge)
+Searching Google Places for: Chez Melissa
+✗ No results found for Chez Melissa
+
+[447/450] Processing: The Daily Bird (València)
+Searching Google Places for: The Daily Bird
+✗ No results found for The Daily Bird
+
+[448/450] Processing: Miller & Carter Woodford Green (Woodford Green)
+Searching Google Places for: Miller & Carter Woodford Green
+✗ No results found for Miller & Carter Woodford Green
+
+[449/450] Processing: Mojos Brasserie (Woodford Green)
+Searching Google Places for: Mojos Brasserie
+✗ No results found for Mojos Brasserie
+
+[450/450] Processing: Pizzeria Bel-Sit (Woodford Green)
+Searching Google Places for: Pizzeria Bel-Sit
+✗ No results found for Pizzeria Bel-Sit
+
+--- Progress Update ---
+Processed: 450/450
+Updated: 0
+Not found: 450
+Success rate: 0.0%
+
+
+=== FINAL SUMMARY ===
+Total restaurants processed: 450
+Total updated: 0
+Total not found: 450
+Success rate: 0.0%

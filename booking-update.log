@@ -1,0 +1,2150 @@
+[dotenv@17.2.3] injecting env (3) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+Fetching all restaurants without booking URLs...
+
+=== Found 450 restaurants without booking URLs ===
+
+
+
+========== BATCH 1/9 ==========
+Processing restaurants 1 to 50
+
+[1] Processing: Bella Italia - Birmingham (Birmingham)
+Searching opentable.co.uk for: Bella Italia - Birmingham
+Error searching for Bella Italia - Birmingham: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[2] Processing: Sushi Monster (Birmingham)
+Searching opentable.co.uk for: Sushi Monster
+Error searching for Sushi Monster: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[3] Processing: Purple Patch (Brighton)
+Skipping - city not recognized: Brighton
+
+[4] Processing: Bella Italia - Bristol Baldwin Street (Bristol)
+Searching opentable.co.uk for: Bella Italia - Bristol Baldwin Street
+Error searching for Bella Italia - Bristol Baldwin Street: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[5] Processing: The PlayGarten + Bluebird Market (Bristol)
+Searching opentable.co.uk for: The PlayGarten + Bluebird Market
+Error searching for The PlayGarten + Bluebird Market: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[6] Processing: American Girl Place - Chicago (Chicago)
+Searching opentable.com for: American Girl Place - Chicago
+Error searching for American Girl Place - Chicago: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[7] Processing: AO Hawaiian Hideout (Chicago)
+Searching opentable.com for: AO Hawaiian Hideout
+Error searching for AO Hawaiian Hideout: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[8] Processing: Avli on The Park (Chicago)
+Searching opentable.com for: Avli on The Park
+Error searching for Avli on The Park: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[9] Processing: Avli River North (Chicago)
+Searching opentable.com for: Avli River North
+Error searching for Avli River North: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[10] Processing: Cheesie's Pub & Grub - Lakeview (Chicago)
+Searching opentable.com for: Cheesie's Pub & Grub - Lakeview
+Error searching for Cheesie's Pub & Grub - Lakeview: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[11] Processing: Cheesie's Pub & Grub - Wicker Park (Chicago)
+Searching opentable.com for: Cheesie's Pub & Grub - Wicker Park
+Error searching for Cheesie's Pub & Grub - Wicker Park: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[12] Processing: Chicago Pizza and Oven Grinder Company (Chicago)
+Searching opentable.com for: Chicago Pizza and Oven Grinder Company
+Error searching for Chicago Pizza and Oven Grinder Company: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[13] Processing: Connie's Pizza (Chicago)
+Searching opentable.com for: Connie's Pizza
+Error searching for Connie's Pizza: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[14] Processing: Connie's Pizza (Chicago)
+Searching opentable.com for: Connie's Pizza
+Error searching for Connie's Pizza: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[15] Processing: Cooper’s Hawk Winery & Restaurant (Chicago)
+Searching opentable.com for: Cooper’s Hawk Winery & Restaurant
+Error searching for Cooper’s Hawk Winery & Restaurant: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[16] Processing: GEMINI (Chicago)
+Searching opentable.com for: GEMINI
+Error searching for GEMINI: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[17] Processing: Greek Islands (Chicago)
+Searching opentable.com for: Greek Islands
+Error searching for Greek Islands: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[18] Processing: Ina Mae (Chicago)
+Searching opentable.com for: Ina Mae
+Error searching for Ina Mae: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[19] Processing: Jerry's Sandwiches (Chicago)
+Searching opentable.com for: Jerry's Sandwiches
+Error searching for Jerry's Sandwiches: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[20] Processing: Little Bad Wolf (Chicago)
+Searching opentable.com for: Little Bad Wolf
+Error searching for Little Bad Wolf: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[21] Processing: Lou Mitchell's (Chicago)
+Searching opentable.com for: Lou Mitchell's
+Error searching for Lou Mitchell's: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[22] Processing: Margie's Candies (Chicago)
+Searching opentable.com for: Margie's Candies
+Error searching for Margie's Candies: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[23] Processing: Moretti's Ristorante & Pizzeria (Chicago)
+Searching opentable.com for: Moretti's Ristorante & Pizzeria
+Error searching for Moretti's Ristorante & Pizzeria: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[24] Processing: Native Foods (Chicago)
+Searching opentable.com for: Native Foods
+Error searching for Native Foods: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[25] Processing: Nutella Cafe Chicago (Chicago)
+Searching opentable.com for: Nutella Cafe Chicago
+Error searching for Nutella Cafe Chicago: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[26] Processing: Old Irving Brewing Co. (Chicago)
+Searching opentable.com for: Old Irving Brewing Co.
+Error searching for Old Irving Brewing Co.: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[27] Processing: Old Pueblo Cantina (Chicago)
+Searching opentable.com for: Old Pueblo Cantina
+Error searching for Old Pueblo Cantina: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[28] Processing: Park & Field (Chicago)
+Searching opentable.com for: Park & Field
+Error searching for Park & Field: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[29] Processing: PB&J: Pizza Beer and Jukebox (Chicago)
+Searching opentable.com for: PB&J: Pizza Beer and Jukebox
+Error searching for PB&J: Pizza Beer and Jukebox: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[30] Processing: Pinstripes (Chicago)
+Searching opentable.com for: Pinstripes
+Error searching for Pinstripes: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[31] Processing: R.J. Grunts (Chicago)
+Searching opentable.com for: R.J. Grunts
+Error searching for R.J. Grunts: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[32] Processing: Replay Andersonville (Chicago)
+Searching opentable.com for: Replay Andersonville
+Error searching for Replay Andersonville: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[33] Processing: Roots Handmade Pizza - South Loop (Chicago)
+Searching opentable.com for: Roots Handmade Pizza - South Loop
+Error searching for Roots Handmade Pizza - South Loop: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[34] Processing: Roots Handmade Pizza - West Town (Chicago)
+Searching opentable.com for: Roots Handmade Pizza - West Town
+Error searching for Roots Handmade Pizza - West Town: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[35] Processing: Shake Shack Chicago Athletic Association (Chicago)
+Searching opentable.com for: Shake Shack Chicago Athletic Association
+Error searching for Shake Shack Chicago Athletic Association: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[36] Processing: Shake Shack River North (Chicago)
+Searching opentable.com for: Shake Shack River North
+Error searching for Shake Shack River North: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[37] Processing: Shake Shack West Loop (Chicago)
+Searching opentable.com for: Shake Shack West Loop
+Error searching for Shake Shack West Loop: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[38] Processing: Shake Shack Willis Tower (Chicago)
+Searching opentable.com for: Shake Shack Willis Tower
+Error searching for Shake Shack Willis Tower: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[39] Processing: Shake Shack Wrigleyville (Chicago)
+Searching opentable.com for: Shake Shack Wrigleyville
+Error searching for Shake Shack Wrigleyville: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[40] Processing: Snakes & Lattes Chicago (Chicago)
+Searching opentable.com for: Snakes & Lattes Chicago
+Error searching for Snakes & Lattes Chicago: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[41] Processing: Spacca Napoli Pizzeria (Chicago)
+Searching opentable.com for: Spacca Napoli Pizzeria
+Error searching for Spacca Napoli Pizzeria: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[42] Processing: Stay and Play Game Cafe (Chicago)
+Searching opentable.com for: Stay and Play Game Cafe
+Error searching for Stay and Play Game Cafe: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[43] Processing: Sugar Factory Chicago River North (Chicago)
+Searching opentable.com for: Sugar Factory Chicago River North
+Error searching for Sugar Factory Chicago River North: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[44] Processing: Summer House Santa Monica (Chicago)
+Searching opentable.com for: Summer House Santa Monica
+Error searching for Summer House Santa Monica: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[45] Processing: Superdawg Drive-In (Chicago)
+Searching opentable.com for: Superdawg Drive-In
+Error searching for Superdawg Drive-In: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[46] Processing: Sushi Plus Rotary Sushi Bar - Chinatown (Chicago)
+Searching opentable.com for: Sushi Plus Rotary Sushi Bar - Chinatown
+Error searching for Sushi Plus Rotary Sushi Bar - Chinatown: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[47] Processing: Sushi Plus Rotary Sushi Bar Boystown (Chicago)
+Searching opentable.com for: Sushi Plus Rotary Sushi Bar Boystown
+Error searching for Sushi Plus Rotary Sushi Bar Boystown: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[48] Processing: Sweet Mandy B's Bakery (Chicago)
+Searching opentable.com for: Sweet Mandy B's Bakery
+Error searching for Sweet Mandy B's Bakery: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[49] Processing: Sweetwater Tavern & Grille (Michigan Plaza - Chicago) (Chicago)
+Searching opentable.com for: Sweetwater Tavern & Grille (Michigan Plaza - Chicago)
+Error searching for Sweetwater Tavern & Grille (Michigan Plaza - Chicago): SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[50] Processing: The Bad Apple (Chicago)
+Searching opentable.com for: The Bad Apple
+Error searching for The Bad Apple: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+--- Batch 1 Summary ---
+Updated: 0
+Not found: 50
+
+
+========== BATCH 2/9 ==========
+Processing restaurants 51 to 100
+
+[51] Processing: The Dock at Montrose Beach (Chicago)
+Searching opentable.com for: The Dock at Montrose Beach
+Error searching for The Dock at Montrose Beach: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[52] Processing: The Perch Kitchen and Tap (Chicago)
+Searching opentable.com for: The Perch Kitchen and Tap
+Error searching for The Perch Kitchen and Tap: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[53] Processing: Tied House (Chicago)
+Searching opentable.com for: Tied House
+Error searching for Tied House: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[54] Processing: UncommonGround - Lakeview (Chicago)
+Searching opentable.com for: UncommonGround - Lakeview
+Error searching for UncommonGround - Lakeview: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[55] Processing: Wagyu House by The X Pot Chicago 和牛放题（日式涮涮锅/烤肉） (Chicago)
+Searching opentable.com for: Wagyu House by The X Pot Chicago 和牛放题（日式涮涮锅/烤肉）
+Error searching for Wagyu House by The X Pot Chicago 和牛放题（日式涮涮锅/烤肉）: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[56] Processing: Wildberry Pancakes and Cafe (Chicago)
+Searching opentable.com for: Wildberry Pancakes and Cafe
+Error searching for Wildberry Pancakes and Cafe: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[57] Processing: Wings and Ringsss (Chicago)
+Searching opentable.com for: Wings and Ringsss
+Error searching for Wings and Ringsss: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[58] Processing: The Choo Choo (Des Plaines)
+Skipping - city not recognized: Des Plaines
+
+[59] Processing: Independent Pizza Company (Dublin)
+Skipping - city not recognized: Dublin
+
+[60] Processing: The Hub Cafe (Edinburgh)
+Searching opentable.co.uk for: The Hub Cafe
+Error searching for The Hub Cafe: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[61] Processing: 3rd St. Market Hall (Enfield)
+Skipping - city not recognized: Enfield
+
+[62] Processing: Colonel Saab, High Holborn (Étretat)
+Skipping - city not recognized: Étretat
+
+[63] Processing: La Flottille (Étretat)
+Skipping - city not recognized: Étretat
+
+[64] Processing: Le Lann-Bihoué (Étretat)
+Skipping - city not recognized: Étretat
+
+[65] Processing: Café Corazón (Fécamp)
+Skipping - city not recognized: Fécamp
+
+[66] Processing: Tower Mangal (Fécamp)
+Skipping - city not recognized: Fécamp
+
+[67] Processing: The Junction Diner - The Train Restaurant (Forest Park)
+Skipping - city not recognized: Forest Park
+
+[68] Processing: 2Toots Train Whistle Grill (Glen Ellyn)
+Searching opentable.com for: 2Toots Train Whistle Grill
+Error searching for 2Toots Train Whistle Grill: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[69] Processing: Bill's Guildford Restaurant (Guildford)
+Searching opentable.co.uk for: Bill's Guildford Restaurant
+Error searching for Bill's Guildford Restaurant: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[70] Processing: Cafe Murano St James (Guildford)
+Searching opentable.co.uk for: Cafe Murano St James
+Error searching for Cafe Murano St James: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[71] Processing: The Guildford Townhouse, Coppa Club (Guildford)
+Searching opentable.co.uk for: The Guildford Townhouse, Coppa Club
+Error searching for The Guildford Townhouse, Coppa Club: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[72] Processing: Urban Social (Guildford)
+Searching opentable.co.uk for: Urban Social
+Error searching for Urban Social: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[73] Processing: Paws For Coffee (Hampton)
+Searching opentable.co.uk for: Paws For Coffee
+Error searching for Paws For Coffee: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[74] Processing: Hungry Horse (Iver)
+Skipping - city not recognized: Iver
+
+[75] Processing: Bella Italia - Lancaster (Lancaster)
+Skipping - city not recognized: Lancaster
+
+[76] Processing: Weber Grill Restaurant & Cooking School (Lombard)
+Searching opentable.com for: Weber Grill Restaurant & Cooking School
+Error searching for Weber Grill Restaurant & Cooking School: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.com)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:109:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[77] Processing: Abeno (London)
+Searching opentable.co.uk for: Abeno
+Error searching for Abeno: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[78] Processing: Alexander The Great Restaurant (London)
+Searching opentable.co.uk for: Alexander The Great Restaurant
+Error searching for Alexander The Great Restaurant: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[79] Processing: Andy’s Greek Taverna (London)
+Searching opentable.co.uk for: Andy’s Greek Taverna
+Error searching for Andy’s Greek Taverna: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[80] Processing: Anilo’s Kitchen (London)
+Searching opentable.co.uk for: Anilo’s Kitchen
+Error searching for Anilo’s Kitchen: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[81] Processing: Arado Restaurant (London)
+Searching opentable.co.uk for: Arado Restaurant
+Error searching for Arado Restaurant: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[82] Processing: Ayllu (London)
+Searching opentable.co.uk for: Ayllu
+Error searching for Ayllu: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[83] Processing: Azzurro (London)
+Searching opentable.co.uk for: Azzurro
+Error searching for Azzurro: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[84] Processing: Babur (London)
+Searching opentable.co.uk for: Babur
+Error searching for Babur: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[85] Processing: BAO Soho (London)
+Searching opentable.co.uk for: BAO Soho
+Error searching for BAO Soho: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[86] Processing: Bar 61 Restaurant (London)
+Searching opentable.co.uk for: Bar 61 Restaurant
+Error searching for Bar 61 Restaurant: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[87] Processing: Barbican Kitchen (London)
+Searching opentable.co.uk for: Barbican Kitchen
+Error searching for Barbican Kitchen: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[88] Processing: Barbounia (London)
+Searching opentable.co.uk for: Barbounia
+Error searching for Barbounia: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[89] Processing: Bayleaf Restaurant (London)
+Searching opentable.co.uk for: Bayleaf Restaurant
+Error searching for Bayleaf Restaurant: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[90] Processing: Beam (London)
+Searching opentable.co.uk for: Beam
+Error searching for Beam: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[91] Processing: Beans & Barley (London)
+Searching opentable.co.uk for: Beans & Barley
+Error searching for Beans & Barley: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[92] Processing: Bear + Wolf Cafe (London)
+Searching opentable.co.uk for: Bear + Wolf Cafe
+Error searching for Bear + Wolf Cafe: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[93] Processing: BEER + BURGER (London)
+Searching opentable.co.uk for: BEER + BURGER
+Error searching for BEER + BURGER: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[94] Processing: Bella Italia - Brighton Market Street (London)
+Searching opentable.co.uk for: Bella Italia - Brighton Market Street
+Error searching for Bella Italia - Brighton Market Street: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[95] Processing: Bella Vita - Broadway (London)
+Searching opentable.co.uk for: Bella Vita - Broadway
+Error searching for Bella Vita - Broadway: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[96] Processing: Best Place at the Historic Pabst Brewery (London)
+Searching opentable.co.uk for: Best Place at the Historic Pabst Brewery
+Error searching for Best Place at the Historic Pabst Brewery: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[97] Processing: Big City Dog (London)
+Searching opentable.co.uk for: Big City Dog
+Error searching for Big City Dog: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[98] Processing: Big Penny Social (London)
+Searching opentable.co.uk for: Big Penny Social
+Error searching for Big Penny Social: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[99] Processing: Biscuiteers (London)
+Searching opentable.co.uk for: Biscuiteers
+Error searching for Biscuiteers: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[100] Processing: Black Husky Brewing (London)
+Searching opentable.co.uk for: Black Husky Brewing
+Error searching for Black Husky Brewing: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+--- Batch 2 Summary ---
+Updated: 0
+Not found: 50
+
+
+========== BATCH 3/9 ==========
+Processing restaurants 101 to 150
+
+[101] Processing: Blue & Gold Brewing (London)
+Searching opentable.co.uk for: Blue & Gold Brewing
+Error searching for Blue & Gold Brewing: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[102] Processing: Bocconcino Soho (London)
+Searching opentable.co.uk for: Bocconcino Soho
+Error searching for Bocconcino Soho: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[103] Processing: Borough Market (London)
+Searching opentable.co.uk for: Borough Market
+Error searching for Borough Market: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[104] Processing: Brags and Brams (London)
+Searching opentable.co.uk for: Brags and Brams
+Error searching for Brags and Brams: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[105] Processing: Bread & Oregano (London)
+Searching opentable.co.uk for: Bread & Oregano
+Error searching for Bread & Oregano: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[106] Processing: Brew & Barrel (London)
+Searching opentable.co.uk for: Brew & Barrel
+Error searching for Brew & Barrel: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[107] Processing: Brew Street Cafe & Bar at Timber Lodge (London)
+Searching opentable.co.uk for: Brew Street Cafe & Bar at Timber Lodge
+Error searching for Brew Street Cafe & Bar at Timber Lodge: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[108] Processing: Broken Bat Brewing Co. (London)
+Searching opentable.co.uk for: Broken Bat Brewing Co.
+Error searching for Broken Bat Brewing Co.: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[109] Processing: Brother Marcus South Kensington (London)
+Searching opentable.co.uk for: Brother Marcus South Kensington
+Error searching for Brother Marcus South Kensington: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[110] Processing: Café Amisha (London)
+Searching opentable.co.uk for: Café Amisha
+Error searching for Café Amisha: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[111] Processing: Café Hollander - Downer (London)
+Searching opentable.co.uk for: Café Hollander - Downer
+Error searching for Café Hollander - Downer: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[112] Processing: Camden Market (London)
+Searching opentable.co.uk for: Camden Market
+Error searching for Camden Market: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[113] Processing: Casa Tua King's Cross (London)
+Searching opentable.co.uk for: Casa Tua King's Cross
+Error searching for Casa Tua King's Cross: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[114] Processing: Cavita (London)
+Searching opentable.co.uk for: Cavita
+Error searching for Cavita: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[115] Processing: Chamisse (London)
+Searching opentable.co.uk for: Chamisse
+Error searching for Chamisse: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[116] Processing: Chimichurris (London)
+Searching opentable.co.uk for: Chimichurris
+Error searching for Chimichurris: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[117] Processing: Chin Chin Dessert Club (Chin Chin Ice Cream) (London)
+Searching opentable.co.uk for: Chin Chin Dessert Club (Chin Chin Ice Cream)
+Error searching for Chin Chin Dessert Club (Chin Chin Ice Cream): SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[118] Processing: Corrochio's (London)
+Searching opentable.co.uk for: Corrochio's
+Error searching for Corrochio's: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[119] Processing: Côte Kensington (London)
+Searching opentable.co.uk for: Côte Kensington
+Error searching for Côte Kensington: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[120] Processing: Crème de la Crêpe (London)
+Searching opentable.co.uk for: Crème de la Crêpe
+Error searching for Crème de la Crêpe: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[121] Processing: CuppaPug (London)
+Searching opentable.co.uk for: CuppaPug
+Error searching for CuppaPug: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[122] Processing: De Vine (London)
+Searching opentable.co.uk for: De Vine
+Error searching for De Vine: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[123] Processing: Del74 Tacos (London)
+Searching opentable.co.uk for: Del74 Tacos
+Error searching for Del74 Tacos: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[124] Processing: Delicious Pho (London)
+Searching opentable.co.uk for: Delicious Pho
+Error searching for Delicious Pho: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[125] Processing: Diabola Market Bar (London)
+Searching opentable.co.uk for: Diabola Market Bar
+Error searching for Diabola Market Bar: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[126] Processing: Draughts - Waterloo (London)
+Searching opentable.co.uk for: Draughts - Waterloo
+Error searching for Draughts - Waterloo: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[127] Processing: Dreami Play Café (London)
+Searching opentable.co.uk for: Dreami Play Café
+Error searching for Dreami Play Café: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[128] Processing: Duck & Waffle (London)
+Searching opentable.co.uk for: Duck & Waffle
+Error searching for Duck & Waffle: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[129] Processing: East Street by Tampopo Fitzrovia (London)
+Searching opentable.co.uk for: East Street by Tampopo Fitzrovia
+Error searching for East Street by Tampopo Fitzrovia: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[130] Processing: Eggbreak (London)
+Searching opentable.co.uk for: Eggbreak
+Error searching for Eggbreak: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[131] Processing: El Faro Restaurant - Cala Torret (London)
+Searching opentable.co.uk for: El Faro Restaurant - Cala Torret
+Error searching for El Faro Restaurant - Cala Torret: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[132] Processing: Ev Restaurant (London)
+Searching opentable.co.uk for: Ev Restaurant
+Error searching for Ev Restaurant: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[133] Processing: Everest Inn (London)
+Searching opentable.co.uk for: Everest Inn
+Error searching for Everest Inn: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[134] Processing: Fallow (London)
+Searching opentable.co.uk for: Fallow
+Error searching for Fallow: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[135] Processing: Farm Girl - South Kensington (London)
+Searching opentable.co.uk for: Farm Girl - South Kensington
+Error searching for Farm Girl - South Kensington: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[136] Processing: Faros Oxford Circus (London)
+Searching opentable.co.uk for: Faros Oxford Circus
+Error searching for Faros Oxford Circus: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[137] Processing: Fifth Floor Café & Terrace (London)
+Searching opentable.co.uk for: Fifth Floor Café & Terrace
+Error searching for Fifth Floor Café & Terrace: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[138] Processing: Fiore Dell Amore Italian Restaurant Shoreditch (London)
+Searching opentable.co.uk for: Fiore Dell Amore Italian Restaurant Shoreditch
+Error searching for Fiore Dell Amore Italian Restaurant Shoreditch: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[139] Processing: Five Guys Piccadilly Circus (London)
+Searching opentable.co.uk for: Five Guys Piccadilly Circus
+Error searching for Five Guys Piccadilly Circus: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[140] Processing: Four Hundred Rabbits: Pizza Restaurant Crystal Palace (London)
+Searching opentable.co.uk for: Four Hundred Rabbits: Pizza Restaurant Crystal Palace
+Error searching for Four Hundred Rabbits: Pizza Restaurant Crystal Palace: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[141] Processing: Franco Manca (London)
+Searching opentable.co.uk for: Franco Manca
+Error searching for Franco Manca: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[142] Processing: Franco Manca Balham (London)
+Searching opentable.co.uk for: Franco Manca Balham
+Error searching for Franco Manca Balham: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[143] Processing: Franco Manca Chiswick (London)
+Searching opentable.co.uk for: Franco Manca Chiswick
+Error searching for Franco Manca Chiswick: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[144] Processing: Franco Manca Kilburn (London)
+Searching opentable.co.uk for: Franco Manca Kilburn
+Error searching for Franco Manca Kilburn: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[145] Processing: Frankie & Benny's (London)
+Searching opentable.co.uk for: Frankie & Benny's
+Error searching for Frankie & Benny's: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[146] Processing: Frankie & Benny's (London)
+Searching opentable.co.uk for: Frankie & Benny's
+Error searching for Frankie & Benny's: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[147] Processing: Frizzante (London)
+Searching opentable.co.uk for: Frizzante
+Error searching for Frizzante: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[148] Processing: Frizzante Proseccheria (London)
+Searching opentable.co.uk for: Frizzante Proseccheria
+Error searching for Frizzante Proseccheria: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[149] Processing: Gallio (London)
+Searching opentable.co.uk for: Gallio
+Error searching for Gallio: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[150] Processing: Gelatorino (London)
+Searching opentable.co.uk for: Gelatorino
+Error searching for Gelatorino: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+--- Batch 3 Summary ---
+Updated: 0
+Not found: 50
+
+
+========== BATCH 4/9 ==========
+Processing restaurants 151 to 200
+
+[151] Processing: Giraffe, Victoria (London)
+Searching opentable.co.uk for: Giraffe, Victoria
+Error searching for Giraffe, Victoria: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[152] Processing: Gloria (London)
+Searching opentable.co.uk for: Gloria
+Error searching for Gloria: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[153] Processing: Golden Chippy (London)
+Searching opentable.co.uk for: Golden Chippy
+Error searching for Golden Chippy: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[154] Processing: Golden Dragon (Chinatown) (London)
+Searching opentable.co.uk for: Golden Dragon (Chinatown)
+Error searching for Golden Dragon (Chinatown): SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[155] Processing: Good City Brewing | Downtown (London)
+Searching opentable.co.uk for: Good City Brewing | Downtown
+Error searching for Good City Brewing | Downtown: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[156] Processing: Gordon Ramsay Street Burger - Charing Cross Road (London)
+Searching opentable.co.uk for: Gordon Ramsay Street Burger - Charing Cross Road
+Error searching for Gordon Ramsay Street Burger - Charing Cross Road: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[157] Processing: Gordon Ramsay Street Burger x Street Pizza - Kensington High Street (London)
+Searching opentable.co.uk for: Gordon Ramsay Street Burger x Street Pizza - Kensington High Street
+Error searching for Gordon Ramsay Street Burger x Street Pizza - Kensington High Street: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[158] Processing: Gott's Ferry Building (London)
+Searching opentable.co.uk for: Gott's Ferry Building
+Error searching for Gott's Ferry Building: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[159] Processing: Gouqi (London)
+Searching opentable.co.uk for: Gouqi
+Error searching for Gouqi: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[160] Processing: Gourmet Pizza Co (London)
+Searching opentable.co.uk for: Gourmet Pizza Co
+Error searching for Gourmet Pizza Co: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[161] Processing: Granary Square Brasserie (London)
+Searching opentable.co.uk for: Granary Square Brasserie
+Error searching for Granary Square Brasserie: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[162] Processing: Granger & Co. Marylebone (London)
+Searching opentable.co.uk for: Granger & Co. Marylebone
+Error searching for Granger & Co. Marylebone: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[163] Processing: Grumpy's Bar + Wood Fired Pizza (London)
+Searching opentable.co.uk for: Grumpy's Bar + Wood Fired Pizza
+Error searching for Grumpy's Bar + Wood Fired Pizza: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[164] Processing: Hacha Dalston (London)
+Searching opentable.co.uk for: Hacha Dalston
+Error searching for Hacha Dalston: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[165] Processing: Hakata Ramen + Bar (London)
+Searching opentable.co.uk for: Hakata Ramen + Bar
+Error searching for Hakata Ramen + Bar: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[166] Processing: Happy Dough Lucky Donuts + Arcade (London)
+Searching opentable.co.uk for: Happy Dough Lucky Donuts + Arcade
+Error searching for Happy Dough Lucky Donuts + Arcade: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[167] Processing: Happy Face Pizza King's Cross (London)
+Searching opentable.co.uk for: Happy Face Pizza King's Cross
+Error searching for Happy Face Pizza King's Cross: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[168] Processing: Hard Rock Cafe Piccadilly Circus (London)
+Searching opentable.co.uk for: Hard Rock Cafe Piccadilly Circus
+Error searching for Hard Rock Cafe Piccadilly Circus: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[169] Processing: Harrods Food Halls (London)
+Searching opentable.co.uk for: Harrods Food Halls
+Error searching for Harrods Food Halls: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[170] Processing: Harvester Grange Park Northampton (London)
+Searching opentable.co.uk for: Harvester Grange Park Northampton
+Error searching for Harvester Grange Park Northampton: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[171] Processing: Harvester Lakewood (London)
+Searching opentable.co.uk for: Harvester Lakewood
+Error searching for Harvester Lakewood: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[172] Processing: Heddon Street Kitchen (London)
+Searching opentable.co.uk for: Heddon Street Kitchen
+Error searching for Heddon Street Kitchen: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[173] Processing: Hiba Street Food (London)
+Searching opentable.co.uk for: Hiba Street Food
+Error searching for Hiba Street Food: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[174] Processing: High Road Brasserie (London)
+Searching opentable.co.uk for: High Road Brasserie
+Error searching for High Road Brasserie: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[175] Processing: Holborn Dining Room (London)
+Searching opentable.co.uk for: Holborn Dining Room
+Error searching for Holborn Dining Room: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[176] Processing: Homeslice Marylebone (London)
+Searching opentable.co.uk for: Homeslice Marylebone
+Error searching for Homeslice Marylebone: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[177] Processing: Honey & Co. Bloomsbury (London)
+Searching opentable.co.uk for: Honey & Co. Bloomsbury
+Error searching for Honey & Co. Bloomsbury: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[178] Processing: Hong Kong Restaurant (London)
+Searching opentable.co.uk for: Hong Kong Restaurant
+Error searching for Hong Kong Restaurant: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[179] Processing: Hoppers (London)
+Searching opentable.co.uk for: Hoppers
+Error searching for Hoppers: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[180] Processing: House of Prime Rib (London)
+Searching opentable.co.uk for: House of Prime Rib
+Error searching for House of Prime Rib: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[181] Processing: Hoxton Grill (London)
+Searching opentable.co.uk for: Hoxton Grill
+Error searching for Hoxton Grill: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[182] Processing: Il Portico (London)
+Searching opentable.co.uk for: Il Portico
+Error searching for Il Portico: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[183] Processing: Inamo Covent Garden (London)
+Searching opentable.co.uk for: Inamo Covent Garden
+Error searching for Inamo Covent Garden: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[184] Processing: Indeed Brewing Company | Pilot Brewery & Taproom of Walker's Point, Milwaukee (London)
+Searching opentable.co.uk for: Indeed Brewing Company | Pilot Brewery & Taproom of Walker's Point, Milwaukee
+Error searching for Indeed Brewing Company | Pilot Brewery & Taproom of Walker's Point, Milwaukee: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[185] Processing: Indian Express (London)
+Searching opentable.co.uk for: Indian Express
+Error searching for Indian Express: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[186] Processing: INIS (London)
+Searching opentable.co.uk for: INIS
+Error searching for INIS: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[187] Processing: ITJL Colindale Station (London)
+Searching opentable.co.uk for: ITJL Colindale Station
+Error searching for ITJL Colindale Station: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[188] Processing: Jefferson's Ice Cream Brixton (London)
+Searching opentable.co.uk for: Jefferson's Ice Cream Brixton
+Error searching for Jefferson's Ice Cream Brixton: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[189] Processing: Jollibee Leicester Square (London)
+Searching opentable.co.uk for: Jollibee Leicester Square
+Error searching for Jollibee Leicester Square: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[190] Processing: Kachori (London)
+Searching opentable.co.uk for: Kachori
+Error searching for Kachori: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[191] Processing: King's Dog Daycare (London)
+Searching opentable.co.uk for: King's Dog Daycare
+Error searching for King's Dog Daycare: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[192] Processing: Koya Ko Hackney (London)
+Searching opentable.co.uk for: Koya Ko Hackney
+Error searching for Koya Ko Hackney: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[193] Processing: Kricket Brixton (London)
+Searching opentable.co.uk for: Kricket Brixton
+Error searching for Kricket Brixton: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[194] Processing: Kricket Soho (London)
+Searching opentable.co.uk for: Kricket Soho
+Error searching for Kricket Soho: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[195] Processing: Kricket White City (London)
+Searching opentable.co.uk for: Kricket White City
+Error searching for Kricket White City: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[196] Processing: La Cave du Salut (London)
+Searching opentable.co.uk for: La Cave du Salut
+Error searching for La Cave du Salut: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[197] Processing: La Gamba - Spanish Tapas Bar & Restaurant (London)
+Searching opentable.co.uk for: La Gamba - Spanish Tapas Bar & Restaurant
+Error searching for La Gamba - Spanish Tapas Bar & Restaurant: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[198] Processing: La Gelatiera - Covent Garden (London)
+Searching opentable.co.uk for: La Gelatiera - Covent Garden
+Error searching for La Gelatiera - Covent Garden: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[199] Processing: La Porchetta Pollo Bar (London)
+Searching opentable.co.uk for: La Porchetta Pollo Bar
+Error searching for La Porchetta Pollo Bar: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[200] Processing: Las Iguanas - London - Stratford Westfield (London)
+Searching opentable.co.uk for: Las Iguanas - London - Stratford Westfield
+Error searching for Las Iguanas - London - Stratford Westfield: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+--- Batch 4 Summary ---
+Updated: 0
+Not found: 50
+
+
+========== BATCH 5/9 ==========
+Processing restaurants 201 to 250
+
+[201] Processing: Latino Hits (London)
+Searching opentable.co.uk for: Latino Hits
+Error searching for Latino Hits: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[202] Processing: Latitude Restaurant (London)
+Searching opentable.co.uk for: Latitude Restaurant
+Error searching for Latitude Restaurant: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[203] Processing: Laughing Halibut (London)
+Searching opentable.co.uk for: Laughing Halibut
+Error searching for Laughing Halibut: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[204] Processing: Le Bistretatais (London)
+Searching opentable.co.uk for: Le Bistretatais
+Error searching for Le Bistretatais: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[205] Processing: Le Favole Ristorante (London)
+Searching opentable.co.uk for: Le Favole Ristorante
+Error searching for Le Favole Ristorante: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[206] Processing: LE RED ROCK (London)
+Searching opentable.co.uk for: LE RED ROCK
+Error searching for LE RED ROCK: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[207] Processing: Leafwild Cafe (London)
+Searching opentable.co.uk for: Leafwild Cafe
+Error searching for Leafwild Cafe: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[208] Processing: Leafy Bean Coffee & Cocktail Bar (London)
+Searching opentable.co.uk for: Leafy Bean Coffee & Cocktail Bar
+Error searching for Leafy Bean Coffee & Cocktail Bar: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[209] Processing: Lina Stores Italian Restaurant & Deli King's Cross (London)
+Searching opentable.co.uk for: Lina Stores Italian Restaurant & Deli King's Cross
+Error searching for Lina Stores Italian Restaurant & Deli King's Cross: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[210] Processing: Lina Stores Italian Restaurant & Deli Marylebone (London)
+Searching opentable.co.uk for: Lina Stores Italian Restaurant & Deli Marylebone
+Error searching for Lina Stores Italian Restaurant & Deli Marylebone: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[211] Processing: Lina Stores Shoreditch - Italian Restaurant & Bar (London)
+Searching opentable.co.uk for: Lina Stores Shoreditch - Italian Restaurant & Bar
+Error searching for Lina Stores Shoreditch - Italian Restaurant & Bar: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[212] Processing: Lizzie's Cucina - Italian Restaurant (London)
+Searching opentable.co.uk for: Lizzie's Cucina - Italian Restaurant
+Error searching for Lizzie's Cucina - Italian Restaurant: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[213] Processing: Love my Human Townhouse (London)
+Searching opentable.co.uk for: Love my Human Townhouse
+Error searching for Love my Human Townhouse: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[214] Processing: Luci (London)
+Searching opentable.co.uk for: Luci
+Error searching for Luci: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[215] Processing: Maharaja of India (London)
+Searching opentable.co.uk for: Maharaja of India
+Error searching for Maharaja of India: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[216] Processing: Mallow Canary Wharf (London)
+Searching opentable.co.uk for: Mallow Canary Wharf
+Error searching for Mallow Canary Wharf: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[217] Processing: Mama Restaurant London (London)
+Searching opentable.co.uk for: Mama Restaurant London
+Error searching for Mama Restaurant London: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[218] Processing: Mamma Dough - Peckham (London)
+Searching opentable.co.uk for: Mamma Dough - Peckham
+Error searching for Mamma Dough - Peckham: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[219] Processing: Manuel's Italian and Mediterranean Restaurant and Bar (London)
+Searching opentable.co.uk for: Manuel's Italian and Mediterranean Restaurant and Bar
+Error searching for Manuel's Italian and Mediterranean Restaurant and Bar: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[220] Processing: Mare Street Market (London)
+Searching opentable.co.uk for: Mare Street Market
+Error searching for Mare Street Market: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[221] Processing: Mare Street Market King's Cross (London)
+Searching opentable.co.uk for: Mare Street Market King's Cross
+Error searching for Mare Street Market King's Cross: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[222] Processing: Margot (London)
+Searching opentable.co.uk for: Margot
+Error searching for Margot: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[223] Processing: Market Halls Oxford Street (London)
+Searching opentable.co.uk for: Market Halls Oxford Street
+Error searching for Market Halls Oxford Street: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[224] Processing: Martha Dear (London)
+Searching opentable.co.uk for: Martha Dear
+Error searching for Martha Dear: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[225] Processing: Marugame Udon / 丸亀製麺 Strand (London)
+Searching opentable.co.uk for: Marugame Udon / 丸亀製麺 Strand
+Error searching for Marugame Udon / 丸亀製麺 Strand: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[226] Processing: Masala Zone Covent Garden (London)
+Searching opentable.co.uk for: Masala Zone Covent Garden
+Error searching for Masala Zone Covent Garden: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[227] Processing: Maxwell's Bar & Grill (London)
+Searching opentable.co.uk for: Maxwell's Bar & Grill
+Error searching for Maxwell's Bar & Grill: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[228] Processing: Maynard Arms (London)
+Searching opentable.co.uk for: Maynard Arms
+Error searching for Maynard Arms: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[229] Processing: Megan's on the High Street Restaurant (Kensington) (London)
+Searching opentable.co.uk for: Megan's on the High Street Restaurant (Kensington)
+Error searching for Megan's on the High Street Restaurant (Kensington): SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[230] Processing: Mersea Restaurant, Bar and Venue (London)
+Searching opentable.co.uk for: Mersea Restaurant, Bar and Venue
+Error searching for Mersea Restaurant, Bar and Venue: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[231] Processing: Meson Don Felipe (London)
+Searching opentable.co.uk for: Meson Don Felipe
+Error searching for Meson Don Felipe: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[232] Processing: Milwaukee Brewing & Distilling Company (London)
+Searching opentable.co.uk for: Milwaukee Brewing & Distilling Company
+Error searching for Milwaukee Brewing & Distilling Company: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[233] Processing: Monkey Temple (London)
+Searching opentable.co.uk for: Monkey Temple
+Error searching for Monkey Temple: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[234] Processing: Monmouth Coffee Company (London)
+Searching opentable.co.uk for: Monmouth Coffee Company
+Error searching for Monmouth Coffee Company: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[235] Processing: Morty & Bob's (London)
+Searching opentable.co.uk for: Morty & Bob's
+Error searching for Morty & Bob's: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[236] Processing: Mothership (London)
+Searching opentable.co.uk for: Mothership
+Error searching for Mothership: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[237] Processing: Mount St. Restaurant (London)
+Searching opentable.co.uk for: Mount St. Restaurant
+Error searching for Mount St. Restaurant: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[238] Processing: My Old Dutch (London)
+Searching opentable.co.uk for: My Old Dutch
+Error searching for My Old Dutch: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[239] Processing: Namaste Lounge (London)
+Searching opentable.co.uk for: Namaste Lounge
+Error searching for Namaste Lounge: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[240] Processing: Nando's Westfield London (London)
+Searching opentable.co.uk for: Nando's Westfield London
+Error searching for Nando's Westfield London: SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[241] Processing: Nobu London (Old Park Lane) (London)
+Searching opentable.co.uk for: Nobu London (Old Park Lane)
+Error searching for Nobu London (Old Park Lane): SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[242] Processing: Nonnos Pizza (Crouch End) (London)
+Searching opentable.co.uk for: Nonnos Pizza (Crouch End)
+Error searching for Nonnos Pizza (Crouch End): SyntaxError: Invalid regular expression: /href="(https:\/\/www\.opentable\.co.uk)\/r\/[^"]+)"/i: Unmatched ')'
+    at new RegExp (<anonymous>)
+    at searchOpenTable (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:42:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async processBatch (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:107:20)
+    at async main (/tmp/cc-agent/58974866/project/scripts/update-all-booking-urls.ts:160:45)
+
+[243] Processing: Ô Gourmet Libanais (London)
+Searching opentable.co.uk for: Ô Gourmet Libanais

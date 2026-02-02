@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow authentication pages from being indexed
+Disallow: /login
+Disallow: /signup
+
+# Sitemap
+Sitemap: https://yourdomain.com/sitemap.xml

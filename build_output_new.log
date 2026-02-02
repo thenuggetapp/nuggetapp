@@ -1,0 +1,142 @@
+
+> nextjs@0.1.0 build
+> next build
+
+   Creating an optimized production build...
+ ⚠ Compiled with warnings
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./lib/supabase/client.ts
+./app/admin/page.tsx
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./lib/supabase/admin.ts
+./app/sitemap.ts
+./node_modules/next/dist/build/webpack/loaders/next-metadata-route-loader.js?page=%2Fsitemap.xml%2Froute&isDynamic=1!./app/sitemap.ts?__next_metadata_route__
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./app/page.tsx
+
+   Skipping linting
+   Checking validity of types...
+   Collecting page data...
+   Generating static pages (0/434)...
+Error fetching filter columns: n [Error]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at a (/tmp/cc-agent/58974866/project/.next/server/chunks/4650.js:1:1375)
+    at d (/tmp/cc-agent/58974866/project/.next/server/chunks/7372.js:9:9363)
+    at r (/tmp/cc-agent/58974866/project/.next/server/chunks/3818.js:1:307)
+    at u (/tmp/cc-agent/58974866/project/.next/server/app/api/filters/route.js:1:999)
+    at /tmp/cc-agent/58974866/project/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:1:45649
+    at /tmp/cc-agent/58974866/project/node_modules/next/dist/server/lib/trace/tracer.js:117:36
+    at NoopContextManager.with (/tmp/cc-agent/58974866/project/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7057)
+    at ContextAPI.with (/tmp/cc-agent/58974866/project/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:516)
+    at NoopTracer.startActiveSpan (/tmp/cc-agent/58974866/project/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18086)
+    at ProxyTracer.startActiveSpan (/tmp/cc-agent/58974866/project/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18847) {
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+[Admin] Rendering loading screen: Checking authentication
+ ⚠ Entire page /login deopted into client-side rendering. https://nextjs.org/docs/messages/deopted-into-client-rendering /login
+   Generating static pages (108/434)
+
+   Generating static pages (216/434)
+
+   Generating static pages (325/434)
+
+ ✓ Generating static pages (434/434)
+   Finalizing page optimization...
+
+Route (app)                                             Size     First Load JS
+┌ ○ /                                                   3.88 kB         193 kB
+├ ○ /_not-found                                         877 B          80.5 kB
+├ ○ /about                                              161 B          79.7 kB
+├ ○ /admin                                              16.2 kB         219 kB
+├ ○ /admin/affiliates                                   8.23 kB         161 kB
+├ ○ /admin/commissions                                  7.95 kB         179 kB
+├ ○ /admin/contact-submissions                          13.7 kB         193 kB
+├ ○ /admin/diagnostic                                   4.02 kB         155 kB
+├ ○ /admin/local-heroes                                 9.02 kB         187 kB
+├ ○ /admin/suggestions                                  9.61 kB         194 kB
+├ ○ /admin/users                                        9.63 kB         188 kB
+├ λ /api/admin/cleanup-contact-data                     0 B                0 B
+├ λ /api/admin/restaurants                              0 B                0 B
+├ λ /api/contact                                        0 B                0 B
+├ λ /api/filters                                        0 B                0 B
+├ ○ /api/health                                         0 B                0 B
+├ λ /api/restaurants                                    0 B                0 B
+├ λ /api/restaurants/[id]                               0 B                0 B
+├ λ /api/restaurants/create                             0 B                0 B
+├ ○ /api/test-mapbox                                    0 B                0 B
+├ ○ /api/test-profile-query                             0 B                0 B
+├ λ /api/user/bookmarks                                 0 B                0 B
+├ λ /api/user/likes                                     0 B                0 B
+├ ○ /contact                                            4.75 kB        91.6 kB
+├ ○ /diagnostic                                         4.38 kB        98.5 kB
+├ ○ /diagnostic/iframe-test                             4.5 kB          148 kB
+├ ○ /faq                                                9.38 kB        96.2 kB
+├ ○ /local-hero                                         3.09 kB         189 kB
+├ ○ /local-hero/apply                                   4.79 kB         156 kB
+├ ○ /local-hero/dashboard                               11.3 kB         172 kB
+├ ○ /local-hero/dashboard/cities                        4.81 kB         156 kB
+├ ○ /local-hero/dashboard/earnings                      4.12 kB         155 kB
+├ ○ /local-hero/dashboard/performance                   3.96 kB         155 kB
+├ λ /local-hero/dashboard/restaurants/[id]              6.65 kB         207 kB
+├ ○ /local-hero/dashboard/restaurants/new               5.4 kB          209 kB
+├ ○ /local-hero/dashboard/settings                      6.11 kB         165 kB
+├ ○ /local-hero/dashboard/suggestions                   11.9 kB         190 kB
+├ ○ /local-hero/signup                                  4.86 kB         170 kB
+├ ○ /login                                              5.18 kB         170 kB
+├ ○ /owner/analytics                                    2.28 kB        89.2 kB
+├ ○ /owner/billing                                      5.54 kB         152 kB
+├ ○ /owner/coupons                                      8.1 kB          179 kB
+├ ○ /owner/dashboard                                    108 kB          259 kB
+├ ○ /owner/marketing                                    5.09 kB          92 kB
+├ ○ /owner/register                                     9.59 kB         169 kB
+├ ○ /owner/restaurants                                  6.29 kB         170 kB
+├ λ /owner/restaurants/[id]/edit                        4.86 kB         205 kB
+├ ○ /owner/restaurants/new                              3.31 kB         207 kB
+├ ○ /owner/settings                                     9.55 kB         166 kB
+├ ○ /partner                                            4.08 kB         190 kB
+├ ○ /privacy                                            161 B          79.7 kB
+├ ● /restaurant/[slug]                                  10.6 kB         634 kB
+├   ├ /restaurant/00dda501-53e5-4a2d-887f-4c08d586af4d
+├   ├ /restaurant/00e863e5-01e7-4bae-942c-1d2b408ddd82
+├   ├ /restaurant/02531961-ddb1-4e72-93d4-387b8c3d44cf
+├   └ [+374 more paths]
+├ ○ /saved                                              3.55 kB         195 kB
+├ ○ /search                                             29.7 kB         653 kB
+├ ○ /signup                                             4.74 kB         170 kB
+├ ○ /sitemap.xml                                        0 B                0 B
+├ ○ /subscription                                       9.03 kB         172 kB
+├ ○ /suggest                                            5.7 kB          161 kB
+└ ○ /terms                                              160 B          79.7 kB
++ First Load JS shared by all                           79.6 kB
+  ├ chunks/7864-abf8618467f87093.js                     26.6 kB
+  ├ chunks/fd9d1056-4eb767a727ab987b.js                 50.9 kB
+  ├ chunks/main-app-355ebcc1e2f78480.js                 229 B
+  └ chunks/webpack-f32cc52188f57339.js                  1.84 kB
+
+
+ƒ Middleware                                            121 kB
+
+λ  (Server)  server-side renders at runtime (uses getInitialProps or getServerSideProps)
+○  (Static)  automatically rendered as static HTML (uses no initial props)
+●  (SSG)     automatically generated as static HTML + JSON (uses getStaticProps)
+

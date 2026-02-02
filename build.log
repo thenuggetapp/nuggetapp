@@ -1,0 +1,65 @@
+
+> nextjs@0.1.0 build
+> next build
+
+   Creating an optimized production build...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (122kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⚠ Compiled with warnings
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./node_modules/@supabase/ssr/dist/main/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/main/index.js
+./lib/supabase/client.ts
+./app/page.tsx
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./node_modules/@supabase/ssr/dist/main/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/main/index.js
+./lib/supabase/client.ts
+./app/sitemap.ts
+./node_modules/next/dist/build/webpack/loaders/next-metadata-route-loader.js?page=%2Fsitemap.xml%2Froute&isDynamic=1!./app/sitemap.ts?__next_metadata_route__
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./app/api/health/route.ts
+
+./node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+A Node.js API is used (process.versions at line: 38) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+./node_modules/@supabase/realtime-js/dist/module/index.js
+./node_modules/@supabase/supabase-js/dist/module/index.js
+./node_modules/@supabase/ssr/dist/module/createServerClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+./node_modules/@supabase/supabase-js/dist/module/index.js
+A Node.js API is used (process.version at line: 23) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/supabase-js/dist/module/index.js
+./node_modules/@supabase/ssr/dist/module/createServerClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+   Skipping linting
+   Checking validity of types...
+   Collecting page data...

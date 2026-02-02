@@ -1,0 +1,24 @@
+
+> nextjs@0.1.0 build
+> next build
+
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+   Creating an optimized production build...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (122kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+Failed to compile.
+
+./components/Footer.tsx
+Module not found: Can't resolve '@supabase/auth-helpers-nextjs'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/ConditionalFooter.tsx
+./app/suggest/page.tsx
+
+
+> Build failed because of webpack errors

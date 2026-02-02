@@ -1,0 +1,81 @@
+
+> nextjs@0.1.0 build
+> next build
+
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+   Creating an optimized production build...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (122kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⚠ Compiled with warnings
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./node_modules/@supabase/ssr/dist/main/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/main/index.js
+./lib/supabase/client.ts
+./app/saved/page.tsx
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./node_modules/@supabase/ssr/dist/main/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/main/index.js
+./lib/supabase/client.ts
+./app/sitemap.ts
+./node_modules/next/dist/build/webpack/loaders/next-metadata-route-loader.js?page=%2Fsitemap.xml%2Froute&isDynamic=1!./app/sitemap.ts?__next_metadata_route__
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./app/api/health/route.ts
+
+./node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+A Node.js API is used (process.versions at line: 38) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+./node_modules/@supabase/realtime-js/dist/module/index.js
+./node_modules/@supabase/supabase-js/dist/module/index.js
+./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+./node_modules/@supabase/supabase-js/dist/module/index.js
+A Node.js API is used (process.version at line: 23) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/supabase-js/dist/module/index.js
+./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+   Skipping linting
+   Checking validity of types...
+Failed to compile.
+
+./components/AuthDiagnostic.tsx:84:80
+Type error: Property 'subscriptions' does not exist on type 'UserProfile'.
+
+[0m [90m 82 | [39m            [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+[0m [90m 83 | [39m            [33m<[39m[33mdiv[39m className[33m=[39m[32m"text-sm"[39m[33m>[39m[0m
+[0m[31m[1m>[22m[39m[90m 84 | [39m              [33m<[39m[33mspan[39m className[33m=[39m[32m"font-medium"[39m[33m>[39m[33mSubscriptions[39m[33m:[39m[33m<[39m[33m/[39m[33mspan[39m[33m>[39m {userProfile[33m.[39msubscriptions[33m?[39m[33m.[39mlength [33m||[39m [35m0[39m}[0m
+[0m [90m    | [39m                                                                               [31m[1m^[22m[39m[0m
+[0m [90m 85 | [39m            [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+[0m [90m 86 | [39m          [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+[0m [90m 87 | [39m        )}[0m

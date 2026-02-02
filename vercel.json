@@ -1,0 +1,10 @@
+{
+  "regions": ["dub1"],
+  "buildCommand": "npm run build",
+  "framework": "nextjs",
+  "functions": {
+    "app/**/*": {
+      "maxDuration": 10
+    }
+  }
+}

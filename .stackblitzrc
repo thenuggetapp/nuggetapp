@@ -1,0 +1,10 @@
+{
+  "installDependencies": true,
+  "startCommand": "npm run dev",
+  "env": {
+    "NODE_OPTIONS": "--no-experimental-fetch",
+    "FORCE_COLOR": "1"
+  },
+  "compileTrigger": "save",
+  "node": "18"
+}

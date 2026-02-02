@@ -1,0 +1,165 @@
+
+> nextjs@0.1.0 build
+> next build
+
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+   Creating an optimized production build...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (122kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⚠ Compiled with warnings
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./lib/supabase/client.ts
+./app/saved/page.tsx
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./lib/supabase/admin.ts
+./app/sitemap.ts
+./node_modules/next/dist/build/webpack/loaders/next-metadata-route-loader.js?page=%2Fsitemap.xml%2Froute&isDynamic=1!./app/sitemap.ts?__next_metadata_route__
+
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/main/RealtimeClient.js
+./node_modules/@supabase/realtime-js/dist/main/index.js
+./node_modules/@supabase/supabase-js/dist/main/index.js
+./app/page.tsx
+
+./node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+A Node.js API is used (process.versions at line: 38) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js
+./node_modules/@supabase/realtime-js/dist/module/index.js
+./node_modules/@supabase/supabase-js/dist/module/index.js
+./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+./node_modules/@supabase/supabase-js/dist/module/index.js
+A Node.js API is used (process.version at line: 23) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/supabase-js/dist/module/index.js
+./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+   Skipping linting
+   Checking validity of types...
+   Collecting page data...
+   Generating static pages (0/439)...
+[Supabase] Using SSR-compatible cookie-based client
+[Admin] Rendering loading screen: Checking authentication
+ ⚠ Entire page /login deopted into client-side rendering. https://nextjs.org/docs/messages/deopted-into-client-rendering /login
+   Generating static pages (109/439)
+
+   Generating static pages (219/439)
+
+   Generating static pages (329/439)
+
+ ✓ Generating static pages (439/439)
+   Finalizing page optimization...
+
+Route (app)                                             Size     First Load JS
+┌ λ /                                                   4.99 kB         210 kB
+├ ○ /_not-found                                         877 B          80.5 kB
+├ ○ /about                                              306 B          84.9 kB
+├ ○ /admin                                              16.6 kB         219 kB
+├ ○ /admin/affiliates                                   9.59 kB         170 kB
+├ ○ /admin/articles                                     5.61 kB         184 kB
+├ λ /admin/articles/[id]/edit                           437 B           185 kB
+├ ○ /admin/articles/new                                 416 B           185 kB
+├ ○ /admin/city-requests                                8.61 kB         202 kB
+├ ○ /admin/commissions                                  9.2 kB          188 kB
+├ ○ /admin/contact-submissions                          8.4 kB          202 kB
+├ ○ /admin/diagnostic                                   4.99 kB         156 kB
+├ ○ /admin/local-heroes                                 9.39 kB         188 kB
+├ ○ /admin/suggestions                                  9.86 kB         194 kB
+├ ○ /admin/users                                        9.9 kB          188 kB
+├ λ /api/admin/cleanup-contact-data                     0 B                0 B
+├ λ /api/admin/restaurants                              0 B                0 B
+├ λ /api/contact                                        0 B                0 B
+├ λ /api/filters                                        0 B                0 B
+├ ○ /api/health                                         0 B                0 B
+├ λ /api/restaurants                                    0 B                0 B
+├ λ /api/restaurants/[id]                               0 B                0 B
+├ λ /api/restaurants/create                             0 B                0 B
+├ ○ /api/test-mapbox                                    0 B                0 B
+├ ○ /api/test-profile-query                             0 B                0 B
+├ λ /api/user/bookmarks                                 0 B                0 B
+├ λ /api/user/likes                                     0 B                0 B
+├ λ /article/[slug]                                     393 B            80 kB
+├ λ /blog                                               180 B          86.5 kB
+├ λ /chicago                                            176 B           211 kB
+├ ○ /contact                                            4.69 kB        96.3 kB
+├ ○ /diagnostic                                         4.79 kB        98.4 kB
+├ ○ /diagnostic/iframe-test                             4.44 kB         148 kB
+├ ○ /faq                                                9.06 kB        95.9 kB
+├ ○ /local-hero                                         3.46 kB         189 kB
+├ ○ /local-hero/apply                                   5.13 kB         156 kB
+├ ○ /local-hero/dashboard                               11.3 kB         172 kB
+├ ○ /local-hero/dashboard/cities                        5.19 kB         156 kB
+├ ○ /local-hero/dashboard/earnings                      4.47 kB         155 kB
+├ ○ /local-hero/dashboard/performance                   4.32 kB         155 kB
+├ λ /local-hero/dashboard/restaurants/[id]              6.59 kB         207 kB
+├ ○ /local-hero/dashboard/restaurants/new               5.42 kB         210 kB
+├ ○ /local-hero/dashboard/settings                      6.31 kB         165 kB
+├ ○ /local-hero/dashboard/suggestions                   11.9 kB         190 kB
+├ ○ /local-hero/signup                                  5.84 kB         170 kB
+├ ○ /login                                              6.11 kB         170 kB
+├ λ /london                                             177 B           211 kB
+├ ○ /owner/analytics                                    2.28 kB        89.1 kB
+├ ○ /owner/billing                                      5.48 kB         152 kB
+├ ○ /owner/coupons                                      7.25 kB         179 kB
+├ ○ /owner/dashboard                                    108 kB          259 kB
+├ ○ /owner/marketing                                    5.08 kB        91.9 kB
+├ ○ /owner/register                                     5.24 kB         169 kB
+├ ○ /owner/restaurants                                  6.23 kB         170 kB
+├ λ /owner/restaurants/[id]/edit                        4.78 kB         205 kB
+├ ○ /owner/restaurants/new                              3.31 kB         208 kB
+├ ○ /owner/settings                                     9.08 kB         166 kB
+├ ○ /partner                                            3.99 kB         189 kB
+├ ○ /privacy                                            158 B          79.7 kB
+├ ● /restaurant/[slug]                                  10.2 kB         650 kB
+├   ├ /restaurant/00e863e5-01e7-4bae-942c-1d2b408ddd82
+├   ├ /restaurant/02531961-ddb1-4e72-93d4-387b8c3d44cf
+├   ├ /restaurant/02df5f70-b63e-4797-a09b-8f5275880438
+├   └ [+373 more paths]
+├ λ /sanfrancisco                                       176 B           211 kB
+├ ○ /saved                                              2.51 kB         209 kB
+├ ○ /search                                             23.9 kB         676 kB
+├ ○ /signup                                             5.71 kB         169 kB
+├ ○ /sitemap.xml                                        0 B                0 B
+├ ○ /subscription                                       8.97 kB         172 kB
+├ ○ /suggest                                            5.53 kB         182 kB
+└ ○ /terms                                              158 B          79.7 kB
++ First Load JS shared by all                           79.6 kB
+  ├ chunks/7864-abf8618467f87093.js                     26.6 kB
+  ├ chunks/fd9d1056-4eb767a727ab987b.js                 50.9 kB
+  ├ chunks/main-app-355ebcc1e2f78480.js                 229 B
+  └ chunks/webpack-7c17a83df287ab55.js                  1.84 kB
+
+
+ƒ Middleware                                            121 kB
+
+λ  (Server)  server-side renders at runtime (uses getInitialProps or getServerSideProps)
+○  (Static)  automatically rendered as static HTML (uses no initial props)
+●  (SSG)     automatically generated as static HTML + JSON (uses getStaticProps)
+
