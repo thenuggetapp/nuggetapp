@@ -54,7 +54,7 @@ export function CityBrowse() {
     <section className="mt-0 md:mt-[50px] text-left px-4 md:px-10 pb-4 md:pb-6">
       <div className="mb-4 md:mb-8">
         <h2 className="text-xl md:text-2xl font-semibold text-slate-900 mb-3">
-          Browse by city
+          Browse by City
         </h2>
         <p className="hidden md:block text-sm md:text-base text-slate-600 max-w-2xl">
           We're growing city by city to create more welcoming places for families.
