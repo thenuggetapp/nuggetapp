@@ -132,6 +132,22 @@ export default function MarketingPage() {
         </Card>
       </div>
 
+      <Card className="bg-gradient-to-br from-slate-900 to-slate-800 text-white border-0">
+        <CardContent className="p-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div>
+              <p className="text-slate-300">More visibility with Pro</p>
+            </div>
+            <div>
+              <p className="text-slate-300">Increase in bookings</p>
+            </div>
+            <div>
+              <p className="text-slate-300">Restaurants trust us</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Frequently Asked Questions</CardTitle>
