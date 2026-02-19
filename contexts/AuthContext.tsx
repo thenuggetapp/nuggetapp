@@ -485,11 +485,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             "[AuthContext] ❌ Fallback also failed:",
             fallbackError
           );
+          throw fallbackError;
         }
 
-        setUserProfile(null);
-        setPermissions(getRolePermissions(null, []));
-        return { skipped: false };
+        throw new Error("Failed to create profile: no auth user available");
       }
 
       console.log(
@@ -545,9 +544,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       );
       console.error("[AuthContext] Error type:", error?.constructor?.name);
       console.error("[AuthContext] Error message:", error?.message);
-      setUserProfile(null);
-      setPermissions(getRolePermissions(null, []));
-      return { skipped: false };
+      throw error;
     } finally {
       loadingUserIdRef.current = null; // Clear the loading user ID
       setIsLoadingProfile(false);
@@ -739,19 +736,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.log("=".repeat(80) + "\n");
 
             const profileLoadStartTime = Date.now();
-            await loadUserProfile(session.user.id);
-            const profileLoadDuration = Date.now() - profileLoadStartTime;
+            try {
+              await loadUserProfile(session.user.id);
+              const profileLoadDuration = Date.now() - profileLoadStartTime;
 
-            console.log("\n" + "✅".repeat(40));
-            console.log("[AuthContext] ✅ PROFILE LOAD COMPLETED");
-            console.log("✅".repeat(40));
-            console.log("[AuthContext] Duration:", profileLoadDuration, "ms");
-            console.log("[AuthContext] Expected: <1000ms");
-            console.log(
-              "[AuthContext] Status:",
-              profileLoadDuration < 1000 ? "✅ Healthy" : "⚠️ Slow"
-            );
-            console.log("✅".repeat(40) + "\n");
+              console.log("\n" + "✅".repeat(40));
+              console.log("[AuthContext] ✅ PROFILE LOAD COMPLETED");
+              console.log("✅".repeat(40));
+              console.log("[AuthContext] Duration:", profileLoadDuration, "ms");
+              console.log("[AuthContext] Expected: <1000ms");
+              console.log(
+                "[AuthContext] Status:",
+                profileLoadDuration < 1000 ? "✅ Healthy" : "⚠️ Slow"
+              );
+              console.log("✅".repeat(40) + "\n");
+            } catch (profileError) {
+              console.error("[AuthContext] Error loading profile in initializeAuth:", profileError);
+              // Create fallback from session data
+              if (mounted && session?.user) {
+                console.warn("[AuthContext] ⚠️ Creating fallback profile from session data in initializeAuth");
+                const fallbackProfile: UserProfile = {
+                  id: session.user.id,
+                  email: session.user.email || "",
+                  full_name:
+                    session.user.user_metadata?.full_name ||
+                    session.user.user_metadata?.name ||
+                    session.user.email?.split("@")[0] ||
+                    "User",
+                  role: (session.user.app_metadata?.role as UserRole) || "customer",
+                  created_at: session.user.created_at || new Date().toISOString(),
+                  avatar_url:
+                    session.user.user_metadata?.avatar_url ||
+                    session.user.user_metadata?.picture ||
+                    null,
+                  preferences: {},
+                  updated_at: session.user.created_at || new Date().toISOString(),
+                };
+                setUserProfile(fallbackProfile);
+                setPermissions(getRolePermissions(fallbackProfile.role, []));
+              } else {
+                setUserProfile(null);
+                setPermissions(getRolePermissions(null, []));
+              }
+            }
 
             if (mounted) {
               console.log("[AuthContext] 🏁 Setting loading=false");
@@ -1046,13 +1073,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 setPermissions(getRolePermissions(fallbackProfile.role, []));
                 setLoading(false);
               } else {
-                setUserProfile(null);
-                setPermissions(getRolePermissions(null, []));
-                setLoading(false);
+                if(!userProfile && mounted) {
+                  setUserProfile(null);
+                  setPermissions(getRolePermissions(null, []));
+                  setLoading(false);
+                }
               }
             }
           }
         } else {
+          // Null session means no user is authenticated - always clear profile to prevent session leakage
           setUserProfile(null);
           setPermissions(getRolePermissions(null, []));
           if (mounted) setLoading(false);
