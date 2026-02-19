@@ -265,7 +265,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         );
         console.error("[AuthContext] Performance breakdown:", perfMarks);
         console.error("[AuthContext] User ID:", userId);
-        console.error("!".repeat(80) + "\n");
+        console.error("!".repeat(80) );
 
         // If we have cached data, continue using it even if refresh fails
         if (userProfile && userProfile.id === userId) {
@@ -577,7 +577,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           logStorageEnvironment();
         }
         
-        console.log("=".repeat(80) + "\n");
+        console.log("=".repeat(80) );
 
         // 🚪 Check for logout parameter - if present, force logout and skip session check
         if (typeof window !== "undefined") {
@@ -798,7 +798,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log("[AuthContext] Timestamp:", new Date().toISOString());
       console.log("[AuthContext] Has session:", !!session);
       console.log(
-        "[AuthContext] Session user:",
+        "[AuthContext] Session user id:",
+        session?.user?.id || "none"
+      );      console.log(
+        "[AuthContext] Session user email:",
         session?.user?.email || "none"
       );
       console.log("[AuthContext] Current state:", {
