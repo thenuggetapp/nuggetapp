@@ -61,13 +61,13 @@ export function ImageUpload({
       }
 
       const fileExt = file.name.split('.').pop();
-      const fileName = `${restaurantId || Date.now()}/main.${fileExt}`;
+      const fileName = `${restaurantId || Date.now()}/${Date.now()}.${fileExt}`
 
       const { data, error: uploadError } = await supabase.storage
         .from('restaurant-images')
         .upload(fileName, file, {
           cacheControl: '3600',
-          upsert: true
+          upsert: false
         });
 
       if (uploadError) throw uploadError;
