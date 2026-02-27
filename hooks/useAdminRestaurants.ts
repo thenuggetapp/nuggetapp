@@ -2,6 +2,8 @@ import useSWR, { mutate } from "swr";
 import { apiFetcher } from "@/lib/swr-fetcher";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase/client";
+import { isGooglePlacesEdgePhotoUrl } from "@/lib/google-places-photo";
+import { importGooglePlacesPhotoUrlToStorageClient } from "@/lib/google-places-photo-import.client";
 
 interface Restaurant {
   id?: string;
@@ -63,6 +65,30 @@ interface Restaurant {
 // Detect if running in iframe
 const isInIframe = typeof window !== 'undefined' && window.self !== window.top;
 
+async function ensureRestaurantImagesRow(params: {
+  restaurantId: string;
+  imageUrl: string;
+}) {
+  const { data: existing, error: existingError } = await supabase
+    .from("restaurant_images")
+    .select("id")
+    .eq("restaurant_id", params.restaurantId)
+    .eq("image_url", params.imageUrl)
+    .maybeSingle();
+
+  if (existingError) throw existingError;
+  if (existing) return;
+
+  const { error: insertError } = await supabase.from("restaurant_images").insert({
+    restaurant_id: params.restaurantId,
+    image_url: params.imageUrl,
+    is_featured: true,
+    display_order: 0,
+  });
+
+  if (insertError) throw insertError;
+}
+
 // Direct Supabase fetcher for iframe mode
 const directSupabaseFetcher = async () => {
   const { data, error } = await supabase
@@ -107,19 +133,51 @@ export function useCreateRestaurant() {
   const createRestaurant = async (restaurantData: Restaurant) => {
     try {
       if (isInIframe) {
+        const maybeGooglePhotoUrl = restaurantData.image_url;
+        const shouldImportGooglePhoto = isGooglePlacesEdgePhotoUrl(maybeGooglePhotoUrl);
+
+        // Never store edge function photo URLs directly (they 401 in browsers).
+        const insertData: Restaurant = shouldImportGooglePhoto
+          ? { ...restaurantData, image_url: undefined }
+          : restaurantData;
+
         // Direct Supabase insert in iframe mode
-        const { data, error } = await supabase
-          .from('restaurants')
-          .insert([restaurantData])
+        const { data: created, error } = await supabase
+          .from("restaurants")
+          .insert([insertData])
           .select()
           .single();
 
         if (error) throw error;
 
+        // If the Google Places mapper set image_url to an edge-function URL, import it
+        // into Storage and persist the resulting public URL.
+        if (created?.id && shouldImportGooglePhoto && maybeGooglePhotoUrl) {
+          const publicUrl = await importGooglePlacesPhotoUrlToStorageClient({
+            supabase,
+            restaurantId: created.id,
+            googlePlacesPhotoUrl: maybeGooglePhotoUrl,
+          });
+
+          const { error: updateError } = await supabase
+            .from("restaurants")
+            .update({ image_url: publicUrl })
+            .eq("id", created.id);
+
+          if (updateError) throw updateError;
+
+          await ensureRestaurantImagesRow({
+            restaurantId: created.id,
+            imageUrl: publicUrl,
+          });
+
+          created.image_url = publicUrl;
+        }
+
         // Refresh the restaurants list
         await mutate('supabase-restaurants');
 
-        return { success: true, data };
+        return { success: true, data: created };
       } else {
         // Use API route in normal mode
         const response = await fetch("/api/admin/restaurants", {
@@ -160,15 +218,45 @@ export function useUpdateRestaurant() {
       const cacheKey = isInIframe ? 'supabase-restaurants' : "/api/admin/restaurants";
 
       if (isInIframe) {
+        const maybeGooglePhotoUrl = restaurantData.image_url;
+        const shouldImportGooglePhoto = isGooglePlacesEdgePhotoUrl(maybeGooglePhotoUrl);
+
+        // Never store edge function photo URLs directly.
+        const updateData: Partial<Restaurant> = shouldImportGooglePhoto
+          ? { ...restaurantData, image_url: undefined }
+          : restaurantData;
+
         // Direct Supabase update in iframe mode
         const { data, error } = await supabase
-          .from('restaurants')
-          .update(restaurantData)
-          .eq('id', id)
+          .from("restaurants")
+          .update(updateData)
+          .eq("id", id)
           .select()
           .single();
 
         if (error) throw error;
+
+        if (shouldImportGooglePhoto && maybeGooglePhotoUrl) {
+          const publicUrl = await importGooglePlacesPhotoUrlToStorageClient({
+            supabase,
+            restaurantId: id,
+            googlePlacesPhotoUrl: maybeGooglePhotoUrl,
+          });
+
+          const { error: updateError } = await supabase
+            .from("restaurants")
+            .update({ image_url: publicUrl })
+            .eq("id", id);
+
+          if (updateError) throw updateError;
+
+          await ensureRestaurantImagesRow({
+            restaurantId: id,
+            imageUrl: publicUrl,
+          });
+
+          data.image_url = publicUrl;
+        }
 
         // Optimistically update the cache
         await mutate(
@@ -176,7 +264,7 @@ export function useUpdateRestaurant() {
           async (current: Restaurant[] | undefined) => {
             if (!current) return current;
             return current.map((r) =>
-              r.id === id ? { ...r, ...restaurantData } : r
+              r.id === id ? { ...r, ...restaurantData, image_url: data.image_url } : r
             );
           },
           false
@@ -202,13 +290,22 @@ export function useUpdateRestaurant() {
           throw new Error(result.error || "Failed to update restaurant");
         }
 
+        const updatedRestaurant: Restaurant | undefined = result.data;
+
         // Optimistically update the cache
         await mutate(
           cacheKey,
           async (current: Restaurant[] | undefined) => {
             if (!current) return current;
             return current.map((r) =>
-              r.id === id ? { ...r, ...restaurantData } : r
+              r.id === id
+                ? {
+                    ...r,
+                    ...restaurantData,
+                    image_url:
+                      updatedRestaurant?.image_url ?? restaurantData.image_url,
+                  }
+                : r
             );
           },
           false

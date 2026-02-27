@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { ImageCarousel } from '@/components/ImageCarousel';
+import { isGooglePlacesEdgePhotoUrl } from '@/lib/google-places-photo';
 import { Restaurant } from '@/lib/dummy-restaurants';
 import { useAuth } from '@/contexts/AuthContext';
 import { generateRestaurantStructuredData, generateBreadcrumbStructuredData } from '@/lib/structured-data';
@@ -380,7 +381,11 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
               <div className="hero-image-container relative w-full flex-shrink-0 lg:mt-0">
                 <ImageCarousel
                   restaurantId={restaurant.id}
-                  fallbackImage={restaurant.imageUrl}
+                  fallbackImage={
+                    isGooglePlacesEdgePhotoUrl(restaurant.imageUrl)
+                      ? undefined
+                      : restaurant.imageUrl
+                  }
                   restaurantName={restaurant.name}
                 />
                 <div className="action-buttons-overlay absolute bottom-4 left-4 flex items-center gap-2 z-10">

@@ -27,6 +27,8 @@ import AmenitiesTab from '@/components/owner/restaurant-form/AmenitiesTab';
 import { RestaurantFormData } from '@/app/owner/restaurants/new/page';
 import { GooglePlacesAutocomplete } from '@/components/GooglePlacesAutocomplete';
 import { mapGooglePlaceToRestaurant } from '@/lib/google-places-mapper';
+import { isGooglePlacesEdgePhotoUrl } from '@/lib/google-places-photo';
+import { importGooglePlacesPhotoUrlToStorageClient } from '@/lib/google-places-photo-import.client';
 
 const initialFormData: RestaurantFormData = {
   name: '',
@@ -174,7 +176,10 @@ export default function AddRestaurantPage() {
         country: formData.country.trim() || null,
         phone: formData.phone.trim() || null,
         description: formData.description.trim() || null,
-        image_url: formData.image_url.trim() || null,
+        image_url: (() => {
+          const maybeGooglePhotoUrl = formData.image_url.trim() || null;
+          return isGooglePlacesEdgePhotoUrl(maybeGooglePhotoUrl) ? null : maybeGooglePhotoUrl;
+        })(),
         website_url: formData.website_url.trim() || null,
         google_maps_url: formData.google_maps_url.trim() || null,
         booking_url: formData.booking_url.trim() || null,
@@ -199,6 +204,44 @@ export default function AddRestaurantPage() {
       }
 
       console.log('Restaurant created successfully:', restaurant);
+
+      // If Google Places provided a photo URL (edge function), import it into Storage and persist a public URL.
+      const maybeGooglePhotoUrl = formData.image_url.trim() || null;
+      if (isGooglePlacesEdgePhotoUrl(maybeGooglePhotoUrl)) {
+        const publicUrl = await importGooglePlacesPhotoUrlToStorageClient({
+          supabase,
+          restaurantId: restaurant.id,
+          googlePlacesPhotoUrl: maybeGooglePhotoUrl!,
+        });
+
+        const { error: updateError } = await supabase
+          .from('restaurants')
+          .update({ image_url: publicUrl })
+          .eq('id', restaurant.id);
+
+        if (updateError) throw updateError;
+
+        const { data: existingImage, error: existingError } = await supabase
+          .from('restaurant_images')
+          .select('id')
+          .eq('restaurant_id', restaurant.id)
+          .eq('image_url', publicUrl)
+          .maybeSingle();
+
+        if (existingError) throw existingError;
+        if (!existingImage) {
+          const { error: insertImageError } = await supabase
+            .from('restaurant_images')
+            .insert({
+              restaurant_id: restaurant.id,
+              image_url: publicUrl,
+              is_featured: true,
+              display_order: 0,
+            });
+
+          if (insertImageError) throw insertImageError;
+        }
+      }
 
       const ownershipData = {
         owner_id: user.id,

@@ -34,6 +34,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Restaurant } from "@/lib/dummy-restaurants";
 import { supabase } from "@/lib/supabase/client";
+import { isGooglePlacesEdgePhotoUrl } from "@/lib/google-places-photo";
 import {
   parseNaturalLanguageQuery,
   buildSupabaseQuery,
@@ -168,7 +169,9 @@ function SearchContent() {
   const { likedIds } = useUserLikes();
   const { toggleBookmark } = useToggleBookmark();
   const { toggleLike } = useToggleLike();
-  const [filters, setFilters] = useState<FilterState>(() => getFiltersFromURLParams(searchParams));
+  const [filters, setFilters] = useState<FilterState>(() =>
+    getFiltersFromURLParams(new URLSearchParams(searchParams.toString()))
+  );
   const [showFilters, setShowFilters] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -331,7 +334,9 @@ function SearchContent() {
 
   useEffect(() => {
     const query = searchParams.get("q");
-    const newFilters = getFiltersFromURLParams(searchParams);
+    const newFilters = getFiltersFromURLParams(
+      new URLSearchParams(searchParams.toString())
+    );
 
     // Update filters when URL params change (e.g., user navigates back/forward)
     setFilters(newFilters);
@@ -527,6 +532,12 @@ function SearchContent() {
           `Restaurant ${r.name}: coords [${coords[0]}, ${coords[1]}]`
         );
 
+        const rawImageUrl = r.image_url || "";
+        const safeImageUrl =
+          rawImageUrl && !isGooglePlacesEdgePhotoUrl(rawImageUrl)
+            ? rawImageUrl
+            : "https://images.pexels.com/photos/1566837/pexels-photo-1566837.jpeg?auto=compress&cs=tinysrgb&w=400";
+
         return {
           id: r.id,
           name: r.name,
@@ -536,9 +547,7 @@ function SearchContent() {
           priceLevel: r.price_level || 2,
           address: r.address,
           coordinates: coords,
-          imageUrl:
-            r.image_url ||
-            "https://images.pexels.com/photos/1566837/pexels-photo-1566837.jpeg?auto=compress&cs=tinysrgb&w=400",
+          imageUrl: safeImageUrl,
           nuggetVerified: r.nugget_verified,
           kidsMenu: r.kids_menu,
           highChairs: r.high_chairs,
@@ -626,6 +635,11 @@ function SearchContent() {
 
       const formattedRestaurants: Restaurant[] = (data || []).map((r: any) => {
         const coords: [number, number] = [r.longitude || 0, r.latitude || 0];
+        const rawImageUrl = r.image_url || "";
+        const safeImageUrl =
+          rawImageUrl && !isGooglePlacesEdgePhotoUrl(rawImageUrl)
+            ? rawImageUrl
+            : "https://images.pexels.com/photos/1566837/pexels-photo-1566837.jpeg?auto=compress&cs=tinysrgb&w=400";
         return {
           id: r.id,
           name: r.name,
@@ -635,9 +649,7 @@ function SearchContent() {
           priceLevel: r.price_level || 2,
           address: r.address,
           coordinates: coords,
-          imageUrl:
-            r.image_url ||
-            "https://images.pexels.com/photos/1566837/pexels-photo-1566837.jpeg?auto=compress&cs=tinysrgb&w=400",
+          imageUrl: safeImageUrl,
           nuggetVerified: r.nugget_verified,
           kidsMenu: r.kids_menu,
           highChairs: r.high_chairs,
