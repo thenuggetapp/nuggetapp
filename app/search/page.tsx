@@ -355,9 +355,7 @@ function SearchContent() {
 
   useEffect(() => {
     const query = searchParams.get("q");
-    if (query && searchQuery) {
-      performSearch(searchQuery);
-    } else if (searchQuery) {
+    if (searchQuery) {
       performSearch(searchQuery);
     } else if (!query) {
       loadRestaurants();
