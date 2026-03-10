@@ -35,10 +35,8 @@ export const AMENITY_DB_COLUMNS = [
   'tourist_attraction_nearby',
 ] as const;
 
-export type AmenityDbColumn = (typeof AMENITY_DB_COLUMNS)[number];
-
 // Mapping from FilterPanel keys to DB columns
-export const FILTER_KEY_TO_DB_COLUMN: Record<string, AmenityDbColumn> = {
+export const FILTER_KEY_TO_DB_COLUMN: Record<string, string> = {
   kidsMenu: 'kids_menu',
   highChairs: 'high_chairs',
   changingTable: 'changing_table',
@@ -77,7 +75,7 @@ export const FILTER_KEY_TO_DB_COLUMN: Record<string, AmenityDbColumn> = {
 };
 
 // Simple phrase → amenity column mapping for search text like "kids coloring"
-export const AMENITY_PHRASES_TO_DB_COLUMN: Record<string, AmenityDbColumn> = {
+export const AMENITY_PHRASES_TO_DB_COLUMN: Record<string, string> = {
   'kids coloring': 'kids_coloring',
   'kids colouring': 'kids_coloring',
   'kids menu': 'kids_menu',
@@ -90,5 +88,6 @@ export const AMENITY_PHRASES_TO_DB_COLUMN: Record<string, AmenityDbColumn> = {
   'playground nearby': 'playground_nearby',
   'free kids meal': 'free_kids_meal',
   'one pound kids meal': 'one_pound_kids_meal',
+  'gluten free': 'gluten_free_options'
 };
 
