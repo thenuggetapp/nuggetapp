@@ -263,7 +263,7 @@ export function FilterPanel({ onFilterChange, expanded = false, searchQuery = ''
       buzzy: 'buzzy',
       posh: 'posh',
       goodForGroups: 'good_for_groups',
-      kidsColoring: 'kids_colouring',
+      kidsColoring: 'kids_coloring',
       gamesAvailable: 'games_available',
       kidsPlaySpace: 'kids_play_space',
       teenFavourite: 'teen_favourite',
