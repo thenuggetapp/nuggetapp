@@ -18,7 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { FILTER_KEY_TO_DB_COLUMN } from '@/lib/amenities';
+import { FILTER_KEY_TO_DB_COLUMN, ALL_CUISINE_TYPES } from '@/lib/amenities';
 
 interface FilterPanelProps {
   onFilterChange?: (filters: FilterState) => void;
@@ -246,17 +246,7 @@ export function FilterPanel({ onFilterChange, expanded = false, searchQuery = ''
     return filterCounts.amenities[dbColumn] || 0;
   };
 
-  const allCuisineTypes = [
-    'American', 'Asian', 'Bakery', 'Bar & Grill', 'BBQ', 'Breakfast',
-    'British', 'Burgers', 'Cafe', 'Chinese', 'Dessert', 'European',
-    'Filipino', 'French', 'Greek', 'Indian', 'International', 'Italian',
-    'Japanese', 'Korean', 'Kosher', 'Latin American', 'Mediterranean',
-    'Mexican', 'Middle Eastern', 'Persian', 'Peruvian', 'Portuguese',
-    'Pub', 'Sandwiches', 'Seafood', 'Spanish', 'Steakhouse', 'Thai',
-    'Turkish', 'Vegetarian'
-  ];
-
-  const cuisineTypes = allCuisineTypes.filter(cuisine => {
+  const cuisineTypes = ALL_CUISINE_TYPES.filter(cuisine => {
     if (loadingCounts) return true;
     return (filterCounts.cuisines[cuisine] || 0) > 0;
   });

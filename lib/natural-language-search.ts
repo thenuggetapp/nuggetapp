@@ -1,4 +1,4 @@
-import { FILTER_KEY_TO_DB_COLUMN } from '@/lib/amenities';
+import { ALL_CUISINE_TYPES, FILTER_KEY_TO_DB_COLUMN } from '@/lib/amenities';
 
 export type ParsedFeatures = Partial<Record<keyof typeof FILTER_KEY_TO_DB_COLUMN, boolean>>;
 
@@ -17,7 +17,7 @@ const CUISINE_KEYWORDS = [
   'american', 'british', 'mediterranean', 'spanish', 'vietnamese', 'korean',
   'greek', 'turkish', 'lebanese', 'brazilian', 'caribbean', 'moroccan',
   'european', 'asian', 'african'
-];
+].concat(ALL_CUISINE_TYPES).map(c => c.toLowerCase());
 
 const FOOD_KEYWORDS = [
   'pizza', 'burger', 'sushi', 'ramen', 'curry', 'tapas', 'bbq', 'seafood',

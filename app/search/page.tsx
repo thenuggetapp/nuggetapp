@@ -264,6 +264,11 @@ function SearchContent() {
     "Discover: 'pizza place with parking'",
     "Explore: 'family-friendly brunch'",
   ];
+  
+  // Search string for filter panel - include cuisines 
+  const filterCountsSearchString = useMemo(() => {
+    return [searchQuery, ...filters.cuisines].filter(Boolean).join(' ');
+  }, [searchQuery, filters.cuisines]);
 
   // Scroll to hovered card when hovering over a marker
   useEffect(() => {
@@ -968,7 +973,7 @@ function SearchContent() {
               <FilterPanel
                 onFilterChange={setFilters}
                 expanded={true}
-                searchQuery={searchQuery}
+                searchQuery={filterCountsSearchString}
                 city={filteredCity || ''}
                 isSearching={loading}
                 currentFilters={filters}
@@ -1031,7 +1036,7 @@ function SearchContent() {
               <FilterPanel
                 onFilterChange={setFilters}
                 expanded={showFilters}
-                searchQuery={searchQuery}
+                searchQuery={filterCountsSearchString}
                 city={filteredCity || ''}
                 isSearching={loading}
                 currentFilters={filters}

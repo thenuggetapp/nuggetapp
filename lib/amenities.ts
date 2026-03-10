@@ -42,3 +42,13 @@ export const FILTER_KEY_TO_DB_COLUMN: Record<string, string> = {
 export const AMENITY_DB_COLUMNS: readonly string[] = Array.from(
   new Set(Object.values(FILTER_KEY_TO_DB_COLUMN))
 );
+
+export const ALL_CUISINE_TYPES = [
+  'American', 'Asian', 'Bakery', 'Bar & Grill', 'BBQ', 'Breakfast',
+  'British', 'Burgers', 'Cafe', 'Chinese', 'Dessert', 'European',
+  'Filipino', 'French', 'Greek', 'Indian', 'International', 'Italian',
+  'Japanese', 'Korean', 'Kosher', 'Latin American', 'Mediterranean',
+  'Mexican', 'Middle Eastern', 'Persian', 'Peruvian', 'Portuguese',
+  'Pub', 'Sandwiches', 'Seafood', 'Spanish', 'Steakhouse', 'Thai',
+  'Turkish', 'Vegetarian'
+];

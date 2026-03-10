@@ -15,7 +15,7 @@ export async function GET(request: Request) {
 
     const amenityFilters = AMENITY_DB_COLUMNS;
 
-    const parsed = parseNaturalLanguageQuery(searchQuery.trim());
+    const parsed = searchQuery.trim() ? parseNaturalLanguageQuery(searchQuery.trim()) : null;
 
     const counts: Record<string, number> = {};
 
@@ -35,11 +35,11 @@ export async function GET(request: Request) {
           );
         } else if (parsed?.location) {
           query = query.or(
-            `address.ilike.${parsed.location},city.ilike.${parsed.location}`
+            `address.ilike.%${parsed.location}%,city.ilike.%${parsed.location}%`
           );
         }
 
-        if(parsed?.cuisines?.length > 0) {
+        if(parsed?.cuisines && parsed.cuisines.length > 0) {
           query = query.or(
             parsed.cuisines.map(c => `cuisine.ilike.${c}`).join(',')
           );
