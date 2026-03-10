@@ -1,41 +1,5 @@
-export const AMENITY_DB_COLUMNS = [
-  'high_chairs',
-  'baby_change_unisex',
-  'kids_potty_toilet',
-  'kids_coloring',
-  'kids_play_space',
-  'playground_nearby',
-  'kids_menu',
-  'free_kids_meal',
-  'pram_storage',
-  'games_available',
-  'outdoor_seating',
-  'wheelchair_access',
-  'dog_friendly',
-  'quick_service',
-  'baby_change_womens',
-  'baby_change_mens',
-  'air_conditioning',
-  'vegetarian_options',
-  'vegan_options',
-  'gluten_free_options',
-  'small_plates',
-  'healthy_options',
-  'halal',
-  'kosher',
-  'fun_quirky',
-  'relaxed',
-  'buzzy',
-  'posh',
-  'good_for_groups',
-  'teen_favourite',
-  'friendly_staff',
-  'takeaway',
-  'one_pound_kids_meal',
-  'tourist_attraction_nearby',
-] as const;
-
 // Mapping from FilterPanel keys to DB columns
+// TODO the allowed filters can be read from the database schema via a query to information_schema.columns
 export const FILTER_KEY_TO_DB_COLUMN: Record<string, string> = {
   kidsMenu: 'kids_menu',
   highChairs: 'high_chairs',
@@ -52,6 +16,7 @@ export const FILTER_KEY_TO_DB_COLUMN: Record<string, string> = {
   dogFriendly: 'dog_friendly',
   vegetarianOptions: 'vegetarian_options',
   veganOptions: 'vegan_options',
+  glutenFree: 'gluten_free_options',
   glutenFreeOptions: 'gluten_free_options',
   smallPlates: 'small_plates',
   healthyOptions: 'healthy_options',
@@ -74,20 +39,6 @@ export const FILTER_KEY_TO_DB_COLUMN: Record<string, string> = {
   touristAttractionNearby: 'tourist_attraction_nearby',
 };
 
-// Simple phrase → amenity column mapping for search text like "kids coloring"
-export const AMENITY_PHRASES_TO_DB_COLUMN: Record<string, string> = {
-  'kids coloring': 'kids_coloring',
-  'kids colouring': 'kids_coloring',
-  'kids menu': 'kids_menu',
-  'high chairs': 'high_chairs',
-  'baby change womens': 'baby_change_womens',
-  'baby change unisex': 'baby_change_unisex',
-  'baby change mens': 'baby_change_mens',
-  'kids potty toilet': 'kids_potty_toilet',
-  'kids play space': 'kids_play_space',
-  'playground nearby': 'playground_nearby',
-  'free kids meal': 'free_kids_meal',
-  'one pound kids meal': 'one_pound_kids_meal',
-  'gluten free': 'gluten_free_options'
-};
-
+export const AMENITY_DB_COLUMNS: readonly string[] = Array.from(
+  new Set(Object.values(FILTER_KEY_TO_DB_COLUMN))
+);
