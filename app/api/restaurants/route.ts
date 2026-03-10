@@ -154,28 +154,6 @@ export async function GET(request: Request) {
       return NextResponse.json({ data, error: null });
     }
 
-    if (type === 'london') {
-      const excludeIds = searchParams.get('exclude')?.split(',') || [];
-
-      let supabaseQuery = supabase
-        .from('restaurants')
-        .select('id, name, cuisine, likes_count, address, image_url')
-        .eq('visible', true)
-        .ilike('address', '%London%');
-
-      if (excludeIds.length > 0) {
-        supabaseQuery = supabaseQuery.not('id', 'in', `(${excludeIds.join(',')})`);
-      }
-
-      const { data, error } = await supabaseQuery
-        .order('likes_count', { ascending: false })
-        .limit(5);
-
-      if (error) throw error;
-
-      return NextResponse.json({ data, error: null });
-    }
-
     if (type === 'search') {
       const searchTerm = `%${query?.toLowerCase() || ''}%`;
 
