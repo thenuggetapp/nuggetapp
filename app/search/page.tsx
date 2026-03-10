@@ -115,7 +115,7 @@ function getFiltersFromURLParams(searchParams: URLSearchParams): FilterState {
     buzzy: searchParams.get("buzzy") === "true",
     posh: searchParams.get("posh") === "true",
     goodForGroups: searchParams.get("good_for_groups") === "true",
-    kidsColoring: searchParams.get("kids_colouring") === "true",
+    kidsColoring: searchParams.get("kids_coloring") === "true",
     gamesAvailable: searchParams.get("games_available") === "true",
     kidsPlaySpace: searchParams.get("kids_play_space") === "true",
     teenFavourite: searchParams.get("teen_favourite") === "true",
