@@ -20,26 +20,6 @@ export function useFeaturedRestaurants() {
   };
 }
 
-// London restaurants
-export function useLondonRestaurants(excludeIds?: string[]) {
-  const key =
-    excludeIds && excludeIds.length > 0
-      ? `/api/restaurants?type=london&exclude=${excludeIds.join(",")}`
-      : "/api/restaurants?type=london";
-
-  const { data, error, isLoading, mutate } = useSWR(key, apiFetcher, {
-    revalidateOnFocus: false,
-    dedupingInterval: 60000,
-  });
-
-  return {
-    restaurants: data || [],
-    isLoading,
-    isError: error,
-    refresh: mutate,
-  };
-}
-
 // Search suggestions (with debouncing)
 export function useSearchSuggestions(query: string) {
   const shouldFetch = query.trim().length > 1;

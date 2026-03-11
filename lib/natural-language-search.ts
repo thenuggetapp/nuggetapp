@@ -1,39 +1,11 @@
+import { ALL_CUISINE_TYPES, FILTER_KEY_TO_DB_COLUMN } from '@/lib/amenities';
+
+export type ParsedFeatures = Partial<Record<keyof typeof FILTER_KEY_TO_DB_COLUMN, boolean>>;
+
 export interface ParsedQuery {
   cuisines: string[];
   foodKeywords: string[];
-  features: {
-    kidsMenu?: boolean;
-    highChairs?: boolean;
-    changingTable?: boolean;
-    wheelchairAccess?: boolean;
-    outdoorSeating?: boolean;
-    vegetarianOptions?: boolean;
-    veganOptions?: boolean;
-    glutenFree?: boolean;
-    halal?: boolean;
-    kosher?: boolean;
-    parking?: boolean;
-    playgroundNearby?: boolean;
-    dogFriendly?: boolean;
-    takeaway?: boolean;
-    quickService?: boolean;
-    goodForGroups?: boolean;
-    freeKidsMeal?: boolean;
-    airConditioning?: boolean;
-    kidsPlaySpace?: boolean;
-    kidsColoring?: boolean;
-    gamesAvailable?: boolean;
-    healthyOptions?: boolean;
-    smallPlates?: boolean;
-    buzzy?: boolean;
-    relaxed?: boolean;
-    posh?: boolean;
-    funQuirky?: boolean;
-    babyChangeWomens?: boolean;
-    babyChangeMens?: boolean;
-    babyChangeUnisex?: boolean;
-    pramStorage?: boolean;
-  };
+  features: ParsedFeatures;
   priceLevel?: number;
   location?: string;
   rating?: number;
@@ -45,7 +17,7 @@ const CUISINE_KEYWORDS = [
   'american', 'british', 'mediterranean', 'spanish', 'vietnamese', 'korean',
   'greek', 'turkish', 'lebanese', 'brazilian', 'caribbean', 'moroccan',
   'european', 'asian', 'african'
-];
+].concat(ALL_CUISINE_TYPES).map(c => c.toLowerCase());
 
 const FOOD_KEYWORDS = [
   'pizza', 'burger', 'sushi', 'ramen', 'curry', 'tapas', 'bbq', 'seafood',
@@ -123,9 +95,11 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
   });
 
   Object.entries(FEATURE_KEYWORDS).forEach(([feature, keywords]) => {
+    if (!(feature in FILTER_KEY_TO_DB_COLUMN)) return;
+    const key = feature as keyof typeof FILTER_KEY_TO_DB_COLUMN;
     keywords.forEach(keyword => {
       if (lowerQuery.includes(keyword)) {
-        parsed.features[feature as keyof typeof parsed.features] = true;
+        parsed.features[key] = true;
       }
     });
   });

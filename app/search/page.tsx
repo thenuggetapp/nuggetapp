@@ -115,7 +115,7 @@ function getFiltersFromURLParams(searchParams: URLSearchParams): FilterState {
     buzzy: searchParams.get("buzzy") === "true",
     posh: searchParams.get("posh") === "true",
     goodForGroups: searchParams.get("good_for_groups") === "true",
-    kidsColoring: searchParams.get("kids_colouring") === "true",
+    kidsColoring: searchParams.get("kids_coloring") === "true",
     gamesAvailable: searchParams.get("games_available") === "true",
     kidsPlaySpace: searchParams.get("kids_play_space") === "true",
     teenFavourite: searchParams.get("teen_favourite") === "true",
@@ -264,6 +264,11 @@ function SearchContent() {
     "Discover: 'pizza place with parking'",
     "Explore: 'family-friendly brunch'",
   ];
+  
+  // Search string for filter panel - include cuisines 
+  const filterCountsSearchString = useMemo(() => {
+    return [searchQuery, ...filters.cuisines].filter(Boolean).join(' ');
+  }, [searchQuery, filters.cuisines]);
 
   // Scroll to hovered card when hovering over a marker
   useEffect(() => {
@@ -355,9 +360,7 @@ function SearchContent() {
 
   useEffect(() => {
     const query = searchParams.get("q");
-    if (query && searchQuery) {
-      performSearch(searchQuery);
-    } else if (searchQuery) {
+    if (searchQuery) {
       performSearch(searchQuery);
     } else if (!query) {
       loadRestaurants();
@@ -970,7 +973,7 @@ function SearchContent() {
               <FilterPanel
                 onFilterChange={setFilters}
                 expanded={true}
-                searchQuery={searchQuery}
+                searchQuery={filterCountsSearchString}
                 city={filteredCity || ''}
                 isSearching={loading}
                 currentFilters={filters}
@@ -1033,7 +1036,7 @@ function SearchContent() {
               <FilterPanel
                 onFilterChange={setFilters}
                 expanded={showFilters}
-                searchQuery={searchQuery}
+                searchQuery={filterCountsSearchString}
                 city={filteredCity || ''}
                 isSearching={loading}
                 currentFilters={filters}

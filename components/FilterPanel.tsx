@@ -18,6 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { FILTER_KEY_TO_DB_COLUMN, ALL_CUISINE_TYPES } from '@/lib/amenities';
 
 interface FilterPanelProps {
   onFilterChange?: (filters: FilterState) => void;
@@ -237,44 +238,7 @@ export function FilterPanel({ onFilterChange, expanded = false, searchQuery = ''
   };
 
   const mapFilterKeyToDbColumn = (key: string): string => {
-    const mapping: Record<string, string> = {
-      kidsMenu: 'kids_menu',
-      highChairs: 'high_chairs',
-      changingTable: 'changing_table',
-      wheelchairAccess: 'wheelchair_access',
-      babyChangeWomens: 'baby_change_womens',
-      babyChangeUnisex: 'baby_change_unisex',
-      babyChangeMens: 'baby_change_mens',
-      kidsPottyToilet: 'kids_potty_toilet',
-      pramStorage: 'pram_storage',
-      outdoorSeating: 'outdoor_seating',
-      playgroundNearby: 'playground_nearby',
-      airConditioning: 'air_conditioning',
-      dogFriendly: 'dog_friendly',
-      vegetarianOptions: 'vegetarian_options',
-      veganOptions: 'vegan_options',
-      glutenFreeOptions: 'gluten_free_options',
-      smallPlates: 'small_plates',
-      healthyOptions: 'healthy_options',
-      halal: 'halal',
-      kosher: 'kosher',
-      funQuirky: 'fun_quirky',
-      relaxed: 'relaxed',
-      buzzy: 'buzzy',
-      posh: 'posh',
-      goodForGroups: 'good_for_groups',
-      kidsColoring: 'kids_colouring',
-      gamesAvailable: 'games_available',
-      kidsPlaySpace: 'kids_play_space',
-      teenFavourite: 'teen_favourite',
-      quickService: 'quick_service',
-      friendlyStaff: 'friendly_staff',
-      takeaway: 'takeaway',
-      freeKidsMeal: 'free_kids_meal',
-      onePoundKidsMeal: 'one_pound_kids_meal',
-      touristAttractionNearby: 'tourist_attraction_nearby',
-    };
-    return mapping[key] || key;
+    return FILTER_KEY_TO_DB_COLUMN[key] || key;
   };
 
   const getFilterCount = (key: string): number => {
@@ -282,17 +246,7 @@ export function FilterPanel({ onFilterChange, expanded = false, searchQuery = ''
     return filterCounts.amenities[dbColumn] || 0;
   };
 
-  const allCuisineTypes = [
-    'American', 'Asian', 'Bakery', 'Bar & Grill', 'BBQ', 'Breakfast',
-    'British', 'Burgers', 'Cafe', 'Chinese', 'Dessert', 'European',
-    'Filipino', 'French', 'Greek', 'Indian', 'International', 'Italian',
-    'Japanese', 'Korean', 'Kosher', 'Latin American', 'Mediterranean',
-    'Mexican', 'Middle Eastern', 'Persian', 'Peruvian', 'Portuguese',
-    'Pub', 'Sandwiches', 'Seafood', 'Spanish', 'Steakhouse', 'Thai',
-    'Turkish', 'Vegetarian'
-  ];
-
-  const cuisineTypes = allCuisineTypes.filter(cuisine => {
+  const cuisineTypes = ALL_CUISINE_TYPES.filter(cuisine => {
     if (loadingCounts) return true;
     return (filterCounts.cuisines[cuisine] || 0) > 0;
   });

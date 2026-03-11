@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { parseNaturalLanguageQuery } from '@/lib/natural-language-search';
+import { FILTER_KEY_TO_DB_COLUMN } from '@/lib/amenities';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -28,6 +29,7 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 
 async function applyFilters(initialQuery: any, searchParams: URLSearchParams) {
   // Map filter names to database column names (supports both camelCase and snake_case)
+  //TODO standardize search keys to camelCase, then remove this mapping
   const columnMap: Record<string, string> = {
     kidsMenu: 'kids_menu',
     kids_menu: 'kids_menu',
@@ -154,28 +156,6 @@ export async function GET(request: Request) {
       return NextResponse.json({ data, error: null });
     }
 
-    if (type === 'london') {
-      const excludeIds = searchParams.get('exclude')?.split(',') || [];
-
-      let supabaseQuery = supabase
-        .from('restaurants')
-        .select('id, name, cuisine, likes_count, address, image_url')
-        .eq('visible', true)
-        .ilike('address', '%London%');
-
-      if (excludeIds.length > 0) {
-        supabaseQuery = supabaseQuery.not('id', 'in', `(${excludeIds.join(',')})`);
-      }
-
-      const { data, error } = await supabaseQuery
-        .order('likes_count', { ascending: false })
-        .limit(5);
-
-      if (error) throw error;
-
-      return NextResponse.json({ data, error: null });
-    }
-
     if (type === 'search') {
       const searchTerm = `%${query?.toLowerCase() || ''}%`;
 
@@ -233,40 +213,9 @@ export async function GET(request: Request) {
       if (parsed?.features) {
         Object.entries(parsed.features).forEach(([feature, value]) => {
           if (value === true) {
-            // Map feature names to database column names
-            const columnMap: Record<string, string> = {
-              kidsMenu: 'kids_menu',
-              highChairs: 'high_chairs',
-              changingTable: 'changing_table',
-              wheelchairAccess: 'wheelchair_access',
-              outdoorSeating: 'outdoor_seating',
-              vegetarianOptions: 'vegetarian_options',
-              veganOptions: 'vegan_options',
-              glutenFree: 'gluten_free_options',
-              halal: 'halal',
-              kosher: 'kosher',
-              dogFriendly: 'dog_friendly',
-              takeaway: 'takeaway',
-              quickService: 'quick_service',
-              goodForGroups: 'good_for_groups',
-              freeKidsMeal: 'free_kids_meal',
-              playgroundNearby: 'playground_nearby',
-              airConditioning: 'air_conditioning',
-              kidsPlaySpace: 'kids_play_space',
-              kidsColoring: 'kids_coloring',
-              gamesAvailable: 'games_available',
-              healthyOptions: 'healthy_options',
-              smallPlates: 'small_plates',
-              buzzy: 'buzzy',
-              relaxed: 'relaxed',
-              posh: 'posh',
-              funQuirky: 'fun_quirky',
-              babyChangeWomens: 'baby_change_womens',
-              babyChangeMens: 'baby_change_mens',
-              babyChangeUnisex: 'baby_change_unisex',
-              pramStorage: 'pram_storage'
-            };
-            const dbColumn = columnMap[feature] || feature;
+            // Map feature names to database column names using shared mapping.
+            // Most feature keys match FilterPanel keys and can use FILTER_KEY_TO_DB_COLUMN.
+            const dbColumn = FILTER_KEY_TO_DB_COLUMN[feature];
             supabaseQuery = supabaseQuery.eq(dbColumn, true);
           }
         });

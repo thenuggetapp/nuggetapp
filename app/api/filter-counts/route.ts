@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { AMENITY_DB_COLUMNS, FILTER_KEY_TO_DB_COLUMN } from '@/lib/amenities';
+import { parseNaturalLanguageQuery } from '@/lib/natural-language-search';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,42 +13,9 @@ export async function GET(request: Request) {
 
     const supabase = createClient();
 
-    const amenityFilters = [
-      'high_chairs',
-      'baby_change_unisex',
-      'kids_potty_toilet',
-      'kids_colouring',
-      'kids_play_space',
-      'playground_nearby',
-      'kids_menu',
-      'free_kids_meal',
-      'pram_storage',
-      'games_available',
-      'outdoor_seating',
-      'wheelchair_access',
-      'dog_friendly',
-      'quick_service',
-      'baby_change_womens',
-      'baby_change_mens',
-      'air_conditioning',
-      'vegetarian_options',
-      'vegan_options',
-      'gluten_free_options',
-      'small_plates',
-      'healthy_options',
-      'halal',
-      'kosher',
-      'fun_quirky',
-      'relaxed',
-      'buzzy',
-      'posh',
-      'good_for_groups',
-      'teen_favourite',
-      'friendly_staff',
-      'takeaway',
-      'one_pound_kids_meal',
-      'tourist_attraction_nearby',
-    ];
+    const amenityFilters = AMENITY_DB_COLUMNS;
+
+    const parsed = searchQuery.trim() ? parseNaturalLanguageQuery(searchQuery.trim()) : null;
 
     const counts: Record<string, number> = {};
 
@@ -58,13 +27,21 @@ export async function GET(request: Request) {
           .eq('visible', true)
           .eq(filter, true);
 
+        // If a city is specified, match either address OR city case-insensitively.
         if (city) {
-          query = query.ilike('address', `%${city}%`);
+          const cityPat = `%${city}%`;
+          query = query.or(
+            `address.ilike.${cityPat},city.ilike.${cityPat}`
+          );
+        } else if (parsed?.location) {
+          query = query.or(
+            `address.ilike.%${parsed.location}%,city.ilike.%${parsed.location}%`
+          );
         }
 
-        if (searchQuery && !city) {
+        if(parsed?.cuisines && parsed.cuisines.length > 0) {
           query = query.or(
-            `name.ilike.%${searchQuery}%,cuisine.ilike.%${searchQuery}%,address.ilike.%${searchQuery}%,city.ilike.%${searchQuery}%`
+            parsed.cuisines.map(c => `cuisine.ilike.${c}`).join(',')
           );
         }
 
