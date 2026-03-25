@@ -327,8 +327,6 @@ function SearchContent() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-
-      // Check if click is outside filter panel and outside filter toggle button
       if (
         filterPanelRef.current &&
         !filterPanelRef.current.contains(target) &&
@@ -338,12 +336,12 @@ function SearchContent() {
       }
     };
 
-    if (showFilters) {
+    if (showFilters && !isMobile) {
       document.addEventListener("mousedown", handleClickOutside);
       return () =>
         document.removeEventListener("mousedown", handleClickOutside);
     }
-  }, [showFilters]);
+  }, [showFilters, isMobile]);
 
   useEffect(() => {
     const query = searchParams.get("q");
@@ -941,9 +939,7 @@ function SearchContent() {
       {isMobile && (
         <Drawer
           open={showFilters}
-          onOpenChange={(open) => {
-            if (open) setShowFilters(true);
-          }}
+          onOpenChange={setShowFilters}
           dismissible={false}
           shouldScaleBackground={false}
           modal={false}

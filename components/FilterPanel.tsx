@@ -515,12 +515,7 @@ export function FilterPanel({
 
   if (expanded) {
     return (
-      //<ScrollArea className="h-full w-full">
-      <div
-        className="h-full w-full overflow-y-auto"
-        onPointerDown={(e) => e.stopPropagation()}
-        onTouchStart={(e) => e.stopPropagation()}
-      >
+      <ScrollArea className="h-full w-full">
         <div className="space-y-6 px-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -806,8 +801,7 @@ export function FilterPanel({
             </div>
           </div>
         </div>
-      </div>
-      //</ScrollArea>
+      </ScrollArea>
     );
   }
 
