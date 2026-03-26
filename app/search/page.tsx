@@ -76,7 +76,7 @@ interface SearchSuggestion {
   name: string;
   cuisine: string;
   address: string;
-  type: 'city' | 'restaurant';
+  type: "city" | "restaurant";
   count?: number;
 }
 
@@ -124,7 +124,8 @@ function getFiltersFromURLParams(searchParams: URLSearchParams): FilterState {
     takeaway: searchParams.get("takeaway") === "true",
     freeKidsMeal: searchParams.get("free_kids_meal") === "true",
     onePoundKidsMeal: searchParams.get("one_pound_kids_meal") === "true",
-    touristAttractionNearby: searchParams.get("tourist_attraction_nearby") === "true",
+    touristAttractionNearby:
+      searchParams.get("tourist_attraction_nearby") === "true",
   };
 }
 
@@ -159,7 +160,7 @@ function SearchContent() {
     page: 1,
     limit: 24,
     total: 0,
-    totalPages: 0
+    totalPages: 0,
   });
 
   // ✅ SWR hooks - automatic caching, deduplication, background refresh
@@ -168,17 +169,23 @@ function SearchContent() {
   const { likedIds } = useUserLikes();
   const { toggleBookmark } = useToggleBookmark();
   const { toggleLike } = useToggleLike();
-  const [filters, setFilters] = useState<FilterState>(() => getFiltersFromURLParams(searchParams));
+  const [filters, setFilters] = useState<FilterState>(() =>
+    getFiltersFromURLParams(searchParams),
+  );
   const [showFilters, setShowFilters] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [hoveredRestaurantId, setHoveredRestaurantId] = useState<string | null>(null);
+  const [hoveredRestaurantId, setHoveredRestaurantId] = useState<string | null>(
+    null,
+  );
   const [isWideLayout, setIsWideLayout] = useState(false);
 
   // Drawer state for mobile
-  const [drawerPosition, setDrawerPosition] = useState<'collapsed' | 'middle' | 'expanded'>('middle');
+  const [drawerPosition, setDrawerPosition] = useState<
+    "collapsed" | "middle" | "expanded"
+  >("middle");
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
   const [currentY, setCurrentY] = useState(0);
@@ -186,70 +193,74 @@ function SearchContent() {
 
   // Map filter keys to display labels
   const filterLabels: Record<string, string> = {
-    kidsMenu: 'Kids Menu',
-    highChairs: 'High Chairs',
-    changingTable: 'Changing Table',
-    wheelchairAccess: 'Wheelchair Access',
-    babyChangeWomens: 'Baby Change (Women)',
-    babyChangeUnisex: 'Baby Change (Unisex)',
-    babyChangeMens: 'Baby Change (Men)',
-    kidsPottyToilet: 'Kids Potty/Toilet',
-    pramStorage: 'Pram Storage',
-    outdoorSeating: 'Outdoor Seating',
-    playgroundNearby: 'Playground Nearby',
-    airConditioning: 'Air Conditioning',
-    dogFriendly: 'Dog Friendly',
-    vegetarianOptions: 'Vegetarian',
-    veganOptions: 'Vegan',
-    glutenFreeOptions: 'Gluten Free',
-    smallPlates: 'Small Plates',
-    healthyOptions: 'Healthy Options',
-    halal: 'Halal',
-    kosher: 'Kosher',
-    funQuirky: 'Fun & Quirky',
-    relaxed: 'Relaxed',
-    buzzy: 'Buzzy',
-    posh: 'Posh',
-    goodForGroups: 'Good for Groups',
-    kidsColoring: 'Kids Coloring',
-    gamesAvailable: 'Games Available',
-    kidsPlaySpace: 'Kids Play Space',
-    teenFavourite: 'Teen Favourite',
-    quickService: 'Quick Service',
-    friendlyStaff: 'Friendly Staff',
-    takeaway: 'Takeaway',
-    freeKidsMeal: 'Free Kids Meal',
-    onePoundKidsMeal: '£1 Kids Meal',
-    touristAttractionNearby: 'Tourist Attraction'
+    kidsMenu: "Kids Menu",
+    highChairs: "High Chairs",
+    changingTable: "Changing Table",
+    wheelchairAccess: "Wheelchair Access",
+    babyChangeWomens: "Baby Change (Women)",
+    babyChangeUnisex: "Baby Change (Unisex)",
+    babyChangeMens: "Baby Change (Men)",
+    kidsPottyToilet: "Kids Potty/Toilet",
+    pramStorage: "Pram Storage",
+    outdoorSeating: "Outdoor Seating",
+    playgroundNearby: "Playground Nearby",
+    airConditioning: "Air Conditioning",
+    dogFriendly: "Dog Friendly",
+    vegetarianOptions: "Vegetarian",
+    veganOptions: "Vegan",
+    glutenFreeOptions: "Gluten Free",
+    smallPlates: "Small Plates",
+    healthyOptions: "Healthy Options",
+    halal: "Halal",
+    kosher: "Kosher",
+    funQuirky: "Fun & Quirky",
+    relaxed: "Relaxed",
+    buzzy: "Buzzy",
+    posh: "Posh",
+    goodForGroups: "Good for Groups",
+    kidsColoring: "Kids Coloring",
+    gamesAvailable: "Games Available",
+    kidsPlaySpace: "Kids Play Space",
+    teenFavourite: "Teen Favourite",
+    quickService: "Quick Service",
+    friendlyStaff: "Friendly Staff",
+    takeaway: "Takeaway",
+    freeKidsMeal: "Free Kids Meal",
+    onePoundKidsMeal: "£1 Kids Meal",
+    touristAttractionNearby: "Tourist Attraction",
   };
 
   // Get active filter labels for the heading
   const getActiveFilterLabel = () => {
     const activeFilterKeys = Object.entries(filters)
-      .filter(([key, value]) => key !== 'cuisines' && value === true)
+      .filter(([key, value]) => key !== "cuisines" && value === true)
       .map(([key]) => key);
 
     const labels: string[] = [];
 
     // Add amenity filter labels
     if (activeFilterKeys.length > 0) {
-      labels.push(...activeFilterKeys.map(key => filterLabels[key].toLowerCase()));
+      labels.push(
+        ...activeFilterKeys.map((key) => filterLabels[key].toLowerCase()),
+      );
     }
 
     // Add cuisine labels
     if (filters.cuisines.length > 0) {
-      labels.push(...filters.cuisines.map(c => c.toLowerCase()));
+      labels.push(...filters.cuisines.map((c) => c.toLowerCase()));
     }
 
     // If we have labels, join them with commas
     if (labels.length > 0) {
-      return labels.join(', ');
+      return labels.join(", ");
     }
 
-    return 'family friendly';
+    return "family friendly";
   };
   const [isMobile, setIsMobile] = useState(false);
-  const [activeTab, setActiveTab] = useState<'restaurants' | 'discounts' | 'events'>('restaurants');
+  const [activeTab, setActiveTab] = useState<
+    "restaurants" | "discounts" | "events"
+  >("restaurants");
   const searchRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const filterPanelRef = useRef<HTMLDivElement>(null);
@@ -264,10 +275,10 @@ function SearchContent() {
     "Discover: 'pizza place with parking'",
     "Explore: 'family-friendly brunch'",
   ];
-  
-  // Search string for filter panel - include cuisines 
+
+  // Search string for filter panel - include cuisines
   const filterCountsSearchString = useMemo(() => {
-    return [searchQuery, ...filters.cuisines].filter(Boolean).join(' ');
+    return [searchQuery, ...filters.cuisines].filter(Boolean).join(" ");
   }, [searchQuery, filters.cuisines]);
 
   // Scroll to hovered card when hovering over a marker
@@ -276,9 +287,9 @@ function SearchContent() {
       const cardElement = cardRefs.current.get(hoveredRestaurantId);
       if (cardElement) {
         cardElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'nearest'
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
         });
       }
     }
@@ -316,8 +327,6 @@ function SearchContent() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-
-      // Check if click is outside filter panel and outside filter toggle button
       if (
         filterPanelRef.current &&
         !filterPanelRef.current.contains(target) &&
@@ -327,12 +336,12 @@ function SearchContent() {
       }
     };
 
-    if (showFilters) {
+    if (showFilters && !isMobile) {
       document.addEventListener("mousedown", handleClickOutside);
       return () =>
         document.removeEventListener("mousedown", handleClickOutside);
     }
-  }, [showFilters]);
+  }, [showFilters, isMobile]);
 
   useEffect(() => {
     const query = searchParams.get("q");
@@ -399,7 +408,7 @@ function SearchContent() {
 
   const handleToggleBookmark = async (
     restaurantId: string,
-    e: React.MouseEvent
+    e: React.MouseEvent,
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -414,7 +423,7 @@ function SearchContent() {
 
   const handleToggleLike = async (
     restaurantId: string,
-    e: React.MouseEvent
+    e: React.MouseEvent,
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -437,8 +446,8 @@ function SearchContent() {
                 ? Math.max((r.likesCount || 0) - 1, 0)
                 : (r.likesCount || 0) + 1,
             }
-          : r
-      )
+          : r,
+      ),
     );
   };
 
@@ -491,10 +500,10 @@ function SearchContent() {
     setError(null);
 
     try {
-      const params = new URLSearchParams({ 
+      const params = new URLSearchParams({
         type: "all",
         page: currentPage.toString(),
-        limit: "24"
+        limit: "24",
       });
 
       // Add filter parameters
@@ -527,7 +536,7 @@ function SearchContent() {
       const formattedRestaurants: Restaurant[] = (data || []).map((r: any) => {
         const coords: [number, number] = [r.longitude || 0, r.latitude || 0];
         console.log(
-          `Restaurant ${r.name}: coords [${coords[0]}, ${coords[1]}]`
+          `Restaurant ${r.name}: coords [${coords[0]}, ${coords[1]}]`,
         );
 
         return {
@@ -556,7 +565,7 @@ function SearchContent() {
       if (formattedRestaurants.length > 0) {
         console.log(
           "Setting selected restaurant:",
-          formattedRestaurants[0].name
+          formattedRestaurants[0].name,
         );
         setSelectedRestaurant(formattedRestaurants[0]);
       } else {
@@ -566,10 +575,10 @@ function SearchContent() {
       console.error("Error loading restaurants:", error);
       console.error(
         "Error stack:",
-        error instanceof Error ? error.stack : "No stack trace"
+        error instanceof Error ? error.stack : "No stack trace",
       );
       setError(
-        error instanceof Error ? error.message : "Failed to load restaurants"
+        error instanceof Error ? error.message : "Failed to load restaurants",
       );
     } finally {
       setLoading(false);
@@ -588,7 +597,7 @@ function SearchContent() {
         type: "search",
         q: query,
         page: currentPage.toString(),
-        limit: "24"
+        limit: "24",
       });
 
       // Add filter parameters
@@ -603,7 +612,13 @@ function SearchContent() {
       });
 
       const response = await fetch(`/api/restaurants?${params.toString()}`);
-      const { data, error, city, cityCoordinates, pagination: paginationInfo } = await response.json();
+      const {
+        data,
+        error,
+        city,
+        cityCoordinates,
+        pagination: paginationInfo,
+      } = await response.json();
 
       if (error) {
         console.error("Search query error:", error);
@@ -661,10 +676,10 @@ function SearchContent() {
       console.error("Error searching restaurants:", error);
       console.error(
         "Error details:",
-        error instanceof Error ? error.message : error
+        error instanceof Error ? error.message : error,
       );
       setError(
-        error instanceof Error ? error.message : "Failed to search restaurants"
+        error instanceof Error ? error.message : "Failed to search restaurants",
       );
     } finally {
       setLoading(false);
@@ -682,7 +697,7 @@ function SearchContent() {
     if (newPage >= 1 && newPage <= pagination.totalPages) {
       setCurrentPage(newPage);
       // Scroll to top of restaurant list
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -708,17 +723,17 @@ function SearchContent() {
     if (Math.abs(deltaY) > threshold) {
       if (deltaY > 0) {
         // Swiping down
-        if (drawerPosition === 'expanded') {
-          setDrawerPosition('middle');
-        } else if (drawerPosition === 'middle') {
-          setDrawerPosition('collapsed');
+        if (drawerPosition === "expanded") {
+          setDrawerPosition("middle");
+        } else if (drawerPosition === "middle") {
+          setDrawerPosition("collapsed");
         }
       } else {
         // Swiping up
-        if (drawerPosition === 'collapsed') {
-          setDrawerPosition('middle');
-        } else if (drawerPosition === 'middle') {
-          setDrawerPosition('expanded');
+        if (drawerPosition === "collapsed") {
+          setDrawerPosition("middle");
+        } else if (drawerPosition === "middle") {
+          setDrawerPosition("expanded");
         }
       }
     }
@@ -729,9 +744,9 @@ function SearchContent() {
   };
 
   const getDrawerTopPosition = () => {
-    if (drawerPosition === 'collapsed') return 'top-[70vh]';
-    if (drawerPosition === 'middle') return 'top-[50vh]';
-    return 'top-[10vh]'; // expanded
+    if (drawerPosition === "collapsed") return "top-[70vh]";
+    if (drawerPosition === "middle") return "top-[50vh]";
+    return "top-[10vh]"; // expanded
   };
 
   const markers = useMemo(
@@ -742,12 +757,12 @@ function SearchContent() {
         title: restaurant.name,
         description: restaurant.address,
       })),
-    [restaurants]
+    [restaurants],
   );
 
   const mapCenter = useMemo(
     () => cityCoordinates || selectedRestaurant?.coordinates,
-    [cityCoordinates, selectedRestaurant?.coordinates]
+    [cityCoordinates, selectedRestaurant?.coordinates],
   );
 
   return (
@@ -969,12 +984,15 @@ function SearchContent() {
                 </DrawerClose>
               </div>
             </DrawerHeader>
-            <div className="overflow-y-auto py-6" onPointerDown={(e) => e.stopPropagation()}>
+            <div
+              className="overflow-y-auto py-6"
+              onPointerDown={(e) => e.stopPropagation()}
+            >
               <FilterPanel
                 onFilterChange={setFilters}
                 expanded={true}
                 searchQuery={filterCountsSearchString}
-                city={filteredCity || ''}
+                city={filteredCity || ""}
                 isSearching={loading}
                 currentFilters={filters}
               />
@@ -1001,7 +1019,10 @@ function SearchContent() {
                 className="relative flex-1"
                 onClick={() => setMobileSearchOpen(true)}
               >
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 pointer-events-none" aria-hidden="true" />
+                <Search
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 pointer-events-none"
+                  aria-hidden="true"
+                />
                 <Input
                   type="text"
                   placeholder={searchQuery || "london"}
@@ -1037,7 +1058,7 @@ function SearchContent() {
                 onFilterChange={setFilters}
                 expanded={showFilters}
                 searchQuery={filterCountsSearchString}
-                city={filteredCity || ''}
+                city={filteredCity || ""}
                 isSearching={loading}
                 currentFilters={filters}
               />
@@ -1064,12 +1085,20 @@ function SearchContent() {
                 size="sm"
                 onClick={() => setIsWideLayout(!isWideLayout)}
                 className="h-10 w-10 p-0 bg-white shadow-lg border-slate-300 hover:bg-slate-50"
-                aria-label={isWideLayout ? "Switch to 2 columns" : "Switch to 4 columns"}
+                aria-label={
+                  isWideLayout ? "Switch to 2 columns" : "Switch to 4 columns"
+                }
               >
                 {isWideLayout ? (
-                  <Columns2 className="h-4 w-4 text-slate-600" aria-hidden="true" />
+                  <Columns2
+                    className="h-4 w-4 text-slate-600"
+                    aria-hidden="true"
+                  />
                 ) : (
-                  <Columns4 className="h-4 w-4 text-slate-600" aria-hidden="true" />
+                  <Columns4
+                    className="h-4 w-4 text-slate-600"
+                    aria-hidden="true"
+                  />
                 )}
               </Button>
             </div>
@@ -1082,17 +1111,20 @@ function SearchContent() {
                 aria-atomic="true"
               >
                 <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
-                  <UtensilsCrossed className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600 flex-shrink-0" aria-hidden="true" />
+                  <UtensilsCrossed
+                    className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600 flex-shrink-0"
+                    aria-hidden="true"
+                  />
                   <span className="text-slate-600 whitespace-nowrap">
                     Showing{" "}
                     <span className="font-medium text-slate-900">
                       {restaurants.length}
-                    </span>
-                    {" "}out of{" "}
+                    </span>{" "}
+                    out of{" "}
                     <span className="font-medium text-slate-900">
                       {pagination.total}
-                    </span>
-                    {" "}restaurant{pagination.total !== 1 ? "s" : ""}
+                    </span>{" "}
+                    restaurant{pagination.total !== 1 ? "s" : ""}
                   </span>
                 </div>
               </div>
@@ -1104,15 +1136,18 @@ function SearchContent() {
         <div
           ref={drawerRef}
           className={`absolute lg:relative ${getDrawerTopPosition()} lg:top-0 left-0 right-0 bottom-0 lg:h-full bg-white rounded-t-3xl lg:rounded-none shadow-2xl lg:shadow-none z-10 lg:z-auto flex flex-col lg:border-r border-slate-200 ${
-            isDragging ? '' : 'transition-all duration-300'
+            isDragging ? "" : "transition-all duration-300"
           } ${
-            isWideLayout ? 'lg:w-[calc(100%-300px)]' : 'lg:w-[640px]'
+            isWideLayout ? "lg:w-[calc(100%-300px)]" : "lg:w-[640px]"
           } lg:order-1`}
         >
           <div className="hidden lg:flex items-center gap-3 px-6 py-4 bg-white border-b border-slate-200">
             <form onSubmit={handleSearch} className="flex-1 max-w-md">
               <div ref={searchRef} className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 z-10" aria-hidden="true" />
+                <Search
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 z-10"
+                  aria-hidden="true"
+                />
                 <Input
                   ref={searchInputRef}
                   type="text"
@@ -1131,46 +1166,55 @@ function SearchContent() {
                 />
                 {showSuggestions && suggestions.length > 0 && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden z-50">
-                    {suggestions.map((suggestion: SearchSuggestion, index: number) => (
-                      <button
-                        key={`${suggestion.type}-${suggestion.id}-${index}`}
-                        type="button"
-                        onClick={() => handleSuggestionClick(suggestion)}
-                        className="w-full px-6 py-4 text-left hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-b-0"
-                      >
-                        <div className="flex items-start gap-3">
-                          {suggestion.type === "city" ? (
-                            <Globe className="h-5 w-5 text-[#8dbf65] mt-0.5 flex-shrink-0" aria-hidden="true" />
-                          ) : (
-                            <MapPin className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                          )}
-                          <div className="flex-1 min-w-0">
+                    {suggestions.map(
+                      (suggestion: SearchSuggestion, index: number) => (
+                        <button
+                          key={`${suggestion.type}-${suggestion.id}-${index}`}
+                          type="button"
+                          onClick={() => handleSuggestionClick(suggestion)}
+                          className="w-full px-6 py-4 text-left hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-b-0"
+                        >
+                          <div className="flex items-start gap-3">
                             {suggestion.type === "city" ? (
-                              <>
-                                <div className="font-semibold text-slate-900 truncate">
-                                  {suggestion.name}
-                                </div>
-                                <div className="text-sm text-slate-600">
-                                  Browse all family-friendly restaurants in this city
-                                </div>
-                              </>
+                              <Globe
+                                className="h-5 w-5 text-[#8dbf65] mt-0.5 flex-shrink-0"
+                                aria-hidden="true"
+                              />
                             ) : (
-                              <>
-                                <div className="font-semibold text-slate-900 truncate">
-                                  {suggestion.name}
-                                </div>
-                                <div className="text-sm text-slate-600 truncate">
-                                  {suggestion.cuisine}
-                                </div>
-                                <div className="text-xs text-slate-500 truncate">
-                                  {suggestion.address}
-                                </div>
-                              </>
+                              <MapPin
+                                className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0"
+                                aria-hidden="true"
+                              />
                             )}
+                            <div className="flex-1 min-w-0">
+                              {suggestion.type === "city" ? (
+                                <>
+                                  <div className="font-semibold text-slate-900 truncate">
+                                    {suggestion.name}
+                                  </div>
+                                  <div className="text-sm text-slate-600">
+                                    Browse all family-friendly restaurants in
+                                    this city
+                                  </div>
+                                </>
+                              ) : (
+                                <>
+                                  <div className="font-semibold text-slate-900 truncate">
+                                    {suggestion.name}
+                                  </div>
+                                  <div className="text-sm text-slate-600 truncate">
+                                    {suggestion.cuisine}
+                                  </div>
+                                  <div className="text-xs text-slate-500 truncate">
+                                    {suggestion.address}
+                                  </div>
+                                </>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      </button>
-                    ))}
+                        </button>
+                      ),
+                    )}
                   </div>
                 )}
               </div>
@@ -1190,7 +1234,7 @@ function SearchContent() {
               data-filter-toggle
               className={`h-11 px-4 rounded-lg relative ${
                 Object.entries(filters).some(([key, value]) =>
-                  key === "cuisines" ? value.length > 0 : value === true
+                  key === "cuisines" ? value.length > 0 : value === true,
                 )
                   ? "border-[#8dbf65] bg-[#8dbf65]/10"
                   : "border-slate-300"
@@ -1200,12 +1244,12 @@ function SearchContent() {
             >
               <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
               {Object.entries(filters).some(([key, value]) =>
-                key === "cuisines" ? value.length > 0 : value === true
+                key === "cuisines" ? value.length > 0 : value === true,
               ) && (
                 <span className="absolute -top-1 -right-1 bg-[#8dbf65] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {
                     Object.entries(filters).filter(([key, value]) =>
-                      key === "cuisines" ? value.length > 0 : value === true
+                      key === "cuisines" ? value.length > 0 : value === true,
                     ).length
                   }
                 </span>
@@ -1227,31 +1271,31 @@ function SearchContent() {
             <div className="px-6 py-4 border-b border-slate-200">
               <div className="hidden lg:flex items-center gap-3 mb-4">
                 <Button
-                  variant={activeTab === 'restaurants' ? 'default' : 'ghost'}
+                  variant={activeTab === "restaurants" ? "default" : "ghost"}
                   size="sm"
-                  onClick={() => setActiveTab('restaurants')}
-                  className={`rounded-full ${activeTab === 'restaurants' ? 'bg-slate-900 hover:bg-slate-800 text-white' : 'text-slate-600 hover:text-slate-900'}`}
+                  onClick={() => setActiveTab("restaurants")}
+                  className={`rounded-full ${activeTab === "restaurants" ? "bg-slate-900 hover:bg-slate-800 text-white" : "text-slate-600 hover:text-slate-900"}`}
                 >
                   Restaurants
                 </Button>
                 <Button
-                  variant={activeTab === 'discounts' ? 'default' : 'ghost'}
+                  variant={activeTab === "discounts" ? "default" : "ghost"}
                   size="sm"
-                  onClick={() => setActiveTab('discounts')}
-                  className={`rounded-full ${activeTab === 'discounts' ? 'bg-slate-900 hover:bg-slate-800 text-white' : 'text-slate-600 hover:text-slate-900'}`}
+                  onClick={() => setActiveTab("discounts")}
+                  className={`rounded-full ${activeTab === "discounts" ? "bg-slate-900 hover:bg-slate-800 text-white" : "text-slate-600 hover:text-slate-900"}`}
                 >
                   Discounts
                 </Button>
                 <Button
-                  variant={activeTab === 'events' ? 'default' : 'ghost'}
+                  variant={activeTab === "events" ? "default" : "ghost"}
                   size="sm"
-                  onClick={() => setActiveTab('events')}
-                  className={`rounded-full ${activeTab === 'events' ? 'bg-slate-900 hover:bg-slate-800 text-white' : 'text-slate-600 hover:text-slate-900'}`}
+                  onClick={() => setActiveTab("events")}
+                  className={`rounded-full ${activeTab === "events" ? "bg-slate-900 hover:bg-slate-800 text-white" : "text-slate-600 hover:text-slate-900"}`}
                 >
                   Events
                 </Button>
               </div>
-              {activeTab === 'restaurants' && (
+              {activeTab === "restaurants" && (
                 <>
                   <h2 className="text-xl font-bold text-slate-900">
                     {filteredCity
@@ -1269,12 +1313,12 @@ function SearchContent() {
                   )}
                 </>
               )}
-              {activeTab === 'discounts' && (
+              {activeTab === "discounts" && (
                 <h2 className="text-xl font-bold text-slate-900">
                   Restaurant Discounts
                 </h2>
               )}
-              {activeTab === 'events' && (
+              {activeTab === "events" && (
                 <h2 className="text-xl font-bold text-slate-900">
                   Family Events
                 </h2>
@@ -1282,7 +1326,7 @@ function SearchContent() {
             </div>
 
             <div className="px-6 py-4">
-              {activeTab === 'restaurants' && (
+              {activeTab === "restaurants" && (
                 <>
                   {error && (
                     <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -1291,261 +1335,319 @@ function SearchContent() {
                       </p>
                     </div>
                   )}
-                  <div className={`grid grid-cols-1 gap-4 transition-all duration-300 ${
-                    isWideLayout ? 'lg:grid-cols-4' : 'lg:grid-cols-2'
-                  }`}>
+                  <div
+                    className={`grid grid-cols-1 gap-4 transition-all duration-300 ${
+                      isWideLayout ? "lg:grid-cols-4" : "lg:grid-cols-2"
+                    }`}
+                  >
                     {loading ? (
-                  <>
-                    {[1, 2, 3, 4].map((i) => (
-                      <Card key={i} className="border-slate-200">
-                        <Skeleton className="h-32 w-full rounded-t-lg" />
-                        <CardContent className="pt-3">
-                          <Skeleton className="h-4 w-3/4 mb-2" />
-                          <Skeleton className="h-3 w-1/2" />
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </>
-                ) : restaurants.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <Search className="h-12 w-12 text-slate-300 mb-4" />
-                    <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                      No restaurants found
-                    </h3>
-                    <p className="text-sm text-slate-500 max-w-sm mb-4">
-                      {searchQuery
-                        ? `No results for "${searchQuery}". Try a different search term.`
-                        : "No restaurants are currently available."}
-                    </p>
-                    {searchQuery && (
-                      <Button
-                        onClick={() => {
-                          setCityRequestName(searchQuery);
-                          setShowCityRequestDialog(true);
-                        }}
-                        className="mt-2 bg-[#8dbf65] hover:bg-[#7da857] text-white"
-                      >
-                        <MapPin className="h-4 w-4 mr-2" />
-                        Request this city
-                      </Button>
-                    )}
-                  </div>
-                ) : (
-                  restaurants.map((restaurant) => (
-                    <Link
-                      key={restaurant.id}
-                      href={`/restaurant/${restaurant.id}`}
-                      prefetch={false}
-                      aria-label={`View details for ${restaurant.name}, ${restaurant.cuisine} restaurant in ${restaurant.address}`}
-                    >
-                      <Card
-                        ref={(el) => {
-                          if (el) {
-                            cardRefs.current.set(restaurant.id, el);
-                          } else {
-                            cardRefs.current.delete(restaurant.id);
-                          }
-                        }}
-                        className={`cursor-pointer transition-all overflow-hidden ${
-                          hoveredRestaurantId === restaurant.id
-                            ? "shadow-xl ring-4 ring-[#8dbf65] ring-opacity-50 scale-[1.02]"
-                            : "hover:shadow-lg border-slate-200"
-                        }`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedRestaurant(restaurant);
-                        }}
-                        onMouseEnter={() => setHoveredRestaurantId(restaurant.id)}
-                        onMouseLeave={() => setHoveredRestaurantId(null)}
-                      >
-                        <div className="relative w-full overflow-hidden aspect-video lg:aspect-[4/3]">
-                          <img
-                            src={restaurant.imageUrl}
-                            alt={restaurant.name}
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute bottom-2 left-2 flex gap-2">
-                            <button
-                              className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-slate-50"
-                              onClick={(e) =>
-                                handleToggleLike(restaurant.id, e)
+                      <>
+                        {[1, 2, 3, 4].map((i) => (
+                          <Card key={i} className="border-slate-200">
+                            <Skeleton className="h-32 w-full rounded-t-lg" />
+                            <CardContent className="pt-3">
+                              <Skeleton className="h-4 w-3/4 mb-2" />
+                              <Skeleton className="h-3 w-1/2" />
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </>
+                    ) : restaurants.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-12 text-center">
+                        <Search className="h-12 w-12 text-slate-300 mb-4" />
+                        <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                          No restaurants found
+                        </h3>
+                        <p className="text-sm text-slate-500 max-w-sm mb-4">
+                          {searchQuery
+                            ? `No results for "${searchQuery}". Try a different search term.`
+                            : "No restaurants are currently available."}
+                        </p>
+                        {searchQuery && (
+                          <Button
+                            onClick={() => {
+                              setCityRequestName(searchQuery);
+                              setShowCityRequestDialog(true);
+                            }}
+                            className="mt-2 bg-[#8dbf65] hover:bg-[#7da857] text-white"
+                          >
+                            <MapPin className="h-4 w-4 mr-2" />
+                            Request this city
+                          </Button>
+                        )}
+                      </div>
+                    ) : (
+                      restaurants.map((restaurant) => (
+                        <Link
+                          key={restaurant.id}
+                          href={`/restaurant/${restaurant.id}`}
+                          prefetch={false}
+                          aria-label={`View details for ${restaurant.name}, ${restaurant.cuisine} restaurant in ${restaurant.address}`}
+                        >
+                          <Card
+                            ref={(el) => {
+                              if (el) {
+                                cardRefs.current.set(restaurant.id, el);
+                              } else {
+                                cardRefs.current.delete(restaurant.id);
                               }
-                              aria-label={likedIds.has(restaurant.id) ? `Unlike ${restaurant.name}` : `Like ${restaurant.name}`}
-                            >
-                              <Heart
-                                className={`h-4 w-4 ${
-                                  likedIds.has(restaurant.id)
-                                    ? "text-red-500 fill-red-500"
-                                    : "text-slate-600"
-                                }`}
-                                aria-hidden="true"
+                            }}
+                            className={`cursor-pointer transition-all overflow-hidden ${
+                              hoveredRestaurantId === restaurant.id
+                                ? "shadow-xl ring-4 ring-[#8dbf65] ring-opacity-50 scale-[1.02]"
+                                : "hover:shadow-lg border-slate-200"
+                            }`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedRestaurant(restaurant);
+                            }}
+                            onMouseEnter={() =>
+                              setHoveredRestaurantId(restaurant.id)
+                            }
+                            onMouseLeave={() => setHoveredRestaurantId(null)}
+                          >
+                            <div className="relative w-full overflow-hidden aspect-video lg:aspect-[4/3]">
+                              <img
+                                src={restaurant.imageUrl}
+                                alt={restaurant.name}
+                                className="w-full h-full object-cover"
                               />
-                            </button>
-                            <button
-                              className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-slate-50"
-                              onClick={(e) =>
-                                handleToggleBookmark(restaurant.id, e)
-                              }
-                              aria-label={bookmarkedIds.has(restaurant.id) ? `Remove ${restaurant.name} from bookmarks` : `Bookmark ${restaurant.name}`}
-                            >
-                              <Bookmark
-                                className={`h-4 w-4 ${
-                                  bookmarkedIds.has(restaurant.id)
-                                    ? "text-blue-600 fill-blue-600"
-                                    : "text-slate-600"
-                                }`}
-                                aria-hidden="true"
-                              />
-                            </button>
-                          </div>
-                        </div>
-                        <CardContent className="p-3">
-                          <h3 className="font-semibold text-sm text-slate-900 mb-1 line-clamp-1">
-                            {restaurant.name}
-                          </h3>
-                          <div className="flex items-center gap-2 mb-1">
-                            <div className="flex items-center gap-1">
-                              <Heart className="h-3 w-3 fill-red-500 text-red-500" />
-                              <span className="font-medium text-xs">
-                                {restaurant.likesCount || 0}
-                              </span>
-                              <span className="text-xs text-slate-500">
-                                likes
-                              </span>
+                              <div className="absolute bottom-2 left-2 flex gap-2">
+                                <button
+                                  className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-slate-50"
+                                  onClick={(e) =>
+                                    handleToggleLike(restaurant.id, e)
+                                  }
+                                  aria-label={
+                                    likedIds.has(restaurant.id)
+                                      ? `Unlike ${restaurant.name}`
+                                      : `Like ${restaurant.name}`
+                                  }
+                                >
+                                  <Heart
+                                    className={`h-4 w-4 ${
+                                      likedIds.has(restaurant.id)
+                                        ? "text-red-500 fill-red-500"
+                                        : "text-slate-600"
+                                    }`}
+                                    aria-hidden="true"
+                                  />
+                                </button>
+                                <button
+                                  className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-slate-50"
+                                  onClick={(e) =>
+                                    handleToggleBookmark(restaurant.id, e)
+                                  }
+                                  aria-label={
+                                    bookmarkedIds.has(restaurant.id)
+                                      ? `Remove ${restaurant.name} from bookmarks`
+                                      : `Bookmark ${restaurant.name}`
+                                  }
+                                >
+                                  <Bookmark
+                                    className={`h-4 w-4 ${
+                                      bookmarkedIds.has(restaurant.id)
+                                        ? "text-blue-600 fill-blue-600"
+                                        : "text-slate-600"
+                                    }`}
+                                    aria-hidden="true"
+                                  />
+                                </button>
+                              </div>
                             </div>
-                            <span className="text-xs text-slate-600">•</span>
-                            <p className="text-xs text-slate-600">
-                              {restaurant.cuisine}
-                            </p>
-                          </div>
-                          <p className="text-xs text-slate-600 line-clamp-1">
-                            {restaurant.address}
-                          </p>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))
-                )}
+                            <CardContent className="p-3">
+                              <h3 className="font-semibold text-sm text-slate-900 mb-1 line-clamp-1">
+                                {restaurant.name}
+                              </h3>
+                              <div className="flex items-center gap-2 mb-1">
+                                <div className="flex items-center gap-1">
+                                  <Heart className="h-3 w-3 fill-red-500 text-red-500" />
+                                  <span className="font-medium text-xs">
+                                    {restaurant.likesCount || 0}
+                                  </span>
+                                  <span className="text-xs text-slate-500">
+                                    likes
+                                  </span>
+                                </div>
+                                <span className="text-xs text-slate-600">
+                                  •
+                                </span>
+                                <p className="text-xs text-slate-600">
+                                  {restaurant.cuisine}
+                                </p>
+                              </div>
+                              <p className="text-xs text-slate-600 line-clamp-1">
+                                {restaurant.address}
+                              </p>
+                            </CardContent>
+                          </Card>
+                        </Link>
+                      ))
+                    )}
                   </div>
 
                   {/* Pagination Controls */}
-                  {!loading && restaurants.length > 0 && pagination.totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2 mt-8 pb-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="h-9 w-9 p-0"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-
-                  {/* Page numbers */}
-                  <div className="flex items-center gap-1">
-                    {/* First page */}
-                    {currentPage > 3 && (
-                      <>
+                  {!loading &&
+                    restaurants.length > 0 &&
+                    pagination.totalPages > 1 && (
+                      <div className="flex items-center justify-center gap-2 mt-8 pb-4">
                         <Button
-                          variant={currentPage === 1 ? "default" : "outline"}
+                          variant="outline"
                           size="sm"
-                          onClick={() => handlePageChange(1)}
+                          onClick={() => handlePageChange(currentPage - 1)}
+                          disabled={currentPage === 1}
                           className="h-9 w-9 p-0"
                         >
-                          1
+                          <ChevronLeft className="h-4 w-4" />
                         </Button>
-                        {currentPage > 4 && (
-                          <span className="px-2 text-slate-400">...</span>
-                        )}
-                      </>
-                    )}
 
-                    {/* Pages around current */}
-                    {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
-                      .filter(page => {
-                        return page === currentPage || 
-                               page === currentPage - 1 || 
-                               page === currentPage + 1 ||
-                               page === currentPage - 2 ||
-                               page === currentPage + 2;
-                      })
-                      .filter(page => page > 0 && page <= pagination.totalPages)
-                      .map(page => (
-                        <Button
-                          key={page}
-                          variant={currentPage === page ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => handlePageChange(page)}
-                          className={`h-9 w-9 p-0 ${
-                            currentPage === page 
-                              ? "bg-[#8dbf65] hover:bg-[#7aaa56]" 
-                              : ""
-                          }`}
-                        >
-                          {page}
-                        </Button>
-                      ))}
+                        {/* Page numbers */}
+                        <div className="flex items-center gap-1">
+                          {/* First page */}
+                          {currentPage > 3 && (
+                            <>
+                              <Button
+                                variant={
+                                  currentPage === 1 ? "default" : "outline"
+                                }
+                                size="sm"
+                                onClick={() => handlePageChange(1)}
+                                className="h-9 w-9 p-0"
+                              >
+                                1
+                              </Button>
+                              {currentPage > 4 && (
+                                <span className="px-2 text-slate-400">...</span>
+                              )}
+                            </>
+                          )}
 
-                    {/* Last page */}
-                    {currentPage < pagination.totalPages - 2 && (
-                      <>
-                        {currentPage < pagination.totalPages - 3 && (
-                          <span className="px-2 text-slate-400">...</span>
-                        )}
+                          {/* Pages around current */}
+                          {Array.from(
+                            { length: pagination.totalPages },
+                            (_, i) => i + 1,
+                          )
+                            .filter((page) => {
+                              return (
+                                page === currentPage ||
+                                page === currentPage - 1 ||
+                                page === currentPage + 1 ||
+                                page === currentPage - 2 ||
+                                page === currentPage + 2
+                              );
+                            })
+                            .filter(
+                              (page) =>
+                                page > 0 && page <= pagination.totalPages,
+                            )
+                            .map((page) => (
+                              <Button
+                                key={page}
+                                variant={
+                                  currentPage === page ? "default" : "outline"
+                                }
+                                size="sm"
+                                onClick={() => handlePageChange(page)}
+                                className={`h-9 w-9 p-0 ${
+                                  currentPage === page
+                                    ? "bg-[#8dbf65] hover:bg-[#7aaa56]"
+                                    : ""
+                                }`}
+                              >
+                                {page}
+                              </Button>
+                            ))}
+
+                          {/* Last page */}
+                          {currentPage < pagination.totalPages - 2 && (
+                            <>
+                              {currentPage < pagination.totalPages - 3 && (
+                                <span className="px-2 text-slate-400">...</span>
+                              )}
+                              <Button
+                                variant={
+                                  currentPage === pagination.totalPages
+                                    ? "default"
+                                    : "outline"
+                                }
+                                size="sm"
+                                onClick={() =>
+                                  handlePageChange(pagination.totalPages)
+                                }
+                                className="h-9 w-9 p-0"
+                              >
+                                {pagination.totalPages}
+                              </Button>
+                            </>
+                          )}
+                        </div>
+
                         <Button
-                          variant={currentPage === pagination.totalPages ? "default" : "outline"}
+                          variant="outline"
                           size="sm"
-                          onClick={() => handlePageChange(pagination.totalPages)}
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          disabled={currentPage === pagination.totalPages}
                           className="h-9 w-9 p-0"
                         >
-                          {pagination.totalPages}
+                          <ChevronRight className="h-4 w-4" />
                         </Button>
-                      </>
+                      </div>
                     )}
-                  </div>
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === pagination.totalPages}
-                    className="h-9 w-9 p-0"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-                  )}
                 </>
               )}
 
-              {activeTab === 'discounts' && (
+              {activeTab === "discounts" && (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
                   <div className="bg-gradient-to-br from-[#8dbf65] to-[#7aaa56] text-white rounded-full p-6 mb-6">
-                    <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      className="h-12 w-12"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                   </div>
                   <h3 className="text-2xl font-bold text-slate-900 mb-2">
                     Coming Soon
                   </h3>
                   <p className="text-slate-600 max-w-md">
-                    We're working on bringing you exclusive restaurant discounts and special offers for families. Be the first to know when we launch!
+                    We're working on bringing you exclusive restaurant discounts
+                    and special offers for families. Be the first to know when
+                    we launch!
                   </p>
                 </div>
               )}
 
-              {activeTab === 'events' && (
+              {activeTab === "events" && (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
                   <div className="bg-gradient-to-br from-[#8dbf65] to-[#7aaa56] text-white rounded-full p-6 mb-6">
-                    <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      className="h-12 w-12"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
                   <h3 className="text-2xl font-bold text-slate-900 mb-2">
                     Coming Soon
                   </h3>
                   <p className="text-slate-600 max-w-md">
-                    Discover family-friendly events at restaurants near you. From kids' cooking classes to themed dining experiences, we'll help you plan memorable outings!
+                    Discover family-friendly events at restaurants near you.
+                    From kids' cooking classes to themed dining experiences,
+                    we'll help you plan memorable outings!
                   </p>
                 </div>
               )}
@@ -1554,7 +1656,10 @@ function SearchContent() {
         </div>
       </div>
 
-      <Dialog open={showCityRequestDialog} onOpenChange={setShowCityRequestDialog}>
+      <Dialog
+        open={showCityRequestDialog}
+        onOpenChange={setShowCityRequestDialog}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Request a City</DialogTitle>
@@ -1620,7 +1725,7 @@ function SearchContent() {
         onClick={() => setShowSuggestModal(true)}
         className="lg:hidden fixed bottom-20 right-6 z-50 w-14 h-14 bg-[#9DC54B] text-white rounded-full shadow-xl flex items-center justify-center hover:bg-[#8AB43A] active:scale-95 transition-all duration-300 animate-[slideUp_0.5s_ease-out]"
         style={{
-          animation: 'slideUp 0.5s ease-out'
+          animation: "slideUp 0.5s ease-out",
         }}
         aria-label="Suggest a restaurant"
       >
