@@ -55,6 +55,7 @@
     "embla-carousel-react": "^8.3.0",
     "eslint": "8.49.0",
     "eslint-config-next": "13.5.1",
+    "fuse.js": "^7.1.0",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.446.0",
     "mapbox-gl": "^3.15.0",
