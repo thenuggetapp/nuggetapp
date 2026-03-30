@@ -77,6 +77,7 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
           google_place_id: data.google_place_id,
         }) || '/nugget_colour_logo.png',
       googleMapsUrl: data.google_maps_url,
+      googlePlaceId: data.google_place_id,
       websiteUrl: data.website_url,
       bookingUrl: data.booking_url,
       openingTimes: data.opening_times,
@@ -388,6 +389,7 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                   restaurantId={restaurant.id}
                   fallbackImage={restaurant.imageUrl}
                   restaurantName={restaurant.name}
+                  googlePlaceId={restaurant.googlePlaceId || null}
                 />
                 <div className="action-buttons-overlay absolute bottom-4 left-4 flex items-center gap-2 z-10">
                   <Button

@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client-browser';
@@ -17,21 +16,33 @@ interface ImageCarouselProps {
   restaurantId: string;
   fallbackImage?: string;
   restaurantName: string;
+  /** When set, additional slides are loaded from Google Places and appended after DB images. */
+  googlePlaceId?: string | null;
 }
 
-export function ImageCarousel({ restaurantId, fallbackImage, restaurantName }: ImageCarouselProps) {
+function fallbackIsPlaceIdOnlyHero(url: string | undefined): boolean {
+  if (!url) return false;
+  return (
+    url.includes('/api/places/photo') &&
+    url.includes('place_id=') &&
+    !url.includes('photo_reference=')
+  );
+}
+
+export function ImageCarousel({
+  restaurantId,
+  fallbackImage,
+  restaurantName,
+  googlePlaceId,
+}: ImageCarouselProps) {
   const [images, setImages] = useState<RestaurantImage[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
-  useEffect(() => {
-    loadImages();
-  }, [restaurantId]);
-
-  const loadImages = async () => {
+  const loadImages = useCallback(async () => {
+    setLoading(true);
     try {
-      setLoading(false);
       const { data, error } = await supabase
         .from('restaurant_images')
         .select('*')
@@ -41,30 +52,68 @@ export function ImageCarousel({ restaurantId, fallbackImage, restaurantName }: I
 
       if (error) throw error;
 
+      let base: RestaurantImage[] = [];
       if (data && data.length > 0) {
-        setImages(data);
-      } else if (fallbackImage) {
-        setImages([{
-          id: 'fallback',
-          image_url: fallbackImage,
-          is_featured: true,
-          display_order: 0
-        }]);
+        base = data;
+      };
+
+      const placeId = googlePlaceId?.trim();
+      if (placeId) {
+        const res = await fetch(
+          `/api/places/photos?place_id=${encodeURIComponent(placeId)}`
+        );
+        if (res.ok) {
+          const payload = (await res.json()) as { imageUrls?: string[] };
+          let extraUrls = payload.imageUrls ?? [];
+          const existing = new Set(base.map((b) => b.image_url));
+          const append: RestaurantImage[] = extraUrls
+            .filter((u) => u && !existing.has(u))
+            .map((url, i) => ({
+              id: `google-${i}-${url.slice(-24)}`,
+              image_url: url,
+              is_featured: false,
+              display_order: 1000 + i,
+            }));
+          base = [...base, ...append];
+        }
       }
+
+      if (fallbackImage && base.length === 0) {
+        base = [
+          {
+            id: 'fallback',
+            image_url: fallbackImage,
+            is_featured: true,
+            display_order: 0,
+          },
+        ];
+      }
+
+      setCurrentIndex(0);
+      setImages(base);
     } catch (err) {
       console.error('Error loading images:', err);
+      setCurrentIndex(0);
       if (fallbackImage) {
-        setImages([{
-          id: 'fallback',
-          image_url: fallbackImage,
-          is_featured: true,
-          display_order: 0
-        }]);
+        setImages([
+          {
+            id: 'fallback',
+            image_url: fallbackImage,
+            is_featured: true,
+            display_order: 0,
+          },
+        ]);
+      } else {
+        setImages([]);
       }
     } finally {
       setLoading(false);
     }
-  };
+  }, [restaurantId, fallbackImage, googlePlaceId, supabase]);
+
+  useEffect(() => {
+    loadImages();
+  }, [loadImages]);
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
