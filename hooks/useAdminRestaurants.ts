@@ -29,6 +29,7 @@ interface Restaurant {
   vegan_options: boolean;
   gluten_free_options: boolean;
   image_url?: string;
+  google_place_id?: string;
   dog_friendly: boolean;
   playground_nearby: boolean;
   quick_service: boolean;

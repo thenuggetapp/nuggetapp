@@ -59,6 +59,7 @@ export interface RestaurantFormData {
   latitude: number;
   longitude: number;
   image_url: string;
+  google_place_id: string;
   website_url: string;
   google_maps_url: string;
   booking_url: string;
@@ -114,6 +115,7 @@ const initialFormData: RestaurantFormData = {
   latitude: 0,
   longitude: 0,
   image_url: "",
+  google_place_id: "",
   website_url: "",
   google_maps_url: "",
   booking_url: "",
@@ -231,6 +233,7 @@ export default function EditRestaurantPage() {
         latitude: parseFloat(restaurant.latitude) || 0,
         longitude: parseFloat(restaurant.longitude) || 0,
         image_url: restaurant.image_url || "",
+        google_place_id: restaurant.google_place_id || "",
         website_url: restaurant.website_url || "",
         google_maps_url: restaurant.google_maps_url || "",
         booking_url: restaurant.booking_url || "",
@@ -360,6 +363,7 @@ export default function EditRestaurantPage() {
         phone: formData.phone.trim() || null,
         description: formData.description.trim() || null,
         image_url: formData.image_url.trim() || null,
+        google_place_id: formData.google_place_id?.trim() || null,
         website_url: formData.website_url.trim() || null,
         google_maps_url: formData.google_maps_url.trim() || null,
         booking_url: formData.booking_url.trim() || null,

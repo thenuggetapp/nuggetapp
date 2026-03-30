@@ -76,6 +76,7 @@ export async function POST(request: Request) {
         latitude: restaurantData.latitude || 0,
         longitude: restaurantData.longitude || 0,
         image_url: restaurantData.image_url || null,
+        google_place_id: restaurantData.google_place_id || null,
         website_url: restaurantData.website_url || null,
         google_maps_url: restaurantData.google_maps_url || null,
         opening_times: restaurantData.opening_times || {},

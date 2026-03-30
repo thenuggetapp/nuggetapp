@@ -40,6 +40,7 @@ const initialFormData: RestaurantFormData = {
   latitude: 0,
   longitude: 0,
   image_url: '',
+  google_place_id: '',
   website_url: '',
   google_maps_url: '',
   booking_url: '',
@@ -101,6 +102,7 @@ export default function AddRestaurantPage() {
     setFormData({
       ...formData,
       ...mappedData,
+      image_url: formData.image_url || mappedData.image_url,
     });
   };
 

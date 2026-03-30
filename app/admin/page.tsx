@@ -125,6 +125,7 @@ interface Restaurant {
   vegan_options: boolean;
   gluten_free_options: boolean;
   image_url?: string;
+  google_place_id?: string;
   dog_friendly: boolean;
   playground_nearby: boolean;
   quick_service: boolean;
@@ -178,6 +179,7 @@ const emptyRestaurant: Restaurant = {
   vegan_options: false,
   gluten_free_options: false,
   image_url: "",
+  google_place_id: "",
   google_maps_url: "",
   website_url: "",
   booking_url: "",
@@ -351,6 +353,7 @@ export default function AdminDashboard() {
     setFormData({
       ...formData,
       ...mappedData,
+      image_url: formData.image_url || mappedData.image_url,
     });
   };
 
@@ -431,6 +434,7 @@ export default function AdminDashboard() {
       phone: formData.phone?.trim() || undefined,
       description: formData.description?.trim() || undefined,
       image_url: formData.image_url?.trim() || undefined,
+      google_place_id: formData.google_place_id?.trim() || undefined,
       website_url: formData.website_url?.trim() || undefined,
       google_maps_url: formData.google_maps_url?.trim() || undefined,
       opening_times: formData.opening_times || {},

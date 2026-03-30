@@ -10,6 +10,7 @@ import { Heart, Bookmark, Menu, Crown, Store, Settings, User, TrendingUp, Shield
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
+import { getRestaurantDisplayImageUrlOrFallback } from '@/lib/restaurant-image';
 
 interface SavedRestaurant {
   id: string;
@@ -69,7 +70,10 @@ export default function SavedPage() {
         cuisine: r.cuisine,
         likesCount: r.likes_count || 0,
         address: r.address,
-        imageUrl: r.image_url || 'https://images.pexels.com/photos/1566837/pexels-photo-1566837.jpeg?auto=compress&cs=tinysrgb&w=400',
+        imageUrl: getRestaurantDisplayImageUrlOrFallback({
+          image_url: r.image_url,
+          google_place_id: r.google_place_id,
+        }),
       }));
 
       setSavedRestaurants(formatted);

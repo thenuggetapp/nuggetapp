@@ -11,6 +11,7 @@ import { supabase } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { getLocationFromIP } from '@/lib/ip-geolocation';
 import { parseNaturalLanguageQuery } from '@/lib/natural-language-search';
+import { getRestaurantDisplayImageUrlOrFallback } from '@/lib/restaurant-image';
 
 const RECENT_SEARCHES_COOKIE = 'nugget_recent_searches';
 const MAX_RECENT_SEARCHES = 6;
@@ -145,7 +146,7 @@ export function MobileSearchModal({ open, onOpenChange, initialQuery = '', defau
       const [restaurantsResult, citiesResult] = await Promise.all([
         supabase
           .from('restaurants')
-          .select('id, name, cuisine, address, image_url, city')
+          .select('id, name, cuisine, address, image_url, google_place_id, city')
           .eq('visible', true)
           .or(`name.ilike.${searchTerm},cuisine.ilike.${searchTerm},address.ilike.${searchTerm}`)
           .order('rating', { ascending: false })
@@ -183,7 +184,10 @@ export function MobileSearchModal({ open, onOpenChange, initialQuery = '', defau
         name: r.name,
         cuisine: r.cuisine,
         address: r.address,
-        imageUrl: r.image_url || 'https://images.pexels.com/photos/1566837/pexels-photo-1566837.jpeg?auto=compress&cs=tinysrgb&w=400',
+        imageUrl: getRestaurantDisplayImageUrlOrFallback({
+          image_url: r.image_url,
+          google_place_id: r.google_place_id,
+        }),
         type: 'restaurant' as const
       }));
 

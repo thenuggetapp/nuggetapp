@@ -33,6 +33,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Restaurant } from "@/lib/dummy-restaurants";
+import { getRestaurantDisplayImageUrlOrFallback } from "@/lib/restaurant-image";
 import { supabase } from "@/lib/supabase/client";
 import {
   parseNaturalLanguageQuery,
@@ -539,9 +540,10 @@ function SearchContent() {
           priceLevel: r.price_level || 2,
           address: r.address,
           coordinates: coords,
-          imageUrl:
-            r.image_url ||
-            "https://images.pexels.com/photos/1566837/pexels-photo-1566837.jpeg?auto=compress&cs=tinysrgb&w=400",
+          imageUrl: getRestaurantDisplayImageUrlOrFallback({
+            image_url: r.image_url,
+            google_place_id: r.google_place_id,
+          }),
           nuggetVerified: r.nugget_verified,
           kidsMenu: r.kids_menu,
           highChairs: r.high_chairs,
@@ -638,9 +640,10 @@ function SearchContent() {
           priceLevel: r.price_level || 2,
           address: r.address,
           coordinates: coords,
-          imageUrl:
-            r.image_url ||
-            "https://images.pexels.com/photos/1566837/pexels-photo-1566837.jpeg?auto=compress&cs=tinysrgb&w=400",
+          imageUrl: getRestaurantDisplayImageUrlOrFallback({
+            image_url: r.image_url,
+            google_place_id: r.google_place_id,
+          }),
           nuggetVerified: r.nugget_verified,
           kidsMenu: r.kids_menu,
           highChairs: r.high_chairs,

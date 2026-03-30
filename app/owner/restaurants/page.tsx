@@ -32,6 +32,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
+import { getRestaurantDisplayImageUrl } from '@/lib/restaurant-image';
 
 interface Restaurant {
   id: string;
@@ -41,6 +42,7 @@ interface Restaurant {
   address: string;
   city: string | null;
   image_url: string | null;
+  google_place_id?: string | null;
   visible: boolean;
   likes_count: number;
   price_level: number;
@@ -99,7 +101,7 @@ export default function MyRestaurantsPage() {
 
       const { data: restaurantsData, error: restaurantsError } = await supabase
         .from('restaurants')
-        .select('id, name, slug, cuisine, address, city, image_url, visible, likes_count, price_level, created_at')
+        .select('id, name, slug, cuisine, address, city, image_url, google_place_id, visible, likes_count, price_level, created_at')
         .in('id', restaurantIds)
         .order('created_at', { ascending: false });
 
@@ -377,12 +379,17 @@ export default function MyRestaurantsPage() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredRestaurants.map((restaurant) => (
+          {filteredRestaurants.map((restaurant) => {
+            const heroSrc = getRestaurantDisplayImageUrl({
+              image_url: restaurant.image_url,
+              google_place_id: restaurant.google_place_id,
+            });
+            return (
             <Card key={restaurant.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <div className="relative h-48 w-full overflow-hidden bg-slate-100">
-                {restaurant.image_url ? (
+                {heroSrc ? (
                   <img
-                    src={restaurant.image_url}
+                    src={heroSrc}
                     alt={restaurant.name}
                     className="w-full h-full object-cover"
                   />
@@ -456,7 +463,8 @@ export default function MyRestaurantsPage() {
                 </div>
               </CardContent>
             </Card>
-          ))}
+          );
+          })}
         </div>
       )}
 
