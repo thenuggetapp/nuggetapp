@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { photoHasNonEmptyAuthorAttributions } from '@/lib/google-places-photo-attribution';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -41,7 +42,7 @@ export async function GET(request: NextRequest) {
   const photos = detailsJson.result.photos as Array<{ photo_reference: string }>;
 
   const imageUrls = photos
-    .filter((p) => p?.photo_reference)
+    .filter((p) => p?.photo_reference && !photoHasNonEmptyAuthorAttributions(p))
     .map(
       (p) =>
         `/api/places/photo?photo_reference=${encodeURIComponent(p.photo_reference)}&maxwidth=${encodeURIComponent(maxwidth)}`
