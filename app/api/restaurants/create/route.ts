@@ -40,24 +40,16 @@ export async function POST(request: Request) {
 
     const baseSlug = generateSlug(restaurantData.name);
 
-    // Check if slug exists and make it unique if needed
     let slug = baseSlug;
-    let counter = 1;
-    let slugExists = true;
+    const { data: slugConflict } = await supabase
+      .from('restaurants')
+      .select('id')
+      .eq('slug', slug)
+      .maybeSingle();
 
-    while (slugExists) {
-      const { data: existing } = await supabase
-        .from('restaurants')
-        .select('id')
-        .eq('slug', slug)
-        .maybeSingle();
-
-      if (!existing) {
-        slugExists = false;
-      } else {
-        slug = `${baseSlug}-${counter}`;
-        counter++;
-      }
+    if (slugConflict) {
+      const timestamp = Date.now().toString().slice(-6);
+      slug = `${slug}-${timestamp}`;
     }
 
     // Insert the restaurant

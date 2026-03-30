@@ -421,14 +421,8 @@ export default function AdminDashboard() {
 
     setIsSaving(true);
 
-    const slug = formData.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
-
     const dataToSave = {
       ...formData,
-      slug,
       city: formData.city?.trim() || undefined,
       country: formData.country?.trim() || undefined,
       phone: formData.phone?.trim() || undefined,
@@ -442,9 +436,27 @@ export default function AdminDashboard() {
 
     let result;
     if (editingRestaurant?.id) {
-      result = await updateRestaurant(editingRestaurant.id, dataToSave);
+      const { slug: _omitSlug, ...updatePayload } = dataToSave as typeof dataToSave & {
+        slug?: string;
+      };
+      result = await updateRestaurant(editingRestaurant.id, updatePayload);
     } else {
-      result = await createRestaurant(dataToSave);
+      const baseSlug = formData.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+
+      let slug = baseSlug;
+      const { data: slugConflict } = await supabase
+        .from("restaurants")
+        .select("id")
+        .eq("slug", slug)
+        .maybeSingle();
+      if (slugConflict) {
+        const timestamp = Date.now().toString().slice(-6);
+        slug = `${slug}-${timestamp}`;
+      }
+      result = await createRestaurant({ ...dataToSave, slug } as Restaurant);
     }
 
     if (result.success) {

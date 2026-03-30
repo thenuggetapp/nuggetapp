@@ -334,29 +334,8 @@ export default function EditRestaurantPage() {
     setSaving(true);
 
     try {
-      // Generate base slug
-      let slug = formData.name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
-
-      // Check if slug exists (excluding current restaurant) and add unique suffix if needed
-      const { data: existingRestaurant } = await supabase
-        .from("restaurants")
-        .select("slug, id")
-        .eq("slug", slug)
-        .neq("id", restaurantId)
-        .maybeSingle();
-
-      if (existingRestaurant) {
-        // Add timestamp to make slug unique
-        const timestamp = Date.now().toString().slice(-6);
-        slug = `${slug}-${timestamp}`;
-      }
-
       const dataToSave = {
         ...formData,
-        slug,
         visible: publish,
         city: formData.city.trim() || null,
         country: formData.country.trim() || null,
@@ -369,6 +348,7 @@ export default function EditRestaurantPage() {
         booking_url: formData.booking_url.trim() || null,
         updated_at: new Date().toISOString(),
       };
+      delete (dataToSave as { slug?: string }).slug;
 
       const { error: updateError } = await supabase
         .from("restaurants")
