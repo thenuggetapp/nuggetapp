@@ -4,7 +4,7 @@
  */
 
 const LEGACY_GOOGLE_PHOTO_PROXY =
-  /\/functions\/v1\/google-places\?[^#]*action=photo/i;
+  /googleusercontent.com/i;
 
 export const DEFAULT_RESTAURANT_IMAGE =
   'nugget_colour_logo.png';
@@ -19,6 +19,7 @@ export function isPreferredUserImageUrl(url: string | null | undefined): boolean
 
 /**
  * Hero/cover image for listings: user image_url first, then runtime Google photo by place_id, then legacy URL, else empty.
+ * A request to api/place/photo returns the image from the Google Places API, so can be used like a direct link to photo
  */
 export function getRestaurantDisplayImageUrl(params: {
   image_url?: string | null;

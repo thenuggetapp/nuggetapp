@@ -20,8 +20,9 @@ export async function GET(request: NextRequest) {
   }
 
   const detailsUrl = new URL(
-    'https://maps.googleapis.com/v1/places/' + placeId
+    'https://maps.googleapis.com/maps/api/place/details/json'
   );
+  detailsUrl.searchParams.set('place_id', placeId);
   detailsUrl.searchParams.set('fields', 'photos');
   detailsUrl.searchParams.set('key', apiKey);
 
