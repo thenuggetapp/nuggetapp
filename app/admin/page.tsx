@@ -80,6 +80,7 @@ import {
 } from "lucide-react";
 import { GooglePlacesAutocomplete } from "@/components/GooglePlacesAutocomplete";
 import { mapGooglePlaceToRestaurant } from "@/lib/google-places-mapper";
+import { getRestaurantDisplayImageUrl } from "@/lib/restaurant-image";
 import { AdminSidebar } from "@/components/AdminSidebar";
 
 interface DayHours {
@@ -350,11 +351,11 @@ export default function AdminDashboard() {
 
   const handlePlaceSelect = (placeData: any) => {
     const mappedData = mapGooglePlaceToRestaurant(placeData);
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       ...mappedData,
-      image_url: formData.image_url || mappedData.image_url,
-    });
+      image_url: prev.image_url || mappedData.image_url,
+    }));
   };
 
   const handleEdit = (restaurant: Restaurant) => {
@@ -1392,6 +1393,14 @@ export default function AdminDashboard() {
                   {editingRestaurant?.id ? (
                     <MultiImageUpload
                       restaurantId={editingRestaurant.id}
+                      googlePlaceId={formData.google_place_id}
+                      restaurantName={formData.name}
+                      heroPreviewUrl={
+                        getRestaurantDisplayImageUrl({
+                          image_url: formData.image_url,
+                          google_place_id: formData.google_place_id,
+                        }) || undefined
+                      }
                       onImagesChange={() => {
                         toast({
                           title: "Images Updated",
@@ -1400,12 +1409,28 @@ export default function AdminDashboard() {
                       }}
                     />
                   ) : (
-                    <ImageUpload
-                      currentImageUrl={formData.image_url}
-                      onImageChange={(url) => setFormData({ ...formData, image_url: url })}
-                      restaurantId={formData.id}
-                      label="Restaurant Image"
-                    />
+                    <>
+                      <ImageUpload
+                        currentImageUrl={formData.image_url}
+                        onImageChange={(url) =>
+                          setFormData((prev) => ({ ...prev, image_url: url }))
+                        }
+                        restaurantId={formData.id}
+                        label="Restaurant Image"
+                      />
+                      {formData.google_place_id?.trim() ? (
+                        <MultiImageUpload
+                          googlePlaceId={formData.google_place_id}
+                          restaurantName={formData.name || "Restaurant"}
+                          heroPreviewUrl={
+                            getRestaurantDisplayImageUrl({
+                              image_url: formData.image_url,
+                              google_place_id: formData.google_place_id,
+                            }) || undefined
+                          }
+                        />
+                      ) : null}
+                    </>
                   )}
 
                   <div className="space-y-2">

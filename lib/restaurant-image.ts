@@ -7,7 +7,7 @@ const LEGACY_GOOGLE_PHOTO_PROXY =
   /googleusercontent.com/i;
 
 export const DEFAULT_RESTAURANT_IMAGE =
-  'nugget_colour_logo.png';
+  '/nugget_colour_logo.png';
 
 /** True if image_url should be treated as user (or third-party) hosted, not our legacy Google proxy. */
 export function isPreferredUserImageUrl(url: string | null | undefined): boolean {

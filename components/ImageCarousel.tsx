@@ -41,24 +41,27 @@ export function ImageCarousel({
   const loadImages = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('restaurant_images')
-        .select('*')
-        .eq('restaurant_id', restaurantId)
-        .order('is_featured', { ascending: false })
-        .order('display_order', { ascending: true });
-
-      if (error) throw error;
-
       let base: CarouselSlide[] = [];
-      if (data && data.length > 0) {
-        base = data.map((row) => ({
-          id: row.id,
-          image_url: row.image_url,
-          is_featured: row.is_featured,
-          display_order: row.display_order,
-          attribution: null,
-        }));
+
+      if (restaurantId?.trim()) {
+        const { data, error } = await supabase
+          .from('restaurant_images')
+          .select('*')
+          .eq('restaurant_id', restaurantId)
+          .order('is_featured', { ascending: false })
+          .order('display_order', { ascending: true });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          base = data.map((row) => ({
+            id: row.id,
+            image_url: row.image_url,
+            is_featured: row.is_featured,
+            display_order: row.display_order,
+            attribution: null,
+          }));
+        }
       }
 
       const placeId = googlePlaceId?.trim();
