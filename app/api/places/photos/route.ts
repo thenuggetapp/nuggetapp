@@ -1,14 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { photoHasNonEmptyAuthorAttributions } from '@/lib/google-places-photo-attribution';
+import {
+  parsePlacesPhotoAttribution,
+  type PlacesPhotoAttribution,
+} from '@/lib/google-places-photo-attribution';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const MAX_PLACE_ID_LEN = 512;
 
+export type PlacesPhotoListItem = {
+  url: string;
+  attribution: PlacesPhotoAttribution | null;
+};
+
 /**
- * Returns same-origin proxy URLs for all Place Photos for a place_id
- * (for client carousels). Actual bytes are served by /api/places/photo.
+ * Returns same-origin proxy URLs and optional attribution for each Place photo.
+ * Bytes are served by /api/places/photo.
  */
 export async function GET(request: NextRequest) {
   const placeId = request.nextUrl.searchParams.get('place_id')?.trim();
@@ -35,21 +43,29 @@ export async function GET(request: NextRequest) {
   const detailsJson = await detailsRes.json();
 
   if (detailsJson.status !== 'OK' || !Array.isArray(detailsJson.result?.photos)) {
-    return NextResponse.json({ imageUrls: [] as string[] });
+    return NextResponse.json({
+      photos: [] as PlacesPhotoListItem[],
+      imageUrls: [] as string[],
+    });
   }
 
   const maxwidth = request.nextUrl.searchParams.get('maxwidth') || '800';
-  const photos = detailsJson.result.photos as Array<{ photo_reference: string }>;
+  const photosRaw = detailsJson.result.photos as Array<{ photo_reference?: string }>;
 
-  const imageUrls = photos
-    .filter((p) => p?.photo_reference && !photoHasNonEmptyAuthorAttributions(p))
-    .map(
-      (p) =>
-        `/api/places/photo?photo_reference=${encodeURIComponent(p.photo_reference)}&maxwidth=${encodeURIComponent(maxwidth)}`
-    );
+  const photos: PlacesPhotoListItem[] = photosRaw
+    .filter((p) => p?.photo_reference)
+    .map((p) => {
+      const url = `/api/places/photo?photo_reference=${encodeURIComponent(p.photo_reference!)}&maxwidth=${encodeURIComponent(maxwidth)}`;
+      return {
+        url,
+        attribution: parsePlacesPhotoAttribution(p),
+      };
+    });
+
+  const imageUrls = photos.map((p) => p.url);
 
   return NextResponse.json(
-    { imageUrls },
+    { photos, imageUrls },
     {
       headers: {
         'Cache-Control': 'private, max-age=300',

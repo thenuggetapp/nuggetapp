@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { photoHasNonEmptyAuthorAttributions } from '@/lib/google-places-photo-attribution';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -73,27 +72,17 @@ export async function GET(request: NextRequest) {
   const detailsRes = await fetch(detailsUrl.toString());
   const detailsJson = await detailsRes.json();
 
-  if (detailsJson.status !== 'OK' || !Array.isArray(detailsJson.result?.photos)) {
+  if (
+    detailsJson.status !== 'OK' ||
+    !detailsJson.result?.photos?.[0]?.photo_reference
+  ) {
     return NextResponse.json(
       { error: 'No photo available' },
       { status: 404 }
     );
   }
 
-  const photos = detailsJson.result.photos as Array<{ photo_reference?: string }>;
-  const chosen = photos.find(
-    (p) =>
-      p?.photo_reference &&
-      !photoHasNonEmptyAuthorAttributions(p)
-  );
-  if (!chosen?.photo_reference) {
-    return NextResponse.json(
-      { error: 'No photo available' },
-      { status: 404 }
-    );
-  }
-
-  const photoRef = chosen.photo_reference;
+  const photoRef = detailsJson.result.photos[0].photo_reference as string;
   const photoRes = await proxyPlacePhoto(photoRef, maxwidth, apiKey);
   if (!photoRes.ok) {
     return NextResponse.json(

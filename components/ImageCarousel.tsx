@@ -5,11 +5,18 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client-browser';
 
-interface RestaurantImage {
+interface PlacesPhotoListItem {
+  url: string;
+  attribution: { name: string; uri: string } | null;
+}
+
+interface CarouselSlide {
   id: string;
   image_url: string;
   is_featured: boolean;
   display_order: number;
+  /** Set for slides loaded from Google Places (proxy URLs). */
+  attribution?: { name: string; uri: string } | null;
 }
 
 interface ImageCarouselProps {
@@ -20,22 +27,13 @@ interface ImageCarouselProps {
   googlePlaceId?: string | null;
 }
 
-function fallbackIsPlaceIdOnlyHero(url: string | undefined): boolean {
-  if (!url) return false;
-  return (
-    url.includes('/api/places/photo') &&
-    url.includes('place_id=') &&
-    !url.includes('photo_reference=')
-  );
-}
-
 export function ImageCarousel({
   restaurantId,
   fallbackImage,
   restaurantName,
   googlePlaceId,
 }: ImageCarouselProps) {
-  const [images, setImages] = useState<RestaurantImage[]>([]);
+  const [images, setImages] = useState<CarouselSlide[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const supabase = useMemo(() => createClient(), []);
@@ -52,10 +50,16 @@ export function ImageCarousel({
 
       if (error) throw error;
 
-      let base: RestaurantImage[] = [];
+      let base: CarouselSlide[] = [];
       if (data && data.length > 0) {
-        base = data;
-      };
+        base = data.map((row) => ({
+          id: row.id,
+          image_url: row.image_url,
+          is_featured: row.is_featured,
+          display_order: row.display_order,
+          attribution: null,
+        }));
+      }
 
       const placeId = googlePlaceId?.trim();
       if (placeId) {
@@ -63,16 +67,25 @@ export function ImageCarousel({
           `/api/places/photos?place_id=${encodeURIComponent(placeId)}`
         );
         if (res.ok) {
-          const payload = (await res.json()) as { imageUrls?: string[] };
-          let extraUrls = payload.imageUrls ?? [];
+          const payload = (await res.json()) as {
+            photos?: PlacesPhotoListItem[];
+            imageUrls?: string[];
+          };
+          const items =
+            payload.photos ??
+            (payload.imageUrls ?? []).map((url) => ({
+              url,
+              attribution: null,
+            }));
           const existing = new Set(base.map((b) => b.image_url));
-          const append: RestaurantImage[] = extraUrls
-            .filter((u) => u && !existing.has(u))
-            .map((url, i) => ({
-              id: `google-${i}-${url.slice(-24)}`,
-              image_url: url,
+          const append: CarouselSlide[] = items
+            .filter((item) => item.url && !existing.has(item.url))
+            .map((item, i) => ({
+              id: `google-${i}-${item.url.slice(-24)}`,
+              image_url: item.url,
               is_featured: false,
               display_order: 1000 + i,
+              attribution: item.attribution,
             }));
           base = [...base, ...append];
         }
@@ -85,6 +98,7 @@ export function ImageCarousel({
             image_url: fallbackImage,
             is_featured: true,
             display_order: 0,
+            attribution: null,
           },
         ];
       }
@@ -101,6 +115,7 @@ export function ImageCarousel({
             image_url: fallbackImage,
             is_featured: true,
             display_order: 0,
+            attribution: null,
           },
         ]);
       } else {
@@ -131,6 +146,9 @@ export function ImageCarousel({
     setCurrentIndex(index);
   };
 
+  const current = images[currentIndex];
+  const currentAttribution = current?.attribution;
+
   if (loading) {
     return (
       <div className="relative h-64 lg:h-80 w-full overflow-hidden flex-shrink-0 bg-gray-200 animate-pulse" />
@@ -153,11 +171,25 @@ export function ImageCarousel({
     <div className="relative h-64 lg:h-80 w-full overflow-hidden flex-shrink-0 group">
       <div className="relative w-full h-full">
         <img
-          src={images[currentIndex].image_url}
+          src={current.image_url}
           alt={`${restaurantName} - Image ${currentIndex + 1}`}
           className="w-full h-full object-cover"
         />
       </div>
+
+      {currentAttribution && (
+        <div className="pointer-events-none absolute top-4 left-4 z-20 max-w-[min(100%,20rem)] rounded-md bg-black/60 px-3 py-2 text-sm text-white opacity-0 shadow-sm transition-opacity duration-200 group-hover:opacity-100">
+          <span className="text-white/90">Photo by </span>
+          <a
+            href={currentAttribution.uri}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pointer-events-auto font-medium text-white underline decoration-white/70 underline-offset-2 hover:text-white hover:decoration-white"
+          >
+            {currentAttribution.name}
+          </a>
+        </div>
+      )}
 
       {images.length > 1 && (
         <>
