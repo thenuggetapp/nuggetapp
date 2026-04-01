@@ -16,6 +16,7 @@ interface Restaurant {
   likes_count: number;
   address: string;
   image_url: string | null;
+  google_place_id?: string | null;
 }
 
 async function getFeaturedRestaurants(): Promise<Restaurant[]> {
@@ -27,7 +28,7 @@ async function getFeaturedRestaurants(): Promise<Restaurant[]> {
 
   const { data, error } = await supabase
     .from('restaurants')
-    .select('id, name, cuisine, likes_count, address, image_url')
+    .select('id, name, cuisine, likes_count, address, image_url, google_place_id')
     .eq('visible', true)
     .eq('high_chairs', true)
     .order('likes_count', { ascending: false })
@@ -50,7 +51,7 @@ async function getLondonRestaurants(excludeIds: string[]): Promise<Restaurant[]>
 
   let query = supabase
     .from('restaurants')
-    .select('id, name, cuisine, likes_count, address, image_url')
+    .select('id, name, cuisine, likes_count, address, image_url, google_place_id')
     .eq('visible', true)
     .ilike('address', '%London%');
 

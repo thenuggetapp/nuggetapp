@@ -13,6 +13,8 @@ export interface Restaurant {
   description?: string;
   coordinates: [number, number];
   imageUrl: string;
+  /** Google Place ID when linked to Places (e.g. extra carousel photos). */
+  googlePlaceId?: string | null;
   googleMapsUrl?: string;
   websiteUrl?: string;
   bookingUrl?: string;

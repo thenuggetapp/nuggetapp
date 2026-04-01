@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Upload, X, Link as LinkIcon, Loader2, Star, GripVertical } from 'lucide-react';
+import { Upload, X, Link as LinkIcon, Loader2, Star, Images } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client-browser';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
+import { ImageCarousel } from '@/components/ImageCarousel';
 
 interface RestaurantImage {
   id: string;
@@ -18,24 +19,44 @@ interface RestaurantImage {
 }
 
 interface MultiImageUploadProps {
-  restaurantId: string;
+  /** Required for Upload / URL tabs (saves to `restaurant_images`). Omit for Google-only preview. */
+  restaurantId?: string;
   onImagesChange?: () => void;
+  /** When set, shows a "Google Images" tab — visitor-style preview; does not persist. */
+  googlePlaceId?: string | null;
+  restaurantName?: string;
+  /** Form cover image — used as carousel fallback when there are no gallery rows yet. */
+  heroPreviewUrl?: string;
 }
 
-export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUploadProps) {
+export function MultiImageUpload({
+  restaurantId,
+  onImagesChange,
+  googlePlaceId,
+  restaurantName = 'Restaurant',
+  heroPreviewUrl,
+}: MultiImageUploadProps) {
   const [images, setImages] = useState<RestaurantImage[]>([]);
   const [uploading, setUploading] = useState(false);
   const [urlInput, setUrlInput] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => Boolean(restaurantId?.trim()));
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
-  useEffect(() => {
-    loadImages();
-  }, [restaurantId]);
+  const canPersistImages = Boolean(restaurantId?.trim());
+  const showGoogleTab = Boolean(googlePlaceId?.trim());
+  const tabColsClass = showGoogleTab ? 'grid-cols-3' : 'grid-cols-2';
+  const defaultTab =
+    showGoogleTab && !canPersistImages ? 'google' : 'upload';
 
-  const loadImages = async () => {
+  const loadImages = useCallback(async () => {
+    if (!restaurantId?.trim()) {
+      setImages([]);
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -52,9 +73,14 @@ export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUpl
     } finally {
       setLoading(false);
     }
-  };
+  }, [restaurantId, supabase]);
+
+  useEffect(() => {
+    void loadImages();
+  }, [loadImages]);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!canPersistImages) return;
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -98,7 +124,7 @@ export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUpl
       const { error: insertError } = await supabase
         .from('restaurant_images')
         .insert({
-          restaurant_id: restaurantId,
+          restaurant_id: restaurantId!,
           image_url: publicUrl,
           is_featured: images.length === 0,
           display_order: images.length
@@ -120,6 +146,7 @@ export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUpl
   };
 
   const handleUrlSubmit = async () => {
+    if (!canPersistImages) return;
     if (!urlInput.trim()) return;
 
     setError(null);
@@ -135,7 +162,7 @@ export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUpl
       const { error: insertError } = await supabase
         .from('restaurant_images')
         .insert({
-          restaurant_id: restaurantId,
+          restaurant_id: restaurantId!,
           image_url: urlInput.trim(),
           is_featured: images.length === 0,
           display_order: images.length
@@ -154,6 +181,7 @@ export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUpl
   };
 
   const handleSetFeatured = async (imageId: string) => {
+    if (!canPersistImages) return;
     try {
       const { error } = await supabase
         .from('restaurant_images')
@@ -170,6 +198,7 @@ export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUpl
   };
 
   const handleDelete = async (imageId: string, imageUrl: string) => {
+    if (!canPersistImages) return;
     try {
       const { error } = await supabase
         .from('restaurant_images')
@@ -192,7 +221,7 @@ export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUpl
     }
   };
 
-  if (loading) {
+  if (loading && canPersistImages) {
     return <div className="flex items-center justify-center p-8"><Loader2 className="h-6 w-6 animate-spin" /></div>;
   }
 
@@ -202,69 +231,110 @@ export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUpl
         <Label>Restaurant Images</Label>
         <p className="text-sm text-gray-500 mt-1">
           Upload multiple images. The first image will be featured by default.
+          {showGoogleTab && (
+            <span className="block mt-1">
+              The Google Images tab is a read-only preview of how Google-sourced photos appear to visitors — nothing there is saved automatically.
+            </span>
+          )}
         </p>
       </div>
 
-      <Tabs defaultValue="upload" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="upload">Upload File</TabsTrigger>
-          <TabsTrigger value="url">Use URL</TabsTrigger>
+      <Tabs key={`${showGoogleTab}-${canPersistImages}`} defaultValue={defaultTab} className="w-full">
+        <TabsList className={`grid w-full ${tabColsClass}`}>
+          <TabsTrigger value="upload" disabled={!canPersistImages}>
+            Upload File
+          </TabsTrigger>
+          <TabsTrigger value="url" disabled={!canPersistImages}>
+            Use URL
+          </TabsTrigger>
+          {showGoogleTab && (
+            <TabsTrigger value="google" className="gap-1">
+              <Images className="h-3.5 w-3.5" />
+              Google Images
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="upload" className="space-y-4">
-          <div
-            onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400 transition-colors"
-          >
-            {uploading ? (
-              <div className="flex flex-col items-center gap-2">
-                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-                <p className="text-sm text-gray-500">Uploading...</p>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-2">
-                <Upload className="h-8 w-8 text-gray-400" />
-                <p className="text-sm text-gray-600">
-                  Click to upload or drag and drop
-                </p>
-                <p className="text-xs text-gray-500">
-                  JPG, PNG or WebP (max 5MB)
-                </p>
-              </div>
-            )}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/jpeg,image/jpg,image/png,image/webp"
-              onChange={handleFileSelect}
-              className="hidden"
-              disabled={uploading}
-            />
-          </div>
+          {!canPersistImages ? (
+            <p className="text-sm text-muted-foreground border rounded-lg p-4 bg-muted/40">
+              Save the restaurant first to upload files to the gallery.
+            </p>
+          ) : (
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400 transition-colors"
+            >
+              {uploading ? (
+                <div className="flex flex-col items-center gap-2">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                  <p className="text-sm text-gray-500">Uploading...</p>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-2">
+                  <Upload className="h-8 w-8 text-gray-400" />
+                  <p className="text-sm text-gray-600">
+                    Click to upload or drag and drop
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    JPG, PNG or WebP (max 5MB)
+                  </p>
+                </div>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                onChange={handleFileSelect}
+                className="hidden"
+                disabled={uploading}
+              />
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="url" className="space-y-4">
-          <div className="flex gap-2">
-            <Input
-              type="url"
-              placeholder="https://example.com/image.jpg"
-              value={urlInput}
-              onChange={(e) => setUrlInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleUrlSubmit()}
-              disabled={uploading}
-            />
-            <Button type="button" onClick={handleUrlSubmit} size="icon" disabled={uploading}>
-              {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <LinkIcon className="h-4 w-4" />}
-            </Button>
-          </div>
+          {!canPersistImages ? (
+            <p className="text-sm text-muted-foreground border rounded-lg p-4 bg-muted/40">
+              Save the restaurant first to add images by URL.
+            </p>
+          ) : (
+            <div className="flex gap-2">
+              <Input
+                type="url"
+                placeholder="https://example.com/image.jpg"
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleUrlSubmit()}
+                disabled={uploading}
+              />
+              <Button type="button" onClick={handleUrlSubmit} size="icon" disabled={uploading}>
+                {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <LinkIcon className="h-4 w-4" />}
+              </Button>
+            </div>
+          )}
         </TabsContent>
+
+        {showGoogleTab && (
+          <TabsContent value="google" className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Visitor-style preview: your saved gallery images (if any) plus Google Places photos for this listing. Hover images for photo credits.
+            </p>
+            <ImageCarousel
+              restaurantId={restaurantId ?? ''}
+              googlePlaceId={googlePlaceId}
+              restaurantName={restaurantName}
+              fallbackImage={heroPreviewUrl?.trim() || undefined}
+            />
+          </TabsContent>
+        )}
       </Tabs>
 
       {error && (
         <p className="text-sm text-red-500">{error}</p>
       )}
 
-      {images.length > 0 && (
+      {canPersistImages && images.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {images.map((image) => (
             <Card key={image.id} className="relative group">

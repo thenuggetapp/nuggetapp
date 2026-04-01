@@ -13,6 +13,7 @@ import { ImageCarousel } from '@/components/ImageCarousel';
 import { Restaurant } from '@/lib/dummy-restaurants';
 import { useAuth } from '@/contexts/AuthContext';
 import { generateRestaurantStructuredData, generateBreadcrumbStructuredData } from '@/lib/structured-data';
+import { getRestaurantDisplayImageUrl, toAbsolutePublicImageUrl } from '@/lib/restaurant-image';
 import { useRestaurantDetail } from '@/hooks/useRestaurants';
 import { useUserBookmarks, useUserLikes, useToggleBookmark, useToggleLike } from '@/hooks/useUserData';
 import {
@@ -70,8 +71,13 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
       phone: data.phone,
       description: data.description,
       coordinates: [data.longitude, data.latitude] as [number, number],
-      imageUrl: data.image_url || '/nugget_colour_logo.png',
+      imageUrl:
+        getRestaurantDisplayImageUrl({
+          image_url: data.image_url,
+          google_place_id: data.google_place_id,
+        }) || '/nugget_colour_logo.png',
       googleMapsUrl: data.google_maps_url,
+      googlePlaceId: data.google_place_id,
       websiteUrl: data.website_url,
       bookingUrl: data.booking_url,
       openingTimes: data.opening_times,
@@ -146,6 +152,7 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
 
 
   const structuredData = restaurant ? generateRestaurantStructuredData(restaurant) : null;
+
   const breadcrumbData = restaurant ? generateBreadcrumbStructuredData([
     { name: 'Home', url: 'https://yourdomain.com' },
     { name: 'Search', url: 'https://yourdomain.com/search' },
@@ -382,6 +389,7 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                   restaurantId={restaurant.id}
                   fallbackImage={restaurant.imageUrl}
                   restaurantName={restaurant.name}
+                  googlePlaceId={restaurant.googlePlaceId || null}
                 />
                 <div className="action-buttons-overlay absolute bottom-4 left-4 flex items-center gap-2 z-10">
                   <Button

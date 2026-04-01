@@ -1,70 +1,137 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client-browser';
 
-interface RestaurantImage {
+interface PlacesPhotoListItem {
+  url: string;
+  attribution: { name: string; uri: string } | null;
+}
+
+interface CarouselSlide {
   id: string;
   image_url: string;
   is_featured: boolean;
   display_order: number;
+  /** Set for slides loaded from Google Places (proxy URLs). */
+  attribution?: { name: string; uri: string } | null;
 }
 
 interface ImageCarouselProps {
   restaurantId: string;
   fallbackImage?: string;
   restaurantName: string;
+  /** When set, additional slides are loaded from Google Places and appended after DB images. */
+  googlePlaceId?: string | null;
 }
 
-export function ImageCarousel({ restaurantId, fallbackImage, restaurantName }: ImageCarouselProps) {
-  const [images, setImages] = useState<RestaurantImage[]>([]);
+export function ImageCarousel({
+  restaurantId,
+  fallbackImage,
+  restaurantName,
+  googlePlaceId,
+}: ImageCarouselProps) {
+  const [images, setImages] = useState<CarouselSlide[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
-  useEffect(() => {
-    loadImages();
-  }, [restaurantId]);
-
-  const loadImages = async () => {
+  const loadImages = useCallback(async () => {
+    setLoading(true);
     try {
-      setLoading(false);
-      const { data, error } = await supabase
-        .from('restaurant_images')
-        .select('*')
-        .eq('restaurant_id', restaurantId)
-        .order('is_featured', { ascending: false })
-        .order('display_order', { ascending: true });
+      let base: CarouselSlide[] = [];
 
-      if (error) throw error;
+      if (restaurantId?.trim()) {
+        const { data, error } = await supabase
+          .from('restaurant_images')
+          .select('*')
+          .eq('restaurant_id', restaurantId)
+          .order('is_featured', { ascending: false })
+          .order('display_order', { ascending: true });
 
-      if (data && data.length > 0) {
-        setImages(data);
-      } else if (fallbackImage) {
-        setImages([{
-          id: 'fallback',
-          image_url: fallbackImage,
-          is_featured: true,
-          display_order: 0
-        }]);
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          base = data.map((row) => ({
+            id: row.id,
+            image_url: row.image_url,
+            is_featured: row.is_featured,
+            display_order: row.display_order,
+            attribution: null,
+          }));
+        }
       }
+
+      const placeId = googlePlaceId?.trim();
+      if (placeId) {
+        const res = await fetch(
+          `/api/places/photos?place_id=${encodeURIComponent(placeId)}`
+        );
+        if (res.ok) {
+          const payload = (await res.json()) as {
+            photos?: PlacesPhotoListItem[];
+            imageUrls?: string[];
+          };
+          const items =
+            payload.photos ??
+            (payload.imageUrls ?? []).map((url) => ({
+              url,
+              attribution: null,
+            }));
+          const existing = new Set(base.map((b) => b.image_url));
+          const append: CarouselSlide[] = items
+            .filter((item) => item.url && !existing.has(item.url))
+            .map((item, i) => ({
+              id: `google-${i}-${item.url.slice(-24)}`,
+              image_url: item.url,
+              is_featured: false,
+              display_order: 1000 + i,
+              attribution: item.attribution,
+            }));
+          base = [...base, ...append];
+        }
+      }
+
+      if (fallbackImage && base.length === 0) {
+        base = [
+          {
+            id: 'fallback',
+            image_url: fallbackImage,
+            is_featured: true,
+            display_order: 0,
+            attribution: null,
+          },
+        ];
+      }
+
+      setCurrentIndex(0);
+      setImages(base);
     } catch (err) {
       console.error('Error loading images:', err);
+      setCurrentIndex(0);
       if (fallbackImage) {
-        setImages([{
-          id: 'fallback',
-          image_url: fallbackImage,
-          is_featured: true,
-          display_order: 0
-        }]);
+        setImages([
+          {
+            id: 'fallback',
+            image_url: fallbackImage,
+            is_featured: true,
+            display_order: 0,
+            attribution: null,
+          },
+        ]);
+      } else {
+        setImages([]);
       }
     } finally {
       setLoading(false);
     }
-  };
+  }, [restaurantId, fallbackImage, googlePlaceId, supabase]);
+
+  useEffect(() => {
+    loadImages();
+  }, [loadImages]);
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
@@ -81,6 +148,9 @@ export function ImageCarousel({ restaurantId, fallbackImage, restaurantName }: I
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
   };
+
+  const current = images[currentIndex];
+  const currentAttribution = current?.attribution;
 
   if (loading) {
     return (
@@ -104,11 +174,25 @@ export function ImageCarousel({ restaurantId, fallbackImage, restaurantName }: I
     <div className="relative h-64 lg:h-80 w-full overflow-hidden flex-shrink-0 group">
       <div className="relative w-full h-full">
         <img
-          src={images[currentIndex].image_url}
+          src={current.image_url}
           alt={`${restaurantName} - Image ${currentIndex + 1}`}
           className="w-full h-full object-cover"
         />
       </div>
+
+      {currentAttribution && (
+        <div className="pointer-events-none absolute top-4 left-4 z-20 max-w-[min(100%,20rem)] rounded-md bg-black/60 px-3 py-2 text-sm text-white opacity-0 shadow-sm transition-opacity duration-200 group-hover:opacity-100">
+          <span className="text-white/90">Photo by </span>
+          <a
+            href={currentAttribution.uri}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pointer-events-auto font-medium text-white underline decoration-white/70 underline-offset-2 hover:text-white hover:decoration-white"
+          >
+            {currentAttribution.name}
+          </a>
+        </div>
+      )}
 
       {images.length > 1 && (
         <>

@@ -6,6 +6,7 @@ import { Heart, Bookmark } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUserBookmarks, useUserLikes, useToggleBookmark, useToggleLike } from '@/hooks/useUserData';
+import { getRestaurantDisplayImageUrlOrFallback } from '@/lib/restaurant-image';
 
 interface Restaurant {
   id: string;
@@ -14,6 +15,7 @@ interface Restaurant {
   likes_count: number;
   address: string;
   image_url: string | null;
+  google_place_id?: string | null;
 }
 
 interface RestaurantGridProps {
@@ -66,7 +68,10 @@ export function RestaurantGrid({ restaurants, title }: RestaurantGridProps) {
             <Card className="cursor-pointer transition-all hover:shadow-lg border-slate-200 overflow-hidden">
               <div className="relative w-full overflow-hidden aspect-[4/3]">
                 <img
-                  src={restaurant.image_url || 'https://images.pexels.com/photos/1566837/pexels-photo-1566837.jpeg?auto=compress&cs=tinysrgb&w=400'}
+                  src={getRestaurantDisplayImageUrlOrFallback({
+                    image_url: restaurant.image_url,
+                    google_place_id: restaurant.google_place_id,
+                  })}
                   alt={restaurant.name}
                   className="w-full h-full object-cover"
                 />
