@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MultiImageUpload } from "@/components/MultiImageUpload";
 import { ImageUpload } from "@/components/ImageUpload";
+import { ImageCarousel } from "@/components/ImageCarousel";
 import {
   Card,
   CardContent,
@@ -1419,16 +1420,25 @@ export default function AdminDashboard() {
                         label="Restaurant Image"
                       />
                       {formData.google_place_id?.trim() ? (
-                        <MultiImageUpload
-                          googlePlaceId={formData.google_place_id}
-                          restaurantName={formData.name || "Restaurant"}
-                          heroPreviewUrl={
-                            getRestaurantDisplayImageUrl({
-                              image_url: formData.image_url,
-                              google_place_id: formData.google_place_id,
-                            }) || undefined
-                          }
-                        />
+                        <div className="space-y-6">
+                          <div>
+                            <Label>Google photo preview</Label>
+                            <p className="text-sm text-gray-500 mt-1">
+                              Read-only preview of photos visitors may see from Google after you save the restaurant. Add gallery images from the form after the restaurant exists.
+                            </p>
+                          </div>
+                          <ImageCarousel
+                            restaurantId=""
+                            googlePlaceId={formData.google_place_id}
+                            restaurantName={formData.name || "Restaurant"}
+                            fallbackImage={
+                              getRestaurantDisplayImageUrl({
+                                image_url: formData.image_url,
+                                google_place_id: formData.google_place_id,
+                              }) || undefined
+                            }
+                          />
+                        </div>
                       ) : null}
                     </>
                   )}
