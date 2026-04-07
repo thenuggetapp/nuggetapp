@@ -1,33 +1,33 @@
-import { MetadataRoute } from 'next';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { MetadataRoute } from "next";
+import { createAdminClient } from "@/lib/supabase/admin";
+
+const BASE_URL = `${process.env.NEXT_PUBLIC_APP_URL}`;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://yourdomain.com';
-
   const supabase = createAdminClient();
   const { data: restaurants } = await supabase
-    .from('restaurants')
-    .select('id')
-    .eq('visible', true);
+    .from("restaurants")
+    .select("id")
+    .eq("visible", true);
 
   const restaurantUrls = (restaurants || []).map((restaurant) => ({
-    url: `${baseUrl}/restaurant/${restaurant.id}`,
+    url: `${BASE_URL}/restaurant/${restaurant.id}`,
     lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
+    changeFrequency: "weekly" as const,
     priority: 0.8,
   }));
 
   return [
     {
-      url: baseUrl,
+      url: BASE_URL,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: "daily",
       priority: 1,
     },
     {
-      url: `${baseUrl}/search`,
+      url: `${BASE_URL}/search`,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: "daily",
       priority: 0.9,
     },
     ...restaurantUrls,
