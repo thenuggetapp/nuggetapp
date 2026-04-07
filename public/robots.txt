@@ -7,4 +7,4 @@ Disallow: /login
 Disallow: /signup
 
 # Sitemap
-Sitemap: https://thenuggetapp.com/sitemap.xml
+Sitemap: https://thenugget.app/sitemap.xml
