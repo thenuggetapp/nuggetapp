@@ -6,6 +6,8 @@ import { Toaster } from '@/components/ui/sonner';
 import { ConditionalFooter } from '@/components/ConditionalFooter';
 import { CookieConsent } from '@/components/CookieConsent';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://yourdomain.com'),
@@ -71,6 +73,8 @@ export default function RootLayout({
             <CookieConsent />
           </SWRProvider>
         </AuthProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
