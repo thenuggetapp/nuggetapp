@@ -89,6 +89,7 @@ export default function EditRestaurantPage() {
         latitude: restaurant.latitude || 0,
         longitude: restaurant.longitude || 0,
         image_url: restaurant.image_url || "",
+        google_place_id: restaurant.google_place_id || "",
         website_url: restaurant.website_url || "",
         google_maps_url: restaurant.google_maps_url || "",
         booking_url: restaurant.booking_url || "",
@@ -193,39 +194,20 @@ export default function EditRestaurantPage() {
     setSaving(true);
 
     try {
-      // Generate base slug
-      let slug = formData.name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
-
-      // Check if slug exists (excluding current restaurant) and add unique suffix if needed
-      const { data: existingRestaurant } = await supabase
-        .from("restaurants")
-        .select("slug, id")
-        .eq("slug", slug)
-        .neq("id", restaurantId)
-        .maybeSingle();
-
-      if (existingRestaurant) {
-        // Add timestamp to make slug unique
-        const timestamp = Date.now().toString().slice(-6);
-        slug = `${slug}-${timestamp}`;
-      }
-
       const dataToSave = {
         ...formData,
-        slug,
         visible: publish,
         city: formData.city.trim() || null,
         country: formData.country.trim() || null,
         phone: formData.phone.trim() || null,
         description: formData.description.trim() || null,
         image_url: formData.image_url.trim() || null,
+        google_place_id: formData.google_place_id?.trim() || null,
         website_url: formData.website_url.trim() || null,
         google_maps_url: formData.google_maps_url.trim() || null,
         booking_url: formData.booking_url.trim() || null,
       };
+      delete (dataToSave as { slug?: string }).slug;
 
       console.log("📤 Sending data to Supabase:", {
         city: dataToSave.city,

@@ -1,5 +1,5 @@
 import { Header } from '@/components/Header';
-import { generateWebsiteStructuredData } from '@/lib/structured-data';
+import { generateWebsiteStructuredData } from '@/lib/website-structured-data';
 import { SearchSection } from '@/components/home/SearchSection';
 import { RestaurantCarousel } from '@/components/home/RestaurantCarousel';
 import { PopularFilters } from '@/components/home/PopularFilters';
@@ -16,6 +16,7 @@ interface Restaurant {
   likes_count: number;
   address: string;
   image_url: string | null;
+  google_place_id?: string | null;
 }
 
 async function getFeaturedRestaurants(): Promise<Restaurant[]> {
@@ -27,7 +28,7 @@ async function getFeaturedRestaurants(): Promise<Restaurant[]> {
 
   const { data, error } = await supabase
     .from('restaurants')
-    .select('id, name, cuisine, likes_count, address, image_url')
+    .select('id, name, cuisine, likes_count, address, image_url, google_place_id')
     .eq('visible', true)
     .eq('high_chairs', true)
     .ilike('address', '%Chicago%')
@@ -50,7 +51,7 @@ async function getDogFriendlyRestaurants(): Promise<Restaurant[]> {
 
   const { data, error } = await supabase
     .from('restaurants')
-    .select('id, name, cuisine, likes_count, address, image_url')
+    .select('id, name, cuisine, likes_count, address, image_url, google_place_id')
     .eq('visible', true)
     .eq('dog_friendly', true)
     .ilike('address', '%Chicago%')
@@ -73,7 +74,7 @@ async function getBabyChangeRestaurants(): Promise<Restaurant[]> {
 
   const { data, error } = await supabase
     .from('restaurants')
-    .select('id, name, cuisine, likes_count, address, image_url')
+    .select('id, name, cuisine, likes_count, address, image_url, google_place_id')
     .eq('visible', true)
     .ilike('address', '%Chicago%')
     .or('baby_change_mens.eq.true,baby_change_womens.eq.true,baby_change_unisex.eq.true')
@@ -96,7 +97,7 @@ async function getKidsColouringRestaurants(): Promise<Restaurant[]> {
 
   const { data, error } = await supabase
     .from('restaurants')
-    .select('id, name, cuisine, likes_count, address, image_url')
+    .select('id, name, cuisine, likes_count, address, image_url, google_place_id')
     .eq('visible', true)
     .eq('kids_colouring', true)
     .ilike('address', '%Chicago%')

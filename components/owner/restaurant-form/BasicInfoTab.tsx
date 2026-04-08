@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ImageUpload } from '@/components/ImageUpload';
 import { MultiImageUpload } from '@/components/MultiImageUpload';
+import { getRestaurantDisplayImageUrl } from '@/lib/restaurant-image';
 
 interface BasicInfoTabProps {
   formData: any;
@@ -178,6 +179,14 @@ export default function BasicInfoTab({ formData, setFormData }: BasicInfoTabProp
       {formData.id ? (
         <MultiImageUpload
           restaurantId={formData.id}
+          googlePlaceId={formData.google_place_id}
+          restaurantName={formData.name}
+          heroPreviewUrl={
+            getRestaurantDisplayImageUrl({
+              image_url: formData.image_url,
+              google_place_id: formData.google_place_id,
+            }) || undefined
+          }
         />
       ) : (
         <ImageUpload

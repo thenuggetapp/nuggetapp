@@ -152,7 +152,9 @@ export async function GET(request: Request) {
     if (type === "featured") {
       const { data, error } = await supabase
         .from("restaurants")
-        .select("id, name, cuisine, likes_count, address, image_url")
+        .select(
+          "id, name, cuisine, likes_count, address, image_url, google_place_id",
+        )
         .eq("visible", true)
         .eq("high_chairs", true)
         .order("likes_count", { ascending: false })

@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import RestaurantDetail from "@/components/RestaurantDetail";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { resolveRestaurantImageUrlForMetadata } from "@/lib/restaurant-image";
 
 // Enable ISR: Revalidate every 60 seconds
 export const revalidate = 60;
@@ -41,9 +42,10 @@ export async function generateMetadata({
   }
 
   const priceSymbol = "$".repeat(restaurant.price_level || 2);
-  const imageUrl =
-    restaurant.image_url ||
-    "/nugget_colour_logo.png";
+  const imageUrl = resolveRestaurantImageUrlForMetadata({
+    image_url: restaurant.image_url,
+    google_place_id: restaurant.google_place_id,
+  });
 
   return {
     title: `${restaurant.name} - ${restaurant.cuisine}`,
@@ -68,7 +70,7 @@ export async function generateMetadata({
       description: `${restaurant.name} - ${restaurant.cuisine}. ${
         restaurant.likes_count || 0
       } likes.`,
-      url: `https://yourdomain.com/restaurant/${restaurant.id}`,
+      url: `/restaurant/${restaurant.id}`,
       images: [
         {
           url: imageUrl,
@@ -81,7 +83,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${restaurant.name} | MapSearch`,
+      title: `${restaurant.name} | Nugget`,
       description: `${restaurant.name} - ${restaurant.cuisine}. ${
         restaurant.likes_count || 0
       } likes`,

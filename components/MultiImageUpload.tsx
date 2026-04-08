@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Upload, X, Link as LinkIcon, Loader2, Star, GripVertical } from 'lucide-react';
+import { Upload, X, Link as LinkIcon, Loader2, Star, Images } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client-browser';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
+import { ImageCarousel } from '@/components/ImageCarousel';
 
 interface RestaurantImage {
   id: string;
@@ -18,24 +19,41 @@ interface RestaurantImage {
 }
 
 interface MultiImageUploadProps {
+  /** Saved restaurant — required for gallery rows in `restaurant_images`. */
   restaurantId: string;
   onImagesChange?: () => void;
+  /** When set, shows a "Google Images" tab — visitor-style preview; does not persist. */
+  googlePlaceId?: string | null;
+  restaurantName?: string;
+  /** Form cover image — used as carousel fallback when there are no gallery rows yet. */
+  heroPreviewUrl?: string;
 }
 
-export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUploadProps) {
+export function MultiImageUpload({
+  restaurantId,
+  onImagesChange,
+  googlePlaceId,
+  restaurantName = 'Restaurant',
+  heroPreviewUrl,
+}: MultiImageUploadProps) {
   const [images, setImages] = useState<RestaurantImage[]>([]);
   const [uploading, setUploading] = useState(false);
   const [urlInput, setUrlInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
-  useEffect(() => {
-    loadImages();
-  }, [restaurantId]);
+  const showGoogleTab = Boolean(googlePlaceId?.trim());
+  const tabColsClass = showGoogleTab ? 'grid-cols-3' : 'grid-cols-2';
 
-  const loadImages = async () => {
+  const loadImages = useCallback(async () => {
+    if (!restaurantId?.trim()) {
+      setImages([]);
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -52,7 +70,11 @@ export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUpl
     } finally {
       setLoading(false);
     }
-  };
+  }, [restaurantId, supabase]);
+
+  useEffect(() => {
+    void loadImages();
+  }, [loadImages]);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -202,13 +224,28 @@ export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUpl
         <Label>Restaurant Images</Label>
         <p className="text-sm text-gray-500 mt-1">
           Upload multiple images. The first image will be featured by default.
+          {showGoogleTab && (
+            <span className="block mt-1">
+              The Google Images tab is a read-only preview of how Google-sourced photos appear to visitors — nothing there is saved automatically.
+            </span>
+          )}
         </p>
       </div>
 
-      <Tabs defaultValue="upload" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="upload">Upload File</TabsTrigger>
-          <TabsTrigger value="url">Use URL</TabsTrigger>
+      <Tabs key={String(showGoogleTab)} defaultValue="upload" className="w-full">
+        <TabsList className={`grid w-full ${tabColsClass}`}>
+          <TabsTrigger value="upload">
+            Upload File
+          </TabsTrigger>
+          <TabsTrigger value="url">
+            Use URL
+          </TabsTrigger>
+          {showGoogleTab && (
+            <TabsTrigger value="google" className="gap-1">
+              <Images className="h-3.5 w-3.5" />
+              Google Images
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="upload" className="space-y-4">
@@ -258,6 +295,20 @@ export function MultiImageUpload({ restaurantId, onImagesChange }: MultiImageUpl
             </Button>
           </div>
         </TabsContent>
+
+        {showGoogleTab && (
+          <TabsContent value="google" className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Visitor-style preview: your saved gallery images (if any) plus Google Places photos for this listing. Hover images for photo credits.
+            </p>
+            <ImageCarousel
+              restaurantId={restaurantId}
+              googlePlaceId={googlePlaceId}
+              restaurantName={restaurantName}
+              fallbackImage={heroPreviewUrl?.trim() || undefined}
+            />
+          </TabsContent>
+        )}
       </Tabs>
 
       {error && (

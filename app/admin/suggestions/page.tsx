@@ -242,10 +242,22 @@ export default function AdminSuggestionsPage() {
     setIsProcessing(true);
 
     try {
-      const slug = selectedSuggestion.name
+      const baseSlug = selectedSuggestion.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
+
+      let slug = baseSlug;
+      const { data: slugConflict } = await supabase
+        .from("restaurants")
+        .select("id")
+        .eq("slug", slug)
+        .maybeSingle();
+
+      if (slugConflict) {
+        const timestamp = Date.now().toString().slice(-6);
+        slug = `${slug}-${timestamp}`;
+      }
 
       const { error: insertError } = await supabase.from("restaurants").insert({
         name: selectedSuggestion.name,

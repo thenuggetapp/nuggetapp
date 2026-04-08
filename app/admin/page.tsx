@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MultiImageUpload } from "@/components/MultiImageUpload";
 import { ImageUpload } from "@/components/ImageUpload";
+import { ImageCarousel } from "@/components/ImageCarousel";
 import {
   Card,
   CardContent,
@@ -80,6 +81,7 @@ import {
 } from "lucide-react";
 import { GooglePlacesAutocomplete } from "@/components/GooglePlacesAutocomplete";
 import { mapGooglePlaceToRestaurant } from "@/lib/google-places-mapper";
+import { getRestaurantDisplayImageUrl } from "@/lib/restaurant-image";
 import { AdminSidebar } from "@/components/AdminSidebar";
 
 interface DayHours {
@@ -125,6 +127,7 @@ interface Restaurant {
   vegan_options: boolean;
   gluten_free_options: boolean;
   image_url?: string;
+  google_place_id?: string;
   dog_friendly: boolean;
   playground_nearby: boolean;
   quick_service: boolean;
@@ -178,6 +181,7 @@ const emptyRestaurant: Restaurant = {
   vegan_options: false,
   gluten_free_options: false,
   image_url: "",
+  google_place_id: "",
   google_maps_url: "",
   website_url: "",
   booking_url: "",
@@ -348,10 +352,11 @@ export default function AdminDashboard() {
 
   const handlePlaceSelect = (placeData: any) => {
     const mappedData = mapGooglePlaceToRestaurant(placeData);
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       ...mappedData,
-    });
+      image_url: prev.image_url || mappedData.image_url,
+    }));
   };
 
   const handleEdit = (restaurant: Restaurant) => {
@@ -418,19 +423,14 @@ export default function AdminDashboard() {
 
     setIsSaving(true);
 
-    const slug = formData.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
-
     const dataToSave = {
       ...formData,
-      slug,
       city: formData.city?.trim() || undefined,
       country: formData.country?.trim() || undefined,
       phone: formData.phone?.trim() || undefined,
       description: formData.description?.trim() || undefined,
       image_url: formData.image_url?.trim() || undefined,
+      google_place_id: formData.google_place_id?.trim() || undefined,
       website_url: formData.website_url?.trim() || undefined,
       google_maps_url: formData.google_maps_url?.trim() || undefined,
       opening_times: formData.opening_times || {},
@@ -438,9 +438,27 @@ export default function AdminDashboard() {
 
     let result;
     if (editingRestaurant?.id) {
-      result = await updateRestaurant(editingRestaurant.id, dataToSave);
+      const { slug: _omitSlug, ...updatePayload } = dataToSave as typeof dataToSave & {
+        slug?: string;
+      };
+      result = await updateRestaurant(editingRestaurant.id, updatePayload);
     } else {
-      result = await createRestaurant(dataToSave);
+      const baseSlug = formData.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+
+      let slug = baseSlug;
+      const { data: slugConflict } = await supabase
+        .from("restaurants")
+        .select("id")
+        .eq("slug", slug)
+        .maybeSingle();
+      if (slugConflict) {
+        const timestamp = Date.now().toString().slice(-6);
+        slug = `${slug}-${timestamp}`;
+      }
+      result = await createRestaurant({ ...dataToSave, slug } as Restaurant);
     }
 
     if (result.success) {
@@ -1376,6 +1394,14 @@ export default function AdminDashboard() {
                   {editingRestaurant?.id ? (
                     <MultiImageUpload
                       restaurantId={editingRestaurant.id}
+                      googlePlaceId={formData.google_place_id}
+                      restaurantName={formData.name}
+                      heroPreviewUrl={
+                        getRestaurantDisplayImageUrl({
+                          image_url: formData.image_url,
+                          google_place_id: formData.google_place_id,
+                        }) || undefined
+                      }
                       onImagesChange={() => {
                         toast({
                           title: "Images Updated",
@@ -1384,12 +1410,37 @@ export default function AdminDashboard() {
                       }}
                     />
                   ) : (
-                    <ImageUpload
-                      currentImageUrl={formData.image_url}
-                      onImageChange={(url) => setFormData({ ...formData, image_url: url })}
-                      restaurantId={formData.id}
-                      label="Restaurant Image"
-                    />
+                    <>
+                      <ImageUpload
+                        currentImageUrl={formData.image_url}
+                        onImageChange={(url) =>
+                          setFormData((prev) => ({ ...prev, image_url: url }))
+                        }
+                        restaurantId={formData.id}
+                        label="Restaurant Image"
+                      />
+                      {formData.google_place_id?.trim() ? (
+                        <div className="space-y-6">
+                          <div>
+                            <Label>Google photo preview</Label>
+                            <p className="text-sm text-gray-500 mt-1">
+                              Read-only preview of photos visitors may see from Google after you save the restaurant. Add gallery images from the form after the restaurant exists.
+                            </p>
+                          </div>
+                          <ImageCarousel
+                            restaurantId=""
+                            googlePlaceId={formData.google_place_id}
+                            restaurantName={formData.name || "Restaurant"}
+                            fallbackImage={
+                              getRestaurantDisplayImageUrl({
+                                image_url: formData.image_url,
+                                google_place_id: formData.google_place_id,
+                              }) || undefined
+                            }
+                          />
+                        </div>
+                      ) : null}
+                    </>
                   )}
 
                   <div className="space-y-2">

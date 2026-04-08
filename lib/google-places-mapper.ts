@@ -49,7 +49,9 @@ interface MappedRestaurantData {
   price_level: number;
   opening_times: Record<string, any>;
   cuisine: string;
+  /** User-uploaded images only; Google photos use google_place_id and are loaded from google */
   image_url: string;
+  google_place_id: string;
 }
 
 /**
@@ -192,17 +194,6 @@ function inferCuisine(types: string[]): string {
 }
 
 /**
- * Get photo URL from Google Places photo reference
- */
-function getPhotoUrl(
-  photoReference: string,
-  maxWidth: number = 800
-): string {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  return `${supabaseUrl}/functions/v1/google-places?action=photo&photo_reference=${photoReference}&maxwidth=${maxWidth}`;
-}
-
-/**
  * Main mapping function
  */
 export function mapGooglePlaceToRestaurant(placeData: GooglePlaceResult): MappedRestaurantData {
@@ -229,9 +220,8 @@ export function mapGooglePlaceToRestaurant(placeData: GooglePlaceResult): Mapped
     price_level: placeData.price_level || 2,
     opening_times: mapOpeningHours(placeData.opening_hours),
     cuisine: inferCuisine(placeData.types),
-    image_url: placeData.photos?.[0]?.photo_reference
-      ? getPhotoUrl(placeData.photos[0].photo_reference)
-      : '',
+    image_url: '',
+    google_place_id: placeData.place_id || '',
   };
 }
 

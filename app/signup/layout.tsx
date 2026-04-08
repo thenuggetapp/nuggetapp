@@ -1,16 +1,17 @@
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Sign Up',
-  description: 'Create a MapSearch account to save your favorite restaurants, write reviews, and get personalized recommendations.',
+  title: "Sign Up",
+  description:
+    "Create a Nugget account to save your favorite restaurants, write reviews, and get personalized recommendations.",
   robots: {
     index: false,
     follow: true,
   },
   openGraph: {
-    title: 'Sign Up | MapSearch',
-    description: 'Create a MapSearch account to save your favorite restaurants.',
-    url: 'https://yourdomain.com/signup',
+    title: "Sign Up | Nugget",
+    description: "Create a Nugget account to save your favorite restaurants.",
+    url: "/signup",
   },
 };
 
