@@ -1,11 +1,13 @@
-import "./globals.css";
-import type { Metadata } from "next";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { SWRProvider } from "@/providers/SWRProvider";
-import { Toaster } from "@/components/ui/sonner";
-import { ConditionalFooter } from "@/components/ConditionalFooter";
-import { CookieConsent } from "@/components/CookieConsent";
-import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import './globals.css';
+import type { Metadata } from 'next';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { SWRProvider } from '@/providers/SWRProvider';
+import { Toaster } from '@/components/ui/sonner';
+import { ConditionalFooter } from '@/components/ConditionalFooter';
+import { CookieConsent } from '@/components/CookieConsent';
+import { GoogleAnalytics } from '@/components/GoogleAnalytics';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { getSiteUrl } from "@/lib/site-url";
 
 const BASE_URL = getSiteUrl();
@@ -85,6 +87,8 @@ export default function RootLayout({
             <CookieConsent />
           </SWRProvider>
         </AuthProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
