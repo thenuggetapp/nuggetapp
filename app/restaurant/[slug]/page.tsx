@@ -70,7 +70,7 @@ export async function generateMetadata({
       description: `${restaurant.name} - ${restaurant.cuisine}. ${
         restaurant.likes_count || 0
       } likes.`,
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/restaurant/${restaurant.id}`,
+      url: `/restaurant/${restaurant.id}`,
       images: [
         {
           url: imageUrl,

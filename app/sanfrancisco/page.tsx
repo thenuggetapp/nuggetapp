@@ -1,5 +1,5 @@
 import { Header } from '@/components/Header';
-import { generateWebsiteStructuredData } from '@/lib/structured-data';
+import { generateWebsiteStructuredData } from '@/lib/website-structured-data';
 import { SearchSection } from '@/components/home/SearchSection';
 import { RestaurantCarousel } from '@/components/home/RestaurantCarousel';
 import { PopularFilters } from '@/components/home/PopularFilters';

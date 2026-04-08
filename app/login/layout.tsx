@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Sign In | Nugget",
     description: "Sign in to your Nugget account.",
-    url: `${process.env.NEXT_PUBLIC_APP_URL}/login`,
+    url: "/login",
   },
 };
 

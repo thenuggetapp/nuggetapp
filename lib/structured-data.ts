@@ -1,7 +1,5 @@
 import { Restaurant } from "./dummy-restaurants";
 
-const BASE_URL = `${process.env.NEXT_PUBLIC_APP_URL}`;
-
 export function generateRestaurantStructuredData(restaurant: Restaurant) {
   return {
     "@context": "https://schema.org",
@@ -19,7 +17,7 @@ export function generateRestaurantStructuredData(restaurant: Restaurant) {
       latitude: restaurant.coordinates[1],
       longitude: restaurant.coordinates[0],
     },
-    url: `${BASE_URL}/restaurant/${restaurant.id}`,
+    url: `/restaurant/${restaurant.id}`,
     servesCuisine: restaurant.cuisine,
     priceRange: "$".repeat(restaurant.priceLevel),
     aggregateRating: {
@@ -61,24 +59,5 @@ export function generateBreadcrumbStructuredData(
       name: item.name,
       item: item.url,
     })),
-  };
-}
-
-export function generateWebsiteStructuredData() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "The Nugget",
-    url: BASE_URL,
-    description:
-      "Discover family-friendly restaurants with interactive maps, detailed reviews, and filters.",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${BASE_URL}/search?q={search_term_string}`,
-      },
-      "query-input": "required name=search_term_string",
-    },
   };
 }

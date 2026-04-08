@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "Search Family-Friendly Restaurants | Nugget",
     description:
       "Search and discover family-friendly restaurants with filters for kids menus, high chairs, parking, WiFi, and more.",
-    url: `${process.env.NEXT_PUBLIC_APP_URL}/search`,
+    url: "/search",
   },
 };
 

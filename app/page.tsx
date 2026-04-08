@@ -1,6 +1,6 @@
 import { Header } from '@/components/Header';
 import { SkipNav } from '@/components/SkipNav';
-import { generateWebsiteStructuredData } from '@/lib/structured-data';
+import { generateWebsiteStructuredData } from '@/lib/website-structured-data';
 import { SmartSearchSection } from '@/components/home/SmartSearchSection';
 import { RestaurantGrid } from '@/components/home/RestaurantGrid';
 import { CityBrowse } from '@/components/home/CityBrowse';
