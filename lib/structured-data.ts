@@ -1,27 +1,29 @@
-import { Restaurant } from './dummy-restaurants';
+import { Restaurant } from "./dummy-restaurants";
+
+const BASE_URL = `${process.env.NEXT_PUBLIC_APP_URL}`;
 
 export function generateRestaurantStructuredData(restaurant: Restaurant) {
   return {
-    '@context': 'https://schema.org',
-    '@type': 'Restaurant',
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
     name: restaurant.name,
     image: restaurant.imageUrl,
     address: {
-      '@type': 'PostalAddress',
+      "@type": "PostalAddress",
       streetAddress: restaurant.address,
-      addressLocality: 'London',
-      addressCountry: 'GB',
+      addressLocality: restaurant.city || "London",
+      addressCountry: restaurant.country || "GB",
     },
     geo: {
-      '@type': 'GeoCoordinates',
+      "@type": "GeoCoordinates",
       latitude: restaurant.coordinates[1],
       longitude: restaurant.coordinates[0],
     },
-    url: `https://yourdomain.com/restaurant/${restaurant.id}`,
+    url: `${BASE_URL}/restaurant/${restaurant.id}`,
     servesCuisine: restaurant.cuisine,
-    priceRange: '$'.repeat(restaurant.priceLevel),
+    priceRange: "$".repeat(restaurant.priceLevel),
     aggregateRating: {
-      '@type': 'AggregateRating',
+      "@type": "AggregateRating",
       ratingValue: restaurant.rating,
       reviewCount: restaurant.reviewCount,
       bestRating: 5,
@@ -29,30 +31,32 @@ export function generateRestaurantStructuredData(restaurant: Restaurant) {
     },
     amenityFeature: [
       restaurant.kidsMenu && {
-        '@type': 'LocationFeatureSpecification',
-        name: 'Kids Menu',
+        "@type": "LocationFeatureSpecification",
+        name: "Kids Menu",
         value: true,
       },
       restaurant.highChairs && {
-        '@type': 'LocationFeatureSpecification',
-        name: 'High Chairs Available',
+        "@type": "LocationFeatureSpecification",
+        name: "High Chairs Available",
         value: true,
       },
       restaurant.changingTable && {
-        '@type': 'LocationFeatureSpecification',
-        name: 'Baby Changing Facilities',
+        "@type": "LocationFeatureSpecification",
+        name: "Baby Changing Facilities",
         value: true,
       },
     ].filter(Boolean),
   };
 }
 
-export function generateBreadcrumbStructuredData(items: { name: string; url: string }[]) {
+export function generateBreadcrumbStructuredData(
+  items: { name: string; url: string }[],
+) {
   return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
     itemListElement: items.map((item, index) => ({
-      '@type': 'ListItem',
+      "@type": "ListItem",
       position: index + 1,
       name: item.name,
       item: item.url,
@@ -62,18 +66,19 @@ export function generateBreadcrumbStructuredData(items: { name: string; url: str
 
 export function generateWebsiteStructuredData() {
   return {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'MapSearch',
-    url: 'https://yourdomain.com',
-    description: 'Discover family-friendly restaurants with interactive maps, detailed reviews, and filters.',
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "The Nugget",
+    url: BASE_URL,
+    description:
+      "Discover family-friendly restaurants with interactive maps, detailed reviews, and filters.",
     potentialAction: {
-      '@type': 'SearchAction',
+      "@type": "SearchAction",
       target: {
-        '@type': 'EntryPoint',
-        urlTemplate: 'https://yourdomain.com/search?q={search_term_string}',
+        "@type": "EntryPoint",
+        urlTemplate: `${BASE_URL}/search?q={search_term_string}`,
       },
-      'query-input': 'required name=search_term_string',
+      "query-input": "required name=search_term_string",
     },
   };
 }

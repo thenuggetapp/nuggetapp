@@ -70,7 +70,7 @@ export async function generateMetadata({
       description: `${restaurant.name} - ${restaurant.cuisine}. ${
         restaurant.likes_count || 0
       } likes.`,
-      url: `https://yourdomain.com/restaurant/${restaurant.id}`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/restaurant/${restaurant.id}`,
       images: [
         {
           url: imageUrl,
@@ -83,7 +83,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${restaurant.name} | MapSearch`,
+      title: `${restaurant.name} | Nugget`,
       description: `${restaurant.name} - ${restaurant.cuisine}. ${
         restaurant.likes_count || 0
       } likes`,
