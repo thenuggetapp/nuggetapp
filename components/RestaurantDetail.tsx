@@ -51,8 +51,6 @@ interface RestaurantDetailProps {
   slug: string;
 }
 
-const BASE_URL = `${process.env.NEXT_PUBLIC_APP_URL}`;
-
 export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
   const router = useRouter();
   const { user, userProfile, permissions } = useAuth();
@@ -170,11 +168,11 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
 
   const breadcrumbData = restaurant
     ? generateBreadcrumbStructuredData([
-        { name: "Home", url: BASE_URL },
-        { name: "Search", url: `${BASE_URL}/search` },
+        { name: "Home", url: "/" },
+        { name: "Search", url: "/search" },
         {
           name: restaurant.name,
-          url: `${BASE_URL}}/restaurant/${restaurant.id}`,
+          url: `/restaurant/${restaurant.id}`,
         },
       ])
     : null;

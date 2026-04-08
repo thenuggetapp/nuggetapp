@@ -6,8 +6,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { ConditionalFooter } from "@/components/ConditionalFooter";
 import { CookieConsent } from "@/components/CookieConsent";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { getSiteUrl } from "@/lib/site-url";
 
-const BASE_URL = `${process.env.NEXT_PUBLIC_APP_URL}`;
+const BASE_URL = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
