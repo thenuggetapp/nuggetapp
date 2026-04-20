@@ -83,7 +83,7 @@ function scoreFeatures(restaurant: any, parsed: ParsedQuery): number {
     if (!required) continue;
     const dbColumn = FILTER_KEY_TO_DB_COLUMN[feature];
     if (!dbColumn) continue;
-    if (restaurant[dbColumn] === true) score += 8;
+    if (restaurant[dbColumn] === true) score += 20;
   }
 
   return score;
@@ -115,12 +115,30 @@ function scoreRestaurant(
     scoreFeatures(restaurant, parsed) +
     scoreQuality(restaurant);
 
-  // Big bonus for matching ALL food keywords
+  // Bonus for matching ALL food keywords
   if (parsed.foodKeywords.length > 1) {
     const text =
       `${restaurant.name} ${restaurant.cuisine} ${restaurant.description} ${restaurant.slug}`.toLowerCase();
     const matched = parsed.foodKeywords.filter((t) => text.includes(t)).length;
     if (matched === parsed.foodKeywords.length) return base + 50;
+  }
+
+  // Bonus for matching food AND features together
+  if (
+    parsed.foodKeywords.length > 0 &&
+    Object.keys(parsed.features).length > 0
+  ) {
+    const text =
+      `${restaurant.name} ${restaurant.cuisine} ${restaurant.description}`.toLowerCase();
+    const foodMatched = parsed.foodKeywords.some((t) => text.includes(t));
+    const featuresMatched = Object.entries(parsed.features).every(
+      ([feature, required]) => {
+        if (!required) return true;
+        const dbColumn = FILTER_KEY_TO_DB_COLUMN[feature];
+        return dbColumn && restaurant[dbColumn] === true;
+      },
+    );
+    if (foodMatched && featuresMatched) return base + 40;
   }
 
   return base;
@@ -158,7 +176,10 @@ export function scoreAndRank(
   const hasTextTerms = allTerms.length > 0;
 
   if (hasFeatures && !hasTextTerms) {
-    return scored.filter((r) => r.score !== -Infinity).map((r) => r.restaurant);
+    return scored
+      .filter((r) => r.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((r) => r.restaurant);
   }
 
   return scored
