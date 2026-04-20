@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { parseNaturalLanguageQuery } from "@/lib/natural-language-search";
 import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/amenities";
+import { scoreAndRank } from "@/lib/search/scorer";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -221,7 +222,7 @@ export async function GET(request: Request) {
         .from("restaurants")
         .select(
           `
-    id, name, cuisine, address, city,
+    id, name, slug, cuisine, address, city,
     rating, likes_count, price_level,
     image_url, latitude, longitude, description,
     kids_menu, high_chairs, wheelchair_access,
@@ -239,42 +240,42 @@ export async function GET(request: Request) {
         )
         .eq("visible", true);
 
-      // Apply feature filters from natural language parsing
-      if (parsed?.features) {
-        Object.entries(parsed.features).forEach(([feature, value]) => {
-          if (value === true) {
-            // Map feature names to database column names using shared mapping.
-            // Most feature keys match FilterPanel keys and can use FILTER_KEY_TO_DB_COLUMN.
-            const dbColumn = FILTER_KEY_TO_DB_COLUMN[feature];
-            supabaseQuery = supabaseQuery.eq(dbColumn, true);
-          }
-        });
-      }
+      // // Apply feature filters from natural language parsing
+      // if (parsed?.features) {
+      //   Object.entries(parsed.features).forEach(([feature, value]) => {
+      //     if (value === true) {
+      //       // Map feature names to database column names using shared mapping.
+      //       // Most feature keys match FilterPanel keys and can use FILTER_KEY_TO_DB_COLUMN.
+      //       const dbColumn = FILTER_KEY_TO_DB_COLUMN[feature];
+      //       supabaseQuery = supabaseQuery.eq(dbColumn, true);
+      //     }
+      //   });
+      // }
 
-      // Apply price level filter
-      if (parsed?.priceLevel) {
-        supabaseQuery = supabaseQuery.eq("price_level", parsed.priceLevel);
-      }
+      // // Apply price level filter
+      // if (parsed?.priceLevel) {
+      //   supabaseQuery = supabaseQuery.eq("price_level", parsed.priceLevel);
+      // }
 
-      // Apply cuisine filters
-      if (parsed?.cuisines && parsed.cuisines.length > 0) {
-        const cuisineConditions = parsed.cuisines
-          .map((c) => `cuisine.ilike.%${c}%`)
-          .join(",");
-        supabaseQuery = supabaseQuery.or(cuisineConditions);
-      }
+      // // Apply cuisine filters
+      // if (parsed?.cuisines && parsed.cuisines.length > 0) {
+      //   const cuisineConditions = parsed.cuisines
+      //     .map((c) => `cuisine.ilike.%${c}%`)
+      //     .join(",");
+      //   supabaseQuery = supabaseQuery.or(cuisineConditions);
+      // }
 
-      // Apply food keyword filters (search across name, description, and cuisine)
-      if (parsed?.foodKeywords && parsed.foodKeywords.length > 0) {
-        const foodConditions = parsed.foodKeywords
-          .flatMap((food) => [
-            `name.ilike.%${food}%`,
-            `description.ilike.%${food}%`,
-            `cuisine.ilike.%${food}%`,
-          ])
-          .join(",");
-        supabaseQuery = supabaseQuery.or(foodConditions);
-      }
+      // // Apply food keyword filters (search across name, description, and cuisine)
+      // if (parsed?.foodKeywords && parsed.foodKeywords.length > 0) {
+      //   const foodConditions = parsed.foodKeywords
+      //     .flatMap((food) => [
+      //       `name.ilike.%${food}%`,
+      //       `description.ilike.%${food}%`,
+      //       `cuisine.ilike.%${food}%`,
+      //     ])
+      //     .join(",");
+      //   supabaseQuery = supabaseQuery.or(foodConditions);
+      // }
 
       if (isExactCityMatch && cityCoordinates) {
         const [lng, lat] = cityCoordinates;
@@ -313,13 +314,16 @@ export async function GET(request: Request) {
           return distance <= radiusMeters;
         });
 
-        filteredData.sort(
-          (a: any, b: any) => (b.rating || 0) - (a.rating || 0),
-        );
-
         // Apply pagination to filtered data
-        const total = filteredData.length;
-        const paginatedData = filteredData.slice(offset, offset + limit);
+        const ranked = scoreAndRank(filteredData, parsed);
+        const total = ranked.length;
+        const paginatedData = ranked.slice(offset, offset + limit);
+
+        // filteredData.sort(
+        //   (a: any, b: any) => (b.rating || 0) - (a.rating || 0),
+        // );
+        // const total = filteredData.length;
+        // const paginatedData = filteredData.slice(offset, offset + limit);
 
         return NextResponse.json({
           data: paginatedData,
@@ -348,22 +352,25 @@ export async function GET(request: Request) {
       ) {
         // Only do generic search if no specific features, cuisines, or food keywords were found
         // Search across name, description, cuisine, address, and city
-        supabaseQuery = supabaseQuery.or(
-          `name.ilike.${searchTerm},description.ilike.${searchTerm},cuisine.ilike.${searchTerm},address.ilike.${searchTerm},city.ilike.${searchTerm}`,
-        );
+        // supabaseQuery = supabaseQuery.or(
+        //   `name.ilike.${searchTerm},description.ilike.${searchTerm},cuisine.ilike.${searchTerm},address.ilike.${searchTerm},city.ilike.${searchTerm}`,
+        // );
       }
 
       // Apply user-selected filters at the end
       const filterResult = await applyFilters(supabaseQuery, searchParams);
 
       if (filterResult.isFiltered) {
-        const sortedData = filterResult.data.sort(
-          (a: any, b: any) => (b.rating || 0) - (a.rating || 0),
-        );
-
         // Apply pagination
-        const total = sortedData.length;
-        const paginatedData = sortedData.slice(offset, offset + limit);
+        const ranked = scoreAndRank(filterResult.data, parsed);
+        const total = ranked.length;
+        const paginatedData = ranked.slice(offset, offset + limit);
+
+        // const sortedData = filterResult.data.sort(
+        //   (a: any, b: any) => (b.rating || 0) - (a.rating || 0),
+        // );
+        // const total = sortedData.length;
+        // const paginatedData = sortedData.slice(offset, offset + limit);
 
         return NextResponse.json({
           data: paginatedData,
@@ -378,29 +385,24 @@ export async function GET(request: Request) {
           },
         });
       } else {
-        // Get total count with filters applied
-        const { count: totalCount } = await filterResult.query.select("*", {
-          count: "exact",
-          head: true,
-        });
-
-        // Apply pagination with range
-        const { data, error } = await filterResult.query
-          .order("rating", { ascending: false })
-          .range(offset, offset + limit - 1);
+        const { data, error } = await filterResult.query;
 
         if (error) throw error;
 
+        const ranked = scoreAndRank(data, parsed);
+        const total = ranked.length;
+        const paginatedData = ranked.slice(offset, offset + limit);
+
         return NextResponse.json({
-          data,
+          data: paginatedData,
           error: null,
           city: matchedCity,
           cityCoordinates,
           pagination: {
             page,
             limit,
-            total: totalCount || 0,
-            totalPages: Math.ceil((totalCount || 0) / limit),
+            total,
+            totalPages: Math.ceil(total / limit),
           },
         });
       }
@@ -411,7 +413,7 @@ export async function GET(request: Request) {
         .from("restaurants")
         .select(
           `
-    id, name, cuisine, address, city,
+    id, name, slug, cuisine, address, city,
     rating, likes_count, price_level,
     image_url, latitude, longitude,
     kids_menu, high_chairs, wheelchair_access,

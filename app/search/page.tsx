@@ -36,10 +36,6 @@ import { Restaurant } from "@/lib/dummy-restaurants";
 import { getRestaurantDisplayImageUrlOrFallback } from "@/lib/restaurant-image";
 import { supabase } from "@/lib/supabase/client";
 import {
-  parseNaturalLanguageQuery,
-  buildSupabaseQuery,
-} from "@/lib/natural-language-search";
-import {
   Search,
   MapPin,
   Heart,

@@ -1,4 +1,13 @@
 import { ALL_CUISINE_TYPES, FILTER_KEY_TO_DB_COLUMN } from "@/lib/amenities";
+import {
+  CUISINE_KEYWORDS,
+  FOOD_KEYWORDS,
+  FEATURE_KEYWORDS,
+  PRICE_KEYWORDS,
+  RATING_KEYWORDS,
+  STOP_WORDS,
+  COMMON_CITIES,
+} from "./search/keywords";
 import Fuse from "fuse.js";
 
 export type ParsedFeatures = Partial<
@@ -15,180 +24,8 @@ export interface ParsedQuery {
   searchTerms: string[];
 }
 
-const CUISINE_KEYWORDS = [
-  "italian",
-  "chinese",
-  "japanese",
-  "indian",
-  "mexican",
-  "thai",
-  "french",
-  "american",
-  "british",
-  "mediterranean",
-  "spanish",
-  "vietnamese",
-  "korean",
-  "greek",
-  "turkish",
-  "lebanese",
-  "brazilian",
-  "caribbean",
-  "moroccan",
-  "european",
-  "asian",
-  "african",
-]
-  .concat(ALL_CUISINE_TYPES)
-  .map((c) => c.toLowerCase());
-
-const FOOD_KEYWORDS = [
-  "pizza",
-  "burger",
-  "sushi",
-  "ramen",
-  "curry",
-  "tapas",
-  "bbq",
-  "seafood",
-  "steak",
-  "pasta",
-  "noodles",
-  "sandwich",
-  "salad",
-  "soup",
-  "wings",
-  "tacos",
-  "burrito",
-  "wrap",
-  "kebab",
-  "falafel",
-  "shawarma",
-  "dumplings",
-  "dim sum",
-  "pho",
-  "pad thai",
-  "fried rice",
-  "chow mein",
-  "biryani",
-  "tikka",
-  "masala",
-];
-
-const FEATURE_KEYWORDS = {
-  kidsMenu: [
-    "kids menu",
-    "children menu",
-    "kids meal",
-    "children's menu",
-    "kid friendly menu",
-  ],
-  highChairs: ["high chair", "highchair", "baby chair"],
-  changingTable: [
-    "changing table",
-    "baby changing",
-    "changing station",
-    "diaper changing",
-  ],
-  wheelchairAccess: [
-    "wheelchair",
-    "accessible",
-    "disability access",
-    "wheelchair accessible",
-  ],
-  outdoorSeating: [
-    "outdoor",
-    "outside",
-    "patio",
-    "terrace",
-    "garden",
-    "alfresco",
-  ],
-  vegetarianOptions: ["vegetarian", "veggie options", "veggie"],
-  veganOptions: ["vegan", "plant based", "plant-based"],
-  glutenFree: ["gluten free", "gluten-free", "celiac"],
-  halal: ["halal"],
-  kosher: ["kosher"],
-  parking: ["parking", "car park"],
-  playgroundNearby: ["playground", "play area"],
-  dogFriendly: [
-    "dog friendly",
-    "pet friendly",
-    "puppy friendly",
-    "dogs allowed",
-    "pets allowed",
-    "puppies allowed",
-    "dog",
-    "puppy",
-    "pet",
-  ],
-  takeaway: ["takeaway", "takeout", "to go", "delivery"],
-  quickService: ["quick service", "fast service", "fast food"],
-  goodForGroups: [
-    "groups",
-    "large groups",
-    "parties",
-    "family groups",
-    "good for groups",
-  ],
-  freeKidsMeal: ["free kids meal", "kids eat free", "free children meal"],
-  airConditioning: ["air conditioning", "air con", "ac", "climate control"],
-  kidsPlaySpace: ["kids play space", "play space", "play room", "kids area"],
-  kidsColoring: ["coloring", "colouring", "crayons", "coloring activities"],
-  gamesAvailable: ["games", "board games", "activities"],
-  healthyOptions: ["healthy", "healthy options", "nutritious"],
-  smallPlates: ["small plates", "tapas", "sharing plates"],
-  buzzy: ["buzzy", "lively", "energetic", "vibrant"],
-  relaxed: ["relaxed", "casual", "laid back", "laid-back", "chill"],
-  posh: ["posh", "upscale", "fancy", "fine dining", "elegant", "sophisticated"],
-  funQuirky: ["quirky", "fun", "unique", "unusual", "different"],
-  babyChangeWomens: [
-    "baby change women",
-    "changing room women",
-    "ladies baby change",
-  ],
-  babyChangeMens: ["baby change men", "changing room men", "mens baby change"],
-  babyChangeUnisex: ["baby change", "unisex baby change", "family bathroom"],
-  pramStorage: ["pram storage", "stroller storage", "buggy storage"],
-};
-
-const PRICE_KEYWORDS = {
-  1: ["cheap", "budget", "inexpensive", "affordable", "$"],
-  2: ["moderate", "mid-range", "reasonable", "$$"],
-  3: ["expensive", "upscale", "fine dining", "$$$"],
-  4: ["luxury", "high-end", "premium", "$$$$"],
-};
-
-const RATING_KEYWORDS = [
-  { pattern: /highly rated|top rated|best|excellent/i, rating: 4.5 },
-  { pattern: /good rating|well rated/i, rating: 4.0 },
-  { pattern: /(\d+\.?\d*)\s*(?:star|stars|\+)/i, extract: true },
-];
-
-// Exclude from search query
-const STOP_WORDS = new Set([
-  "and",
-  "with",
-  "the",
-  "in",
-  "at",
-  "near",
-  "a",
-  "an",
-  "for",
-  "that",
-  "has",
-  "have",
-  "is",
-  "or",
-  "to",
-  "of",
-  "some",
-  "any",
-]);
-
-const cuisineFuse = new Fuse(CUISINE_KEYWORDS, { threshold: 0.3 });
-const foodFuse = new Fuse(FOOD_KEYWORDS, { threshold: 0.3 });
+const cuisineFuse = new Fuse(CUISINE_KEYWORDS, { threshold: 0.1 });
+const foodFuse = new Fuse(FOOD_KEYWORDS, { threshold: 0.15 });
 
 export function parseNaturalLanguageQuery(query: string): ParsedQuery {
   const lowerQuery = query.toLowerCase();
@@ -210,11 +47,24 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
     searchTerms: [],
   };
 
+  // Check for multi-word cities first (before splitting)
+  if (!parsed.location) {
+    for (const city of COMMON_CITIES) {
+      if (lowerQuery.includes(city)) {
+        parsed.location = city;
+        break;
+      }
+    }
+  }
+
   const cuisineMatches = new Set<string>();
   const foodMatches = new Set<string>();
 
   // Use Fuses on each word
   queryWords.forEach((queryWord) => {
+    if (parsed.location && parsed.location.split(" ").includes(queryWord))
+      return;
+
     const cuisineMatch = cuisineFuse.search(queryWord);
     if (cuisineMatch.length > 0) cuisineMatches.add(cuisineMatch[0].item);
 
@@ -230,18 +80,6 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
   parsed.cuisines = Array.from(cuisineMatches);
   parsed.foodKeywords = Array.from(foodMatches);
 
-  // CUISINE_KEYWORDS.forEach((cuisine) => {
-  //   if (lowerQuery.includes(cuisine)) {
-  //     parsed.cuisines.push(cuisine);
-  //   }
-  // });
-
-  // FOOD_KEYWORDS.forEach((food) => {
-  //   if (lowerQuery.includes(food)) {
-  //     parsed.foodKeywords.push(food);
-  //   }
-  // });
-
   Object.entries(FEATURE_KEYWORDS).forEach(([feature, keywords]) => {
     if (!(feature in FILTER_KEY_TO_DB_COLUMN)) return;
     const key = feature as keyof typeof FILTER_KEY_TO_DB_COLUMN;
@@ -249,6 +87,16 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
       if (lowerQuery.includes(keyword)) {
         parsed.features[key] = true;
       }
+    });
+  });
+
+  // Build a set of all words that belong to detected feature phrases
+  const featureWords = new Set<string>();
+  Object.entries(parsed.features).forEach(([feature, active]) => {
+    if (!active) return;
+    const phrases = FEATURE_KEYWORDS[feature] ?? [];
+    phrases.forEach((phrase) => {
+      phrase.split(" ").forEach((word) => featureWords.add(word));
     });
   });
 
@@ -271,80 +119,11 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
     }
   });
 
-  // Try to extract location using common prepositions
-  const locationMatch = lowerQuery.match(
-    /(?:in|near|at|around)\s+([a-z\s]+?)(?:\s+with|\s+that|\s+has|\s+and|$)/i,
-  );
-  if (locationMatch && locationMatch[1]) {
-    parsed.location = locationMatch[1].trim();
-  }
-
-  const commonCities = [
-    // UK Cities
-    "london",
-    "manchester",
-    "birmingham",
-    "leeds",
-    "glasgow",
-    "edinburgh",
-    "liverpool",
-    "bristol",
-    "maidenhead",
-    "cambridge",
-    "oxford",
-    "brighton",
-    "southampton",
-    "york",
-    "nottingham",
-    "sheffield",
-    "leicester",
-    "reading",
-    "cardiff",
-    // US Cities
-    "chicago",
-    "san francisco",
-    "sanfrancisco",
-    "new york",
-    "newyork",
-    "los angeles",
-    "losangeles",
-    "houston",
-    "phoenix",
-    "philadelphia",
-    "san antonio",
-    "san diego",
-    "dallas",
-    "austin",
-    "seattle",
-    "boston",
-    "denver",
-    "portland",
-    "miami",
-    "atlanta",
-    "detroit",
-    "minneapolis",
-    "tampa",
-    "orlando",
-    "cleveland",
-    "pittsburgh",
-    "sacramento",
-    "las vegas",
-    "lasvegas",
-  ];
-
-  // Check for multi-word cities first (before splitting)
-  if (!parsed.location) {
-    for (const city of commonCities) {
-      if (lowerQuery.includes(city)) {
-        parsed.location = city;
-        break;
-      }
-    }
-  }
-
   const words = query.split(/\s+/).filter((w) => w.length > 2);
   parsed.searchTerms = words.filter((word) => {
     const lower = word.toLowerCase();
+
+    if (featureWords.has(lower)) return false;
 
     // Skip if this word is part of the already-detected location
     if (parsed.location && parsed.location.includes(lower)) {
@@ -352,7 +131,7 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
     }
 
     // Check single-word cities
-    if (commonCities.includes(lower) && !parsed.location) {
+    if (COMMON_CITIES.includes(lower) && !parsed.location) {
       parsed.location = lower;
       return false;
     }
@@ -360,9 +139,6 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
     return (
       !CUISINE_KEYWORDS.includes(lower) &&
       !FOOD_KEYWORDS.includes(lower) &&
-      !Object.values(FEATURE_KEYWORDS)
-        .flat()
-        .some((k) => k.includes(lower)) &&
       !Object.values(PRICE_KEYWORDS)
         .flat()
         .some((k) => k.includes(lower))
