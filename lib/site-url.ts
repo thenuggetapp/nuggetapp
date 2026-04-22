@@ -1,12 +1,20 @@
 /**
  * Public origin for metadataBase, sitemap, and server-only structured data.
- * Uses Vercel's deployment URL when present; otherwise localhost (and PORT if set).
+ *
+ * On Vercel, the SITE_URL is set to a project URL, even for the production site, which 
+ * is not accessible to most users, although it is a real working address for those with 
+ * access to the Vercel project. Here, check 
+ * for production, and use the production URL if available. Otherwise, use the site URL
+ * which is necessary to compute the correct URL in non-production environments.
  */
 export function getSiteUrl(): string {
-  const vercel = process.env.VERCEL_URL?.trim();
-  if (vercel && vercel !== "undefined") {
-    const host = vercel.replace(/^https?:\/\//i, "");
-    return `https://${host}`.replace(/\/$/, "");
+  if(process.env.NEXT_PUBLIC_VERCEL_ENV === "production" && process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL) {
+    return "https://" + process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL?.replace(/\/$/, "");
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_VERCEL_URL?.replace(/\/$/, "");
+  if (siteUrl && siteUrl !== "undefined") {
+    return "https://" + siteUrl;
   }
   const port = process.env.PORT?.trim();
   if (port && port !== "undefined") {
