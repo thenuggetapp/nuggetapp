@@ -1,15 +1,12 @@
 /**
  * Public origin for metadataBase, sitemap, and server-only structured data.
  * Same preference order as `restaurant-image.ts` (absolute image helpers):
- * NEXT_PUBLIC_SITE_URL, then VERCEL_URL, then localhost (PORT if set).
+ * NEXT_PUBLIC_SITE_URL, then localhost (PORT if set).
  */
 export function getSiteUrl(): string {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
   if (siteUrl && siteUrl !== "undefined") {
     return siteUrl;
-  }
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL.replace(/\/$/, "")}`;
   }
   const port = process.env.PORT?.trim();
   if (port && port !== "undefined") {
