@@ -9,12 +9,12 @@
  */
 export function getSiteUrl(): string {
   if(process.env.NEXT_PUBLIC_VERCEL_ENV === "production" && process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL) {
-    return process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL?.replace(/\/$/, "");
+    return "https://" + process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL?.replace(/\/$/, "");
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+  const siteUrl = process.env.NEXT_PUBLIC_VERCEL_URL?.replace(/\/$/, "");
   if (siteUrl && siteUrl !== "undefined") {
-    return siteUrl;
+    return "https://" + siteUrl;
   }
   const port = process.env.PORT?.trim();
   if (port && port !== "undefined") {
