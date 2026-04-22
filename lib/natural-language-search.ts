@@ -1,4 +1,4 @@
-import { ALL_CUISINE_TYPES, FILTER_KEY_TO_DB_COLUMN } from "@/lib/amenities";
+import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/amenities";
 import {
   CUISINE_KEYWORDS,
   FOOD_KEYWORDS,
@@ -90,7 +90,6 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
     });
   });
 
-  // Build a set of all words that belong to detected feature phrases
   const featureWords = new Set<string>();
   Object.entries(parsed.features).forEach(([feature, active]) => {
     if (!active) return;
@@ -99,6 +98,7 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
       phrase.split(" ").forEach((word) => featureWords.add(word));
     });
   });
+  // console.log("featureWords:", Array.from(featureWords));
 
   Object.entries(PRICE_KEYWORDS).forEach(([level, keywords]) => {
     keywords.forEach((keyword) => {
