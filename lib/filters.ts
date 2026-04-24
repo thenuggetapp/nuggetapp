@@ -1,14 +1,11 @@
-import { LucideIcon, Baby, DollarSign } from "lucide-react";
-
 export type FilterDefinition = {
   key: string;
   label: string;
   category: FilterCategory;
-  image: string | null;
-  icon?: LucideIcon;
+  image: string;
 };
 
-export const FILTERS = [
+export const FILTERS: FilterDefinition[] = [
   {
     key: "airConditioning",
     label: "Air Conditioning",
@@ -43,7 +40,7 @@ export const FILTERS = [
   //     key: "changingTable",
   //     label: "Changing Table",
   //     category: "Kids & Family",
-  //     image: null,
+  //     image: "/placeholder.png",
   //     icon: Baby,
   //   },
   {
@@ -140,8 +137,7 @@ export const FILTERS = [
     key: "onePoundKidsMeal",
     label: "£1 Kids Meal",
     category: "Deals",
-    image: null,
-    icon: DollarSign,
+    image: "/placeholder.png", // PLACEHOLDER IMAGE
   },
   {
     key: "outdoorSeating",
@@ -221,11 +217,11 @@ export const FILTERS = [
     category: "Accessibility",
     image: "/wheelchair.png",
   },
-] as const satisfies readonly FilterDefinition[];
+];
 
-export type FilterKey = (typeof FILTERS)[number]["key"];
+export type FilterKey = keyof Omit<FilterState, "cuisines">;
 
-export const TOP_FILTERS_KEYS = [
+export const TOP_FILTERS = [
   "kidsMenu",
   "highChairs",
   "wheelchairAccess",
@@ -235,10 +231,6 @@ export const TOP_FILTERS_KEYS = [
   "veganOptions",
   "glutenFreeOptions",
 ] as const;
-
-export const TOP_FILTERS = FILTERS.filter((f) =>
-  (TOP_FILTERS_KEYS as readonly string[]).includes(f.key),
-);
 
 export type FilterCategory =
   | "Accessibility"
@@ -259,9 +251,80 @@ export const FILTER_CATEGORIES: FilterCategory[] = [
   "Deals",
 ];
 
-export const emptyFilterState = {
-  cuisines: [] as string[],
-  ...Object.fromEntries(FILTERS.map((f) => [f.key, false])),
-} as Record<"cuisines", string[]> & Record<FilterKey, boolean>;
+export type FilterState = {
+  cuisines: string[];
+  airConditioning: boolean;
+  babyChangeMens: boolean;
+  babyChangeUnisex: boolean;
+  babyChangeWomens: boolean;
+  buzzy: boolean;
+  // changingTable: boolean,
+  dogFriendly: boolean;
+  freeKidsMeal: boolean;
+  friendlyStaff: boolean;
+  funQuirky: boolean;
+  gamesAvailable: boolean;
+  glutenFreeOptions: boolean;
+  goodForGroups: boolean;
+  halal: boolean;
+  healthyOptions: boolean;
+  highChairs: boolean;
+  kidsColoring: boolean;
+  kidsMenu: boolean;
+  kidsPlaySpace: boolean;
+  kidsPottyToilet: boolean;
+  kosher: boolean;
+  onePoundKidsMeal: boolean;
+  outdoorSeating: boolean;
+  playgroundNearby: boolean;
+  posh: boolean;
+  pramStorage: boolean;
+  quickService: boolean;
+  relaxed: boolean;
+  smallPlates: boolean;
+  takeaway: boolean;
+  teenFavourite: boolean;
+  touristAttractionNearby: boolean;
+  veganOptions: boolean;
+  vegetarianOptions: boolean;
+  wheelchairAccess: boolean;
+};
 
-export type FilterState = typeof emptyFilterState;
+export const emptyFilterState: FilterState = {
+  cuisines: [],
+  airConditioning: false,
+  babyChangeMens: false,
+  babyChangeUnisex: false,
+  babyChangeWomens: false,
+  buzzy: false,
+  // changingTable: false,
+  dogFriendly: false,
+  freeKidsMeal: false,
+  friendlyStaff: false,
+  funQuirky: false,
+  gamesAvailable: false,
+  glutenFreeOptions: false,
+  goodForGroups: false,
+  halal: false,
+  healthyOptions: false,
+  highChairs: false,
+  kidsColoring: false,
+  kidsMenu: false,
+  kidsPlaySpace: false,
+  kidsPottyToilet: false,
+  kosher: false,
+  onePoundKidsMeal: false,
+  outdoorSeating: false,
+  playgroundNearby: false,
+  posh: false,
+  pramStorage: false,
+  quickService: false,
+  relaxed: false,
+  smallPlates: false,
+  takeaway: false,
+  teenFavourite: false,
+  touristAttractionNearby: false,
+  veganOptions: false,
+  vegetarianOptions: false,
+  wheelchairAccess: false,
+};

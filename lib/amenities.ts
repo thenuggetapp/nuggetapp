@@ -12,7 +12,6 @@ export const FILTER_KEY_TO_DB_COLUMN: Record<string, string> = {
   friendlyStaff: "friendly_staff",
   funQuirky: "fun_quirky",
   gamesAvailable: "games_available",
-  glutenFree: "gluten_free_options",
   glutenFreeOptions: "gluten_free_options",
   goodForGroups: "good_for_groups",
   halal: "halal",

@@ -73,15 +73,10 @@ export function FilterPanel({
           params.append("q", searchQuery);
         }
 
-        const response = await fetch(`/api/filter-counts?${params.toString()}`);
-        const data = await response.json();
-
-        if (data.amenities && data.cuisines) {
-          setFilterCounts({
-            amenities: data.amenities,
-            cuisines: data.cuisines,
-          });
-        }
+        const data = await fetch(`/api/filter-counts?${params}`).then((r) =>
+          r.json(),
+        );
+        if (data.amenities && data.cuisines) setFilterCounts(data);
       } catch (error) {
         console.error("Error fetching filter counts:", error);
       } finally {
@@ -92,90 +87,64 @@ export function FilterPanel({
     fetchFilterCounts();
   }, [searchQuery, city, isSearching]);
 
+  const applyFilters = (newFilters: FilterState) => {
+    setActiveFilters(newFilters);
+    onFilterChange?.(newFilters);
+  };
+
   const toggleFilter = (
-    key: keyof Omit<FilterState, "cuisines">,
+    key: FilterKey,
     e?: React.MouseEvent | React.PointerEvent,
   ) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    const newFilters = {
-      ...activeFilters,
-      [key]: !activeFilters[key],
-    };
-    setActiveFilters(newFilters);
-    if (onFilterChange) {
-      onFilterChange(newFilters);
-    }
+    e?.preventDefault();
+    e?.stopPropagation();
+    applyFilters({ ...activeFilters, [key]: !activeFilters[key] });
   };
 
   const toggleCuisine = (
     cuisine: string,
     e?: React.MouseEvent | React.PointerEvent,
   ) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    const newCuisines = activeFilters.cuisines.includes(cuisine)
+    e?.preventDefault();
+    e?.stopPropagation();
+    const cuisines = activeFilters.cuisines.includes(cuisine)
       ? activeFilters.cuisines.filter((c) => c !== cuisine)
       : [...activeFilters.cuisines, cuisine];
-
-    const newFilters = {
-      ...activeFilters,
-      cuisines: newCuisines,
-    };
-    setActiveFilters(newFilters);
-    if (onFilterChange) {
-      onFilterChange(newFilters);
-    }
+    applyFilters({ ...activeFilters, cuisines });
   };
 
-  const clearAllFilters = () => {
-    setActiveFilters(emptyFilterState);
-    if (onFilterChange) onFilterChange(emptyFilterState);
-  };
+  const getFilterCount = (key: string) =>
+    filterCounts.amenities[FILTER_KEY_TO_DB_COLUMN[key] ?? key] ?? 0;
 
-  const mapFilterKeyToDbColumn = (key: string): string => {
-    return FILTER_KEY_TO_DB_COLUMN[key] || key;
-  };
-
-  const getFilterCount = (key: string): number => {
-    const dbColumn = mapFilterKeyToDbColumn(key);
-    return filterCounts.amenities[dbColumn] || 0;
+  const shouldShow = (key: string) => {
+    if (loadingCounts && Object.keys(filterCounts.amenities).length === 0)
+      return true;
+    return getFilterCount(key) > 0;
   };
 
   const cuisineTypes = ALL_CUISINE_TYPES.filter((cuisine) => {
-    const hasNoCuisineData = Object.keys(filterCounts.cuisines).length === 0;
-    if (loadingCounts && hasNoCuisineData) return true;
-
-    return (filterCounts.cuisines[cuisine] || 0) > 0;
+    if (loadingCounts && Object.keys(filterCounts.cuisines).length === 0)
+      return true;
+    return (filterCounts.cuisines[cuisine] ?? 0) > 0;
   });
 
-  const allFilterCategories = FILTER_CATEGORIES.map((category) => ({
-    title: category,
-    filters: FILTERS.filter((f) => f.category === category),
-  }));
+  const filterCategories = FILTER_CATEGORIES.map((title) => ({
+    title,
+    filters: FILTERS.filter((f) => f.category === title && shouldShow(f.key)),
+  })).filter((c) => c.filters.length > 0);
 
-  const filterCategories = allFilterCategories
-    .map((category) => ({
-      ...category,
-      filters: category.filters.filter((filter) => {
-        const hasNoData = Object.keys(filterCounts.amenities).length === 0;
-        if (loadingCounts && hasNoData) return true;
+  const activeFilterCount = Object.values(activeFilters).filter((v) =>
+    Array.isArray(v) ? v.length > 0 : v === true,
+  ).length;
 
-        return getFilterCount(filter.key) > 0;
-      }),
-    }))
-    .filter((category) => category.filters.length > 0);
+  const stopProp = {
+    onPointerDown: (e: React.PointerEvent) => e.stopPropagation(),
+    onTouchStart: (e: React.TouchEvent) => e.stopPropagation(),
+  };
 
-  const activeFilterCount = Object.values(activeFilters).filter((value) => {
-    if (Array.isArray(value)) {
-      return value.length > 0;
-    }
-    return value === true;
-  }).length;
+  const activeClass =
+    "bg-[#8dbf65] text-white border-[#8dbf65] hover:bg-[#7aaa56] hover:border-[#7aaa56]";
+  const inactiveClass = "border-slate-300 hover:bg-slate-50";
 
   if (expanded) {
     return (
@@ -197,9 +166,8 @@ export function FilterPanel({
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={clearAllFilters}
-                onPointerDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
+                onClick={() => applyFilters(emptyFilterState)}
+                {...stopProp}
                 className="text-xs text-slate-600 hover:text-slate-900"
               >
                 Clear All
@@ -213,31 +181,20 @@ export function FilterPanel({
                 {category.title}
               </h4>
               <div className="grid grid-cols-2 gap-3">
-                {category.filters.map(({ key, label, image, icon: Icon }) => (
+                {category.filters.map(({ key, label, image }) => (
                   <Button
                     key={key}
                     type="button"
                     variant="outline"
                     onClick={(e) => toggleFilter(key as FilterKey, e)}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onTouchStart={(e) => e.stopPropagation()}
-                    className={`h-20 flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer ${
-                      activeFilters[key as FilterKey]
-                        ? "bg-[#8dbf65] text-white border-[#8dbf65] hover:bg-[#7aaa56] hover:border-[#7aaa56]"
-                        : "border-slate-300 hover:bg-slate-50"
-                    }`}
+                    {...stopProp}
+                    className={`h-20 flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer ${activeFilters[key as FilterKey] ? activeClass : inactiveClass}`}
                   >
-                    {image ? (
-                      <img
-                        src={image}
-                        alt={label}
-                        className="h-7 w-7 object-contain"
-                      />
-                    ) : Icon ? (
-                      <Icon className="h-7 w-7" />
-                    ) : (
-                      <span className="h-7 w-7" />
-                    )}
+                    <img
+                      src={image}
+                      alt={label}
+                      className="h-7 w-7 object-contain"
+                    />
                     <span className="text-xs font-medium text-center leading-tight whitespace-pre-line">
                       {label}
                     </span>
@@ -261,13 +218,8 @@ export function FilterPanel({
                   variant="outline"
                   size="sm"
                   onClick={(e) => toggleCuisine(cuisine, e)}
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onTouchStart={(e) => e.stopPropagation()}
-                  className={`transition-colors cursor-pointer ${
-                    activeFilters.cuisines.includes(cuisine)
-                      ? "bg-[#8dbf65] text-white border-[#8dbf65] hover:bg-[#7aaa56] hover:border-[#7aaa56]"
-                      : "border-slate-300 hover:bg-slate-50"
-                  }`}
+                  {...stopProp}
+                  className={`transition-colors cursor-pointer ${activeFilters.cuisines.includes(cuisine) ? activeClass : inactiveClass}`}
                 >
                   {cuisine}
                 </Button>
@@ -279,19 +231,15 @@ export function FilterPanel({
     );
   }
 
-  // Top filters to show in collapsed view
-  const topFilters = TOP_FILTERS.filter((filter) => {
-    const hasNoData = Object.keys(filterCounts.amenities).length === 0;
-    if (loadingCounts && hasNoData) return true;
-
-    return getFilterCount(filter.key) > 0;
-  });
+  const topFilters = TOP_FILTERS.map(
+    (key) => FILTERS.find((f) => f.key === key)!,
+  ).filter((f) => shouldShow(f.key));
 
   return (
     <TooltipProvider delayDuration={300}>
       <div className="flex flex-col items-center h-full py-6 relative z-10">
         <div className="flex flex-col items-center gap-6 flex-1">
-          {topFilters.map(({ key, label, image, icon: Icon }) => (
+          {topFilters.map(({ key, label, image }) => (
             <Tooltip key={key}>
               <TooltipTrigger asChild>
                 <Button
@@ -299,23 +247,13 @@ export function FilterPanel({
                   variant="ghost"
                   size="icon"
                   onClick={(e) => toggleFilter(key as FilterKey, e)}
-                  className={`w-[46px] h-[46px] rounded-lg transition-colors relative cursor-pointer ${
-                    activeFilters[key as FilterKey]
-                      ? "bg-[#8dbf65] text-white hover:bg-[#7aaa56]"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                  }`}
+                  className={`w-[46px] h-[46px] rounded-lg transition-colors relative cursor-pointer ${activeFilters[key as FilterKey] ? "bg-[#8dbf65] text-white hover:bg-[#7aaa56]" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
                 >
-                  {image ? (
-                    <img
-                      src={image}
-                      alt={label}
-                      className="h-7 w-7 object-contain"
-                    />
-                  ) : Icon ? (
-                    <Icon className="h-7 w-7" />
-                  ) : (
-                    <span className="h-7 w-7" />
-                  )}
+                  <img
+                    src={image}
+                    alt={label}
+                    className="h-7 w-7 object-contain"
+                  />
                 </Button>
               </TooltipTrigger>
               <TooltipContent

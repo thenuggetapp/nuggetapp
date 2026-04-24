@@ -103,7 +103,13 @@ export const FEATURE_KEYWORDS: Record<string, string[]> = {
   ],
   funQuirky: ["quirky", "fun", "unique", "unusual", "different"],
   gamesAvailable: ["games", "board games", "activities"],
-  glutenFree: ["gluten free", "gluten-free", "celiac"],
+  glutenFreeOptions: [
+    "gluten free options",
+    "gluten-free options",
+    "gluten free",
+    "gluten-free",
+    "celiac",
+  ],
   goodForGroups: [
     "groups",
     "large groups",
