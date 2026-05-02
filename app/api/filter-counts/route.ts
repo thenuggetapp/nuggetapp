@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { AMENITY_DB_COLUMNS, FILTER_KEY_TO_DB_COLUMN } from "@/lib/amenities";
-import { parseNaturalLanguageQuery } from "@/lib/natural-language-search";
+import {
+  AMENITY_DB_COLUMNS,
+  FILTER_KEY_TO_DB_COLUMN,
+} from "@/lib/db-amenities";
+import { parseNaturalLanguageQuery } from "@/lib/search/natural-language-parser";
 
 export const dynamic = "force-dynamic";
 

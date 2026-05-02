@@ -1,6 +1,27 @@
-import { ParsedQuery } from "@/lib/natural-language-search";
-import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/amenities";
+/**
+ * scorer.ts
+ *
+ * Binary scorer
+ * Route.ts handles all hard filtering (city, features, price).
+ * This scorer ranks the candidates that survive those filters.
+ *
+ * Ranking order:
+ *   1. Relevance score (slug/name, cuisine, description)
+ *   2. Likes tiebreaker
+ *   3. Feature count tiebreaker
+ */
 
+import { ParsedQuery } from "@/lib/search/natural-language-parser";
+import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/db-amenities";
+
+const POINTS = {
+  slugExact: 20, // full query phrase in slug
+  nameExact: 18, // full query phrase in name
+  cuisine: 5, // any query term in cuisine field
+  description: 1, // any query term in description (binary, not frequency)
+} as const;
+
+// Helpers
 function normalizeToSlug(text: string): string {
   return text
     .toLowerCase()
@@ -19,131 +40,75 @@ function getNgrams(terms: string[], n: number): string[] {
   return ngrams;
 }
 
-function scoreSlugAndName(restaurant: any, terms: string[]): number {
+// Tiebreaker
+const FEATURE_COLUMNS = Object.values(FILTER_KEY_TO_DB_COLUMN);
+
+function tiebreak(a: any, b: any): number {
+  const likesA = a.likes_count ?? 0;
+  const likesB = b.likes_count ?? 0;
+  if (likesB !== likesA) return likesB - likesA;
+
+  const featuresA = FEATURE_COLUMNS.filter((col) => a[col] === true).length;
+  const featuresB = FEATURE_COLUMNS.filter((col) => b[col] === true).length;
+  return featuresB - featuresA;
+}
+
+// Scorers
+function scoreSlugAndName(
+  restaurant: any,
+  terms: string[],
+  parsed: ParsedQuery,
+): number {
   if (terms.length === 0) return 0;
 
-  let score = 0;
   const slug = restaurant.slug ?? "";
   const name = restaurant.name?.toLowerCase() ?? "";
+  const isDiscoveryQuery =
+    parsed.foodKeywords.length > 0 || parsed.cuisines.length > 0;
 
-  // Pass 1 — multi-word n-grams (bigrams, trigrams)
+  if (isDiscoveryQuery) {
+    const queryPhrase = terms.join(" ");
+    if (slug.includes(normalizeToSlug(queryPhrase))) return POINTS.slugExact;
+    if (name.includes(queryPhrase)) return POINTS.nameExact;
+    return 0;
+  }
+
+  let score = 0;
   for (let n = terms.length; n >= 2; n--) {
-    const ngrams = getNgrams(terms, n);
-    for (const ngram of ngrams) {
-      const normalizedNgram = normalizeToSlug(ngram);
-      if (slug.includes(normalizedNgram)) score += 12;
-      if (name.includes(ngram)) score += 10;
+    for (const ngram of getNgrams(terms, n)) {
+      if (slug.includes(normalizeToSlug(ngram))) score += POINTS.slugExact;
+      if (name.includes(ngram)) score += POINTS.nameExact;
     }
   }
-
-  // Pass 2 — individual terms
   for (const term of terms) {
-    const normalizedTerm = normalizeToSlug(term);
-    if (slug.includes(normalizedTerm)) score += 6;
-    if (name.includes(term)) score += 5;
+    if (slug.includes(normalizeToSlug(term))) score += POINTS.slugExact * 0.5;
+    if (name.includes(term)) score += POINTS.nameExact * 0.5;
   }
-
   return score;
 }
 
 function scoreCuisine(restaurant: any, terms: string[]): number {
   if (terms.length === 0) return 0;
-
-  let score = 0;
   const cuisine = restaurant.cuisine?.toLowerCase() ?? "";
-
+  let score = 0;
   for (const term of terms) {
-    if (cuisine.includes(term)) score += 3;
+    if (cuisine.includes(term)) score += POINTS.cuisine;
   }
-
   return score;
 }
 
 function scoreDescription(restaurant: any, terms: string[]): number {
   if (terms.length === 0) return 0;
-
-  let score = 0;
   const description = restaurant.description?.toLowerCase() ?? "";
-
   if (!description) return 0;
-
-  for (const term of terms) {
-    if (description.includes(term)) score += 2;
-  }
-
-  return score;
-}
-
-function scoreFeatures(restaurant: any, parsed: ParsedQuery): number {
-  const features = parsed.features;
-  if (!features || Object.keys(features).length === 0) return 0;
-
   let score = 0;
-  for (const [feature, required] of Object.entries(features)) {
-    if (!required) continue;
-    const dbColumn = FILTER_KEY_TO_DB_COLUMN[feature];
-    if (!dbColumn) continue;
-    if (restaurant[dbColumn] === true) score += 20;
+  for (const term of terms) {
+    if (description.includes(term)) score += POINTS.description;
   }
-
   return score;
 }
 
-function scoreQuality(restaurant: any): number {
-  // TODO: when rating and likes data is reliable
-  // const ratingScore = (restaurant.rating ?? 0) * 2
-  // const popularityScore = Math.log1p(restaurant.likes_count ?? 0)
-  return 0;
-}
-
-function scoreRestaurant(
-  restaurant: any,
-  parsed: ParsedQuery,
-  allTerms: string[],
-): number {
-  const foodTerms = [...parsed.foodKeywords, ...parsed.cuisines];
-  if (foodTerms.length > 0) {
-    const text =
-      `${restaurant.name} ${restaurant.cuisine} ${restaurant.description}`.toLowerCase();
-    if (!foodTerms.some((t) => text.includes(t))) return 0;
-  }
-
-  const base =
-    scoreSlugAndName(restaurant, allTerms) +
-    scoreCuisine(restaurant, allTerms) +
-    scoreDescription(restaurant, allTerms) +
-    scoreFeatures(restaurant, parsed) +
-    scoreQuality(restaurant);
-
-  // Bonus for matching ALL food keywords
-  if (parsed.foodKeywords.length > 1) {
-    const text =
-      `${restaurant.name} ${restaurant.cuisine} ${restaurant.description} ${restaurant.slug}`.toLowerCase();
-    const matched = parsed.foodKeywords.filter((t) => text.includes(t)).length;
-    if (matched === parsed.foodKeywords.length) return base + 50;
-  }
-
-  // Bonus for matching food AND features together
-  if (
-    parsed.foodKeywords.length > 0 &&
-    Object.keys(parsed.features).length > 0
-  ) {
-    const text =
-      `${restaurant.name} ${restaurant.cuisine} ${restaurant.description}`.toLowerCase();
-    const foodMatched = parsed.foodKeywords.some((t) => text.includes(t));
-    const featuresMatched = Object.entries(parsed.features).every(
-      ([feature, required]) => {
-        if (!required) return true;
-        const dbColumn = FILTER_KEY_TO_DB_COLUMN[feature];
-        return dbColumn && restaurant[dbColumn] === true;
-      },
-    );
-    if (foodMatched && featuresMatched) return base + 40;
-  }
-
-  return base;
-}
-
+// PUBLIC ENTRY POINT
 export function scoreAndRank(
   restaurants: any[],
   parsed: ParsedQuery | null,
@@ -160,31 +125,28 @@ export function scoreAndRank(
     .map((t) => t.toLowerCase())
     .filter(Boolean);
 
-  if (
-    allTerms.length === 0 &&
-    Object.keys(parsed.features ?? {}).length === 0
-  ) {
-    return restaurants;
-  }
-
-  const scored = restaurants.map((r) => ({
-    restaurant: r,
-    score: scoreRestaurant(r, parsed, allTerms),
-  }));
-
   const hasFeatures = Object.keys(parsed.features ?? {}).length > 0;
   const hasTextTerms = allTerms.length > 0;
 
-  if (hasFeatures && !hasTextTerms) {
-    return scored
-      .filter((r) => r.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .map((r) => r.restaurant);
+  // No text terms to score on (e.g. city-only or feature-only query) —
+  // skip scoring and apply tiebreaker chain directly.
+  if (!hasTextTerms) {
+    return [...restaurants].sort(tiebreak);
   }
 
-  return scored
-    .filter((r) => r.score > 0)
+  const scored = restaurants
+    .map((r) => {
+      const slugName = scoreSlugAndName(r, allTerms, parsed);
+      const cuisine = scoreCuisine(r, allTerms);
+      const description = scoreDescription(r, allTerms);
+      const total = slugName + cuisine + description;
 
-    .sort((a, b) => b.score - a.score)
-    .map((r) => r.restaurant);
+      return { restaurant: r, score: total };
+    })
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return tiebreak(a.restaurant, b.restaurant);
+    });
+
+  return scored.map((r) => r.restaurant);
 }

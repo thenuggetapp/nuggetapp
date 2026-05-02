@@ -1,4 +1,4 @@
-import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/amenities";
+import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/db-amenities";
 import {
   CUISINE_KEYWORDS,
   FOOD_KEYWORDS,
@@ -6,8 +6,9 @@ import {
   PRICE_KEYWORDS,
   RATING_KEYWORDS,
   STOP_WORDS,
+  VENUE_WORDS,
   COMMON_CITIES,
-} from "./search/keywords";
+} from "./synonym-map";
 import Fuse from "fuse.js";
 
 export type ParsedFeatures = Partial<
@@ -122,7 +123,8 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
   const words = query.split(/\s+/).filter((w) => w.length > 2);
   parsed.searchTerms = words.filter((word) => {
     const lower = word.toLowerCase();
-
+    if (STOP_WORDS.has(lower)) return false;
+    if (VENUE_WORDS.has(lower)) return false;
     if (featureWords.has(lower)) return false;
 
     // Skip if this word is part of the already-detected location
@@ -146,41 +148,4 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
   });
 
   return parsed;
-}
-
-export function buildSupabaseQuery(parsed: ParsedQuery) {
-  const allConditions: string[] = [];
-
-  if (parsed.cuisines.length > 0) {
-    parsed.cuisines.forEach((c) => {
-      allConditions.push(`cuisine.ilike.%${c}%`);
-    });
-  }
-
-  if (parsed.foodKeywords.length > 0) {
-    parsed.foodKeywords.forEach((food) => {
-      allConditions.push(`name.ilike.%${food}%`);
-      allConditions.push(`description.ilike.%${food}%`);
-      allConditions.push(`cuisine.ilike.%${food}%`);
-    });
-  }
-
-  if (parsed.location) {
-    allConditions.push(`city.ilike.%${parsed.location}%`);
-    allConditions.push(`address.ilike.%${parsed.location}%`);
-  }
-
-  if (parsed.searchTerms.length > 0) {
-    parsed.searchTerms.forEach((term) => {
-      allConditions.push(`name.ilike.%${term}%`);
-      allConditions.push(`description.ilike.%${term}%`);
-    });
-  }
-
-  return {
-    conditions: allConditions.length > 0 ? allConditions.join(",") : null,
-    features: parsed.features,
-    priceLevel: parsed.priceLevel,
-    rating: parsed.rating,
-  };
 }

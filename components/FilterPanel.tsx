@@ -11,7 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { FILTER_KEY_TO_DB_COLUMN, ALL_CUISINE_TYPES } from "@/lib/amenities";
+import { FILTER_KEY_TO_DB_COLUMN, ALL_CUISINE_TYPES } from "@/lib/db-amenities";
 import {
   FILTERS,
   FILTER_CATEGORIES,

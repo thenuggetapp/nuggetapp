@@ -1,17 +1,43 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { parseNaturalLanguageQuery } from "@/lib/natural-language-search";
-import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/amenities";
+import { parseNaturalLanguageQuery } from "@/lib/search/natural-language-parser";
+import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/db-amenities";
 import { scoreAndRank } from "@/lib/search/scorer";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const columnMap = FILTER_KEY_TO_DB_COLUMN;
 
 const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
     persistSession: false,
   },
 });
+
+const RESTAURANT_SELECT = `
+  id, name, slug, cuisine, address, city,
+  rating, likes_count, price_level,
+  image_url, latitude, longitude, description,
+  kids_menu, high_chairs, wheelchair_access,
+  outdoor_seating, dog_friendly, vegetarian_options,
+  vegan_options, gluten_free_options, halal, kosher,
+  baby_change_womens, baby_change_unisex, baby_change_mens,
+  kids_potty_toilet, pram_storage, playground_nearby,
+  air_conditioning, small_plates, healthy_options,
+  fun_quirky, relaxed, buzzy, posh, good_for_groups,
+  kids_coloring, games_available, kids_play_space,
+  teen_favourite, quick_service, friendly_staff,
+  takeaway, free_kids_meal, one_pound_kids_meal,
+  tourist_attraction_nearby, changing_table
+`;
+
+function sanitizeQuery(input: string): string {
+  return input
+    .trim()
+    .replace(/[(),.%*\\\x00]/g, " ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
 
 function calculateDistance(
   lat1: number,
@@ -26,117 +52,28 @@ function calculateDistance(
   const Δλ = ((lon2 - lon1) * Math.PI) / 180;
 
   const a =
-    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-    Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  return R * c;
+    Math.sin(Δφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-async function applyFilters(initialQuery: any, searchParams: URLSearchParams) {
-  // Map filter names to database column names (supports both camelCase and snake_case)
-  //TODO standardize search keys to camelCase, then remove this mapping
-  const columnMap: Record<string, string> = {
-    kidsMenu: "kids_menu",
-    kids_menu: "kids_menu",
-    highChairs: "high_chairs",
-    high_chairs: "high_chairs",
-    changingTable: "changing_table",
-    changing_table: "changing_table",
-    wheelchairAccess: "wheelchair_access",
-    wheelchair_access: "wheelchair_access",
-    wheelchair: "wheelchair_access",
-    babyChangeWomens: "baby_change_womens",
-    baby_change_womens: "baby_change_womens",
-    babyChangeUnisex: "baby_change_unisex",
-    baby_change_unisex: "baby_change_unisex",
-    babyChangeMens: "baby_change_mens",
-    baby_change_mens: "baby_change_mens",
-    kidsPottyToilet: "kids_potty_toilet",
-    kids_potty_toilet: "kids_potty_toilet",
-    pramStorage: "pram_storage",
-    pram_storage: "pram_storage",
-    outdoorSeating: "outdoor_seating",
-    outdoor_seating: "outdoor_seating",
-    outdoor: "outdoor_seating",
-    playgroundNearby: "playground_nearby",
-    playground_nearby: "playground_nearby",
-    airConditioning: "air_conditioning",
-    air_conditioning: "air_conditioning",
-    dogFriendly: "dog_friendly",
-    dog_friendly: "dog_friendly",
-    vegetarianOptions: "vegetarian_options",
-    vegetarian_options: "vegetarian_options",
-    veganOptions: "vegan_options",
-    vegan_options: "vegan_options",
-    glutenFreeOptions: "gluten_free_options",
-    gluten_free_options: "gluten_free_options",
-    smallPlates: "small_plates",
-    small_plates: "small_plates",
-    healthyOptions: "healthy_options",
-    healthy_options: "healthy_options",
-    halal: "halal",
-    kosher: "kosher",
-    funQuirky: "fun_quirky",
-    fun_quirky: "fun_quirky",
-    relaxed: "relaxed",
-    buzzy: "buzzy",
-    posh: "posh",
-    goodForGroups: "good_for_groups",
-    good_for_groups: "good_for_groups",
-    kidsColoring: "kids_coloring",
-    kids_coloring: "kids_coloring",
-    kids_colouring: "kids_coloring",
-    gamesAvailable: "games_available",
-    games_available: "games_available",
-    kidsPlaySpace: "kids_play_space",
-    kids_play_space: "kids_play_space",
-    teenFavourite: "teen_favourite",
-    teen_favourite: "teen_favourite",
-    quickService: "quick_service",
-    quick_service: "quick_service",
-    friendlyStaff: "friendly_staff",
-    friendly_staff: "friendly_staff",
-    takeaway: "takeaway",
-    freeKidsMeal: "free_kids_meal",
-    free_kids_meal: "free_kids_meal",
-    onePoundKidsMeal: "one_pound_kids_meal",
-    one_pound_kids_meal: "one_pound_kids_meal",
-    touristAttractionNearby: "tourist_attraction_nearby",
-    tourist_attraction_nearby: "tourist_attraction_nearby",
-  };
-
-  // Apply boolean filters
+function applyUiFilters(query: any, searchParams: URLSearchParams) {
   for (const [filterKey, dbColumn] of Object.entries(columnMap)) {
     if (searchParams.get(filterKey) === "true") {
-      initialQuery = initialQuery.eq(dbColumn, true);
+      query = query.eq(dbColumn, true);
     }
   }
 
-  // Handle cuisine filters separately
+  // Cuisine filter from UI panel — OR within the group
   const cuisines = searchParams.get("cuisines");
   if (cuisines) {
-    const cuisineList = cuisines.split(",");
-
-    // If we have cuisine filters, we need to fetch all results first and filter in memory
-    // to avoid conflicts with OR conditions
-    const { data, error } = await initialQuery;
-
-    if (error) throw error;
-
-    // Filter by cuisines in memory
-    const filteredData = data.filter((restaurant: any) => {
-      return cuisineList.some((cuisine) =>
-        restaurant.cuisine
-          ?.toLowerCase()
-          .includes(cuisine.trim().toLowerCase()),
-      );
-    });
-
-    return { data: filteredData, isFiltered: true };
+    const conditions = cuisines
+      .split(",")
+      .map((c) => `cuisine.ilike.%${c.trim()}%`)
+      .join(",");
+    query = query.or(conditions);
   }
 
-  return { query: initialQuery, isFiltered: false };
+  return query;
 }
 
 export async function GET(request: Request) {
@@ -146,10 +83,11 @@ export async function GET(request: Request) {
 
   // Pagination parameters
   const page = parseInt(searchParams.get("page") || "1");
-  const limit = parseInt(searchParams.get("limit") || "24");
+  const limit = parseInt(searchParams.get("limit") || "12");
   const offset = (page - 1) * limit;
 
   try {
+    // FEATURED
     if (type === "featured") {
       const { data, error } = await supabase
         .from("restaurants")
@@ -162,53 +100,102 @@ export async function GET(request: Request) {
         .limit(5);
 
       if (error) throw error;
-
       return NextResponse.json({ data, error: null });
     }
 
+    // SEARCH
     if (type === "search") {
-      const searchTerm = `%${query?.toLowerCase() || ""}%`;
-
-      // Parse natural language query
-      const parsed = query ? parseNaturalLanguageQuery(query) : null;
+      const rawQuery = query ?? "";
+      const safeQuery = sanitizeQuery(rawQuery);
+      const parsed = safeQuery ? parseNaturalLanguageQuery(safeQuery) : null;
 
       console.log(
         "Natural language parse result:",
         JSON.stringify(parsed, null, 2),
       );
 
-      // Check if there's a location in the parsed query or in the original query
-      const locationToCheck = parsed?.location || query?.toLowerCase();
-
-      const cityCheckResult = await supabase
+      // Base query
+      let supabaseQuery = supabase
         .from("restaurants")
-        .select("city")
-        .eq("visible", true)
-        .not("city", "is", null)
-        .neq("city", "")
-        .ilike("city", `%${locationToCheck}%`)
-        .limit(1);
+        .select(RESTAURANT_SELECT)
+        .eq("visible", true);
 
-      const isExactCityMatch =
-        cityCheckResult.data && cityCheckResult.data.length > 0;
-      let cityCoordinates = null;
-      let matchedCity = null;
+      // 1. City - hard exclude (always applied if we have a location)
+      const location = parsed?.location;
+      if (location) {
+        supabaseQuery = supabaseQuery.ilike("city", `%${location}%`);
+      }
 
-      if (isExactCityMatch && (parsed?.location || query)) {
-        matchedCity = cityCheckResult.data[0].city;
+      // 2. Feature flags - hard AND from natural language
+      if (parsed?.features) {
+        Object.entries(parsed.features).forEach(([feature, value]) => {
+          if (value === true) {
+            const dbColumn =
+              FILTER_KEY_TO_DB_COLUMN[
+                feature as keyof typeof FILTER_KEY_TO_DB_COLUMN
+              ];
+            if (dbColumn) supabaseQuery = supabaseQuery.eq(dbColumn, true);
+          }
+        });
+      }
 
-        // Use parsed location for geocoding if available, otherwise use query
-        const geocodeQuery = parsed?.location || query;
+      // 3. Price level - hard AND
+      if (parsed?.priceLevel) {
+        supabaseQuery = supabaseQuery.eq("price_level", parsed.priceLevel);
+      }
+
+      // 4. Food/cuisine terms - OR within group
+      if (parsed?.foodKeywords?.length || parsed?.cuisines?.length) {
+        const foodConditions = [
+          ...(parsed?.foodKeywords ?? []).flatMap((food) => [
+            `name.ilike.%${food}%`,
+            `description.ilike.%${food}%`,
+            `cuisine.ilike.%${food}%`,
+          ]),
+          ...(parsed?.cuisines ?? []).map((c) => `cuisine.ilike.%${c}%`),
+        ].join(",");
+
+        if (foodConditions) supabaseQuery = supabaseQuery.or(foodConditions);
+      }
+
+      // 5. Search terms - catch-all OR across name and description
+      if (parsed?.searchTerms?.length) {
+        const termConditions = parsed.searchTerms
+          .flatMap((term) => [
+            `name.ilike.%${term}%`,
+            `description.ilike.%${term}%`,
+          ])
+          .join(",");
+
+        if (termConditions) supabaseQuery = supabaseQuery.or(termConditions);
+      }
+
+      // 6. UI panel filters (filter chips) - hard AND on top of NL filters
+      supabaseQuery = applyUiFilters(supabaseQuery, searchParams);
+
+      // Execute
+      const { data: candidates, error: fetchError } = await supabaseQuery.order(
+        "rating",
+        { ascending: false },
+      );
+
+      if (fetchError) throw fetchError;
+
+      // 7. Distance filter
+      let cityCoordinates: [number, number] | null = null;
+      let matchedCity: string | null = null;
+
+      if (location && candidates && candidates.length > 0) {
+        matchedCity = candidates[0].city ?? null;
 
         try {
           const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
           if (mapboxToken) {
-            const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(geocodeQuery!)}.json?access_token=${mapboxToken}&limit=1&types=place`;
+            const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${mapboxToken}&limit=1&types=place`;
             const geocodeResponse = await fetch(geocodeUrl);
-
             if (geocodeResponse.ok) {
               const geocodeData = await geocodeResponse.json();
-              if (geocodeData.features && geocodeData.features.length > 0) {
+              if (geocodeData.features?.length > 0) {
                 cityCoordinates = geocodeData.features[0].center;
               }
             }
@@ -218,271 +205,82 @@ export async function GET(request: Request) {
         }
       }
 
-      let supabaseQuery = supabase
-        .from("restaurants")
-        .select(
-          `
-    id, name, slug, cuisine, address, city,
-    rating, likes_count, price_level,
-    image_url, latitude, longitude, description,
-    kids_menu, high_chairs, wheelchair_access,
-    outdoor_seating, dog_friendly, vegetarian_options,
-    vegan_options, gluten_free_options, halal, kosher,
-    baby_change_womens, baby_change_unisex, baby_change_mens,
-    kids_potty_toilet, pram_storage, playground_nearby,
-    air_conditioning, small_plates, healthy_options,
-    fun_quirky, relaxed, buzzy, posh, good_for_groups,
-    kids_coloring, games_available, kids_play_space,
-    teen_favourite, quick_service, friendly_staff,
-    takeaway, free_kids_meal, one_pound_kids_meal,
-    tourist_attraction_nearby, changing_table
-  `,
-        )
-        .eq("visible", true);
+      const radiusMeters = 20 * 1609.34; // 20 miles
 
-      // // Apply feature filters from natural language parsing
-      // if (parsed?.features) {
-      //   Object.entries(parsed.features).forEach(([feature, value]) => {
-      //     if (value === true) {
-      //       // Map feature names to database column names using shared mapping.
-      //       // Most feature keys match FilterPanel keys and can use FILTER_KEY_TO_DB_COLUMN.
-      //       const dbColumn = FILTER_KEY_TO_DB_COLUMN[feature];
-      //       supabaseQuery = supabaseQuery.eq(dbColumn, true);
-      //     }
-      //   });
-      // }
-
-      // // Apply price level filter
-      // if (parsed?.priceLevel) {
-      //   supabaseQuery = supabaseQuery.eq("price_level", parsed.priceLevel);
-      // }
-
-      // // Apply cuisine filters
-      // if (parsed?.cuisines && parsed.cuisines.length > 0) {
-      //   const cuisineConditions = parsed.cuisines
-      //     .map((c) => `cuisine.ilike.%${c}%`)
-      //     .join(",");
-      //   supabaseQuery = supabaseQuery.or(cuisineConditions);
-      // }
-
-      // // Apply food keyword filters (search across name, description, and cuisine)
-      // if (parsed?.foodKeywords && parsed.foodKeywords.length > 0) {
-      //   const foodConditions = parsed.foodKeywords
-      //     .flatMap((food) => [
-      //       `name.ilike.%${food}%`,
-      //       `description.ilike.%${food}%`,
-      //       `cuisine.ilike.%${food}%`,
-      //     ])
-      //     .join(",");
-      //   supabaseQuery = supabaseQuery.or(foodConditions);
-      // }
-
-      if (isExactCityMatch && cityCoordinates) {
-        const [lng, lat] = cityCoordinates;
-        const radiusMiles = 20;
-        const radiusMeters = radiusMiles * 1609.34;
-
-        // IMPORTANT: Filter by city name first to avoid showing global results
-        const cityName = cityCheckResult.data[0].city;
-        supabaseQuery = supabaseQuery.ilike("city", `%${cityName}%`);
-
-        // Apply user-selected filters before executing
-        const filterResult = await applyFilters(supabaseQuery, searchParams);
-
-        let allData;
-        if (filterResult.isFiltered) {
-          allData = filterResult.data;
-        } else {
-          const { data, error: allError } = await filterResult.query.order(
-            "rating",
-            { ascending: false },
-          );
-          if (allError) throw allError;
-          allData = data;
-        }
-
-        const filteredData = (allData || []).filter((restaurant: any) => {
+      const filtered = (candidates || []).filter((restaurant: any) => {
+        // If we have coordinates, apply radius filter
+        if (cityCoordinates) {
           if (!restaurant.latitude || !restaurant.longitude) return false;
-
-          const distance = calculateDistance(
-            lat,
-            lng,
-            restaurant.latitude,
-            restaurant.longitude,
+          const [lng, lat] = cityCoordinates;
+          return (
+            calculateDistance(
+              lat,
+              lng,
+              restaurant.latitude,
+              restaurant.longitude,
+            ) <= radiusMeters
           );
+        }
+        // No coordinates, keep everything that passed DB filters
+        return true;
+      });
 
-          return distance <= radiusMeters;
-        });
+      // 8. Score, rank, paginate
+      const ranked = scoreAndRank(filtered, parsed);
+      const total = ranked.length;
+      const paginatedData = ranked.slice(offset, offset + limit);
 
-        // Apply pagination to filtered data
-        const ranked = scoreAndRank(filteredData, parsed);
-        const total = ranked.length;
-        const paginatedData = ranked.slice(offset, offset + limit);
-
-        // filteredData.sort(
-        //   (a: any, b: any) => (b.rating || 0) - (a.rating || 0),
-        // );
-        // const total = filteredData.length;
-        // const paginatedData = filteredData.slice(offset, offset + limit);
-
-        return NextResponse.json({
-          data: paginatedData,
-          error: null,
-          city: matchedCity,
-          cityCoordinates,
-          pagination: {
-            page,
-            limit,
-            total,
-            totalPages: Math.ceil(total / limit),
-          },
-        });
-      } else if (isExactCityMatch) {
-        const cityName = cityCheckResult.data[0].city;
-        supabaseQuery = supabaseQuery.ilike("city", `%${cityName}%`);
-      } else if (parsed?.location) {
-        // Apply location filter from natural language parsing
-        supabaseQuery = supabaseQuery.or(
-          `city.ilike.%${parsed.location}%,address.ilike.%${parsed.location}%`,
-        );
-      } else if (
-        !parsed?.cuisines?.length &&
-        !parsed?.foodKeywords?.length &&
-        !Object.keys(parsed?.features || {}).length
-      ) {
-        // Only do generic search if no specific features, cuisines, or food keywords were found
-        // Search across name, description, cuisine, address, and city
-        // supabaseQuery = supabaseQuery.or(
-        //   `name.ilike.${searchTerm},description.ilike.${searchTerm},cuisine.ilike.${searchTerm},address.ilike.${searchTerm},city.ilike.${searchTerm}`,
-        // );
-      }
-
-      // Apply user-selected filters at the end
-      const filterResult = await applyFilters(supabaseQuery, searchParams);
-
-      if (filterResult.isFiltered) {
-        // Apply pagination
-        const ranked = scoreAndRank(filterResult.data, parsed);
-        const total = ranked.length;
-        const paginatedData = ranked.slice(offset, offset + limit);
-
-        // const sortedData = filterResult.data.sort(
-        //   (a: any, b: any) => (b.rating || 0) - (a.rating || 0),
-        // );
-        // const total = sortedData.length;
-        // const paginatedData = sortedData.slice(offset, offset + limit);
-
-        return NextResponse.json({
-          data: paginatedData,
-          error: null,
-          city: matchedCity,
-          cityCoordinates,
-          pagination: {
-            page,
-            limit,
-            total,
-            totalPages: Math.ceil(total / limit),
-          },
-        });
-      } else {
-        const { data, error } = await filterResult.query;
-
-        if (error) throw error;
-
-        const ranked = scoreAndRank(data, parsed);
-        const total = ranked.length;
-        const paginatedData = ranked.slice(offset, offset + limit);
-
-        return NextResponse.json({
-          data: paginatedData,
-          error: null,
-          city: matchedCity,
-          cityCoordinates,
-          pagination: {
-            page,
-            limit,
-            total,
-            totalPages: Math.ceil(total / limit),
-          },
-        });
-      }
+      return NextResponse.json({
+        data: paginatedData,
+        error: null,
+        city: matchedCity,
+        cityCoordinates,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+        },
+      });
     }
 
+    // ALL
     if (type === "all") {
       let supabaseQuery = supabase
         .from("restaurants")
-        .select(
-          `
-    id, name, slug, cuisine, address, city,
-    rating, likes_count, price_level,
-    image_url, latitude, longitude,
-    kids_menu, high_chairs, wheelchair_access,
-    outdoor_seating, dog_friendly, vegetarian_options,
-    vegan_options, gluten_free_options, halal, kosher,
-    baby_change_womens, baby_change_unisex, baby_change_mens,
-    kids_potty_toilet, pram_storage, playground_nearby,
-    air_conditioning, small_plates, healthy_options,
-    fun_quirky, relaxed, buzzy, posh, good_for_groups,
-    kids_coloring, games_available, kids_play_space,
-    teen_favourite, quick_service, friendly_staff,
-    takeaway, free_kids_meal, one_pound_kids_meal,
-    tourist_attraction_nearby, changing_table
-  `,
-        )
+        .select(RESTAURANT_SELECT)
         .eq("visible", true);
 
-      // Apply filters
-      const filterResult = await applyFilters(supabaseQuery, searchParams);
+      supabaseQuery = applyUiFilters(supabaseQuery, searchParams);
 
-      if (filterResult.isFiltered) {
-        // Data was filtered in memory (cuisines were involved), need to sort
-        const sortedData = filterResult.data.sort(
-          (a: any, b: any) => (b.rating || 0) - (a.rating || 0),
-        );
+      // Get total count
+      const { count: totalCount } = await supabase
+        .from("restaurants")
+        .select("*", { count: "exact", head: true })
+        .eq("visible", true);
 
-        // Apply pagination
-        const total = sortedData.length;
-        const paginatedData = sortedData.slice(offset, offset + limit);
+      const { data, error } = await supabaseQuery
+        .order("rating", { ascending: false })
+        .range(offset, offset + limit - 1);
 
-        return NextResponse.json({
-          data: paginatedData,
-          error: null,
-          pagination: {
-            page,
-            limit,
-            total,
-            totalPages: Math.ceil(total / limit),
-          },
-        });
-      } else {
-        // Get total count with filters applied
-        const { count: totalCount } = await filterResult.query.select("*", {
-          count: "exact",
-          head: true,
-        });
+      if (error) throw error;
 
-        // Use the query object and add ordering + pagination
-        const { data, error } = await filterResult.query
-          .order("rating", { ascending: false })
-          .range(offset, offset + limit - 1);
-
-        if (error) throw error;
-
-        return NextResponse.json({
-          data,
-          error: null,
-          pagination: {
-            page,
-            limit,
-            total: totalCount || 0,
-            totalPages: Math.ceil((totalCount || 0) / limit),
-          },
-        });
-      }
+      return NextResponse.json({
+        data,
+        error: null,
+        pagination: {
+          page,
+          limit,
+          total: totalCount || 0,
+          totalPages: Math.ceil((totalCount || 0) / limit),
+        },
+      });
     }
 
+    // SUGGESTIONS
     if (type === "suggestions") {
-      const searchTerm = `%${query?.toLowerCase() || ""}%`;
+      const safeQuery = sanitizeQuery(query ?? "");
+      const searchTerm = `%${safeQuery.toLowerCase()}%`;
 
       const [restaurantsResult, citiesResult] = await Promise.all([
         supabase
@@ -506,7 +304,6 @@ export async function GET(request: Request) {
       if (restaurantsResult.error) throw restaurantsResult.error;
       if (citiesResult.error) throw citiesResult.error;
 
-      // Get unique cities with counts
       const cityCountMap = new Map<string, number>();
       (citiesResult.data || []).forEach((r) => {
         if (r.city) {
@@ -519,18 +316,16 @@ export async function GET(request: Request) {
         }
       });
 
-      // Sort cities by restaurant count (descending)
-      const sortedCities = Array.from(cityCountMap.entries())
+      const citySuggestions = Array.from(cityCountMap.entries())
         .sort((a, b) => b[1] - a[1])
-        .slice(0, 3);
-
-      const citySuggestions = sortedCities.map(([city, count]) => ({
-        id: city,
-        name: city,
-        cuisine: "",
-        address: "",
-        type: "city" as const,
-      }));
+        .slice(0, 3)
+        .map(([city]) => ({
+          id: city,
+          name: city,
+          cuisine: "",
+          address: "",
+          type: "city" as const,
+        }));
 
       const restaurantSuggestions = (restaurantsResult.data || []).map((r) => ({
         id: r.id,
@@ -540,13 +335,10 @@ export async function GET(request: Request) {
         type: "restaurant" as const,
       }));
 
-      // Prioritize cities first, then restaurants
-      const allSuggestions = [
-        ...citySuggestions,
-        ...restaurantSuggestions,
-      ].slice(0, 8);
-
-      return NextResponse.json({ data: allSuggestions, error: null });
+      return NextResponse.json({
+        data: [...citySuggestions, ...restaurantSuggestions].slice(0, 8),
+        error: null,
+      });
     }
 
     return NextResponse.json({ data: [], error: null });
