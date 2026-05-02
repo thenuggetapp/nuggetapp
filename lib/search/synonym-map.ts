@@ -38,6 +38,7 @@ export const FOOD_KEYWORDS = [
   "dumplings",
   "falafel",
   "fried rice",
+  "hummus",
   "ice cream",
   "kebab",
   "masala",
@@ -64,7 +65,12 @@ export const FOOD_KEYWORDS = [
 export const FEATURE_KEYWORDS: Record<string, string[]> = {
   airConditioning: ["air conditioning", "air con", "climate control"],
   babyChangeMens: ["baby change men", "changing room men", "mens baby change"],
-  babyChangeUnisex: ["baby change", "unisex baby change", "family bathroom"],
+  babyChangeUnisex: [
+    "baby change",
+    "unisex baby change",
+    "family bathroom",
+    "baby changing",
+  ],
   babyChangeWomens: [
     "baby change women",
     "changing room women",
@@ -269,6 +275,7 @@ export const COMMON_CITIES = [
   "nottingham",
   "oxford",
   "reading",
+  "rye",
   "sheffield",
   "southampton",
   "york",

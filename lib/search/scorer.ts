@@ -13,6 +13,7 @@
 
 import { ParsedQuery } from "@/lib/search/natural-language-parser";
 import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/db-amenities";
+import { FEATURE_KEYWORDS } from "@/lib/search/synonym-map";
 
 const POINTS = {
   slugExact: 20, // full query phrase in slug
@@ -43,11 +44,26 @@ function getNgrams(terms: string[], n: number): string[] {
 // Tiebreaker
 const FEATURE_COLUMNS = Object.values(FILTER_KEY_TO_DB_COLUMN);
 
-function tiebreak(a: any, b: any): number {
+function tiebreak(a: any, b: any, parsed?: ParsedQuery | null): number {
+  // 1. Likes
   const likesA = a.likes_count ?? 0;
   const likesB = b.likes_count ?? 0;
   if (likesB !== likesA) return likesB - likesA;
 
+  // 2. Description mentions any requested feature keywords (boolean)
+  if (parsed?.features) {
+    const featureTerms = Object.keys(parsed.features)
+      .filter((f) => parsed.features[f as keyof typeof parsed.features])
+      .flatMap((f) => FEATURE_KEYWORDS[f] ?? []);
+
+    const descA = a.description?.toLowerCase() ?? "";
+    const descB = b.description?.toLowerCase() ?? "";
+    const mentionsA = featureTerms.some((term) => descA.includes(term)) ? 1 : 0;
+    const mentionsB = featureTerms.some((term) => descB.includes(term)) ? 1 : 0;
+    if (mentionsB !== mentionsA) return mentionsB - mentionsA;
+  }
+
+  // 3. Feature count
   const featuresA = FEATURE_COLUMNS.filter((col) => a[col] === true).length;
   const featuresB = FEATURE_COLUMNS.filter((col) => b[col] === true).length;
   return featuresB - featuresA;
@@ -125,13 +141,12 @@ export function scoreAndRank(
     .map((t) => t.toLowerCase())
     .filter(Boolean);
 
-  const hasFeatures = Object.keys(parsed.features ?? {}).length > 0;
   const hasTextTerms = allTerms.length > 0;
 
   // No text terms to score on (e.g. city-only or feature-only query) —
   // skip scoring and apply tiebreaker chain directly.
   if (!hasTextTerms) {
-    return [...restaurants].sort(tiebreak);
+    return [...restaurants].sort((a, b) => tiebreak(a, b, parsed));
   }
 
   const scored = restaurants
@@ -145,7 +160,7 @@ export function scoreAndRank(
     })
     .sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
-      return tiebreak(a.restaurant, b.restaurant);
+      return tiebreak(a.restaurant, b.restaurant, parsed);
     });
 
   return scored.map((r) => r.restaurant);
