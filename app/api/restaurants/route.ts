@@ -253,11 +253,15 @@ export async function GET(request: Request) {
 
       supabaseQuery = applyUiFilters(supabaseQuery, searchParams);
 
-      // Get total count
-      const { count: totalCount } = await supabase
+      // Get total count with the same filters as the data query
+      let countQuery = supabase
         .from("restaurants")
-        .select("*", { count: "exact", head: true })
+        .select("id", { count: "exact", head: true })
         .eq("visible", true);
+
+      countQuery = applyUiFilters(countQuery, searchParams);
+      const { count: totalCount, error: countError } = await countQuery;
+      if (countError) throw countError;
 
       const { data, error } = await supabaseQuery
         .order("rating", { ascending: false })
