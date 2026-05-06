@@ -104,14 +104,23 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
   parsed.cuisines = Array.from(cuisineMatches);
   parsed.foodKeywords = Array.from(foodMatches);
 
-  Object.entries(FEATURE_KEYWORDS).forEach(([feature, keywords]) => {
-    if (!(feature in FILTER_KEY_TO_DB_COLUMN)) return;
+  const allPairs = Object.entries(FEATURE_KEYWORDS)
+    .filter(([feature]) => feature in FILTER_KEY_TO_DB_COLUMN)
+    .flatMap(([feature, keywords]) =>
+      keywords.map((keyword) => ({ feature, keyword })),
+    )
+    .sort((a, b) => b.keyword.length - a.keyword.length);
+
+  let remainingQuery = lowerQuery;
+
+  allPairs.forEach(({ feature, keyword }) => {
+    if (!remainingQuery.includes(keyword)) return;
     const key = feature as keyof typeof FILTER_KEY_TO_DB_COLUMN;
-    keywords.forEach((keyword) => {
-      if (lowerQuery.includes(keyword)) {
-        parsed.features[key] = true;
-      }
-    });
+    parsed.features[key] = true;
+    remainingQuery = remainingQuery.replaceAll(
+      keyword,
+      " ".repeat(keyword.length),
+    );
   });
 
   const featureWords = new Set<string>();

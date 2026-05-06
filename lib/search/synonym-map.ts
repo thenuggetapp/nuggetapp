@@ -64,17 +64,24 @@ export const FOOD_KEYWORDS = [
 
 export const FEATURE_KEYWORDS: Record<string, string[]> = {
   airConditioning: ["air conditioning", "air con", "climate control"],
-  babyChangeMens: ["baby change men", "changing room men", "mens baby change"],
-  babyChangeUnisex: [
-    "baby change",
-    "unisex baby change",
-    "family bathroom",
-    "baby changing",
+  babyChangeMens: [
+    "baby change men",
+    "baby change mens",
+    "mens baby change",
+    "changing room men",
   ],
   babyChangeWomens: [
     "baby change women",
-    "changing room women",
+    "baby change womens",
     "ladies baby change",
+    "changing room women",
+  ],
+  babyChangeUnisex: [
+    "unisex baby change",
+    "family bathroom",
+    "baby change",
+    "baby changing",
+    "changing room",
   ],
   buzzy: ["buzzy", "lively", "energetic", "vibrant"],
   // changingTable: [
