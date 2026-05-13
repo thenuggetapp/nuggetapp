@@ -1,12 +1,30 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import {
-  AMENITY_DB_COLUMNS,
-  FILTER_KEY_TO_DB_COLUMN,
-} from "@/lib/db-amenities";
+import { AMENITY_DB_COLUMNS } from "@/lib/db-amenities";
 import { parseNaturalLanguageQuery } from "@/lib/search/natural-language-parser";
 
 export const dynamic = "force-dynamic";
+
+function applyLocationAndCuisineFilters(
+  query: any,
+  city: string,
+  parsed: ReturnType<typeof parseNaturalLanguageQuery> | null,
+) {
+  let q = query;
+  if (city) {
+    q = q.or(`address.ilike.%${city}%,city.ilike.%${city}%`);
+  } else if (parsed?.location) {
+    q = q.or(
+      `address.ilike.%${parsed.location}%,city.ilike.%${parsed.location}%`,
+    );
+  }
+  if (parsed?.cuisines && parsed.cuisines.length > 0) {
+    q = q.or(
+      parsed.cuisines.map((c) => `cuisine.ilike.%${c}%`).join(","),
+    );
+  }
+  return q;
+}
 
 export async function GET(request: Request) {
   try {
@@ -24,41 +42,28 @@ export async function GET(request: Request) {
 
     const counts: Record<string, number> = {};
 
-    let countQuery = supabase
-      .from("restaurants")
-      .select(amenityFilters.join(", "))
-      .eq("visible", true);
+    // One exact count query per amenity column. Fetching all matching rows and
+    // counting in memory hits PostgREST's default row cap (~1000), so totals
+    // would be wrong for larger datasets.
+    await Promise.all(
+      amenityFilters.map(async (filter) => {
+        let q = supabase
+          .from("restaurants")
+          .select("id", { count: "exact", head: true })
+          .eq("visible", true)
+          .eq(filter, true);
 
-    if (city) {
-      countQuery = countQuery.or(
-        `address.ilike.%${city}%,city.ilike.%${city}%`,
-      );
-    } else if (parsed?.location) {
-      countQuery = countQuery.or(
-        `address.ilike.%${parsed.location}%,city.ilike.%${parsed.location}%`,
-      );
-    }
+        q = applyLocationAndCuisineFilters(q, city, parsed);
 
-    if (parsed?.cuisines && parsed.cuisines.length > 0) {
-      countQuery = countQuery.or(
-        parsed.cuisines.map((c) => `cuisine.ilike.%${c}%`).join(","),
-      );
-    }
-
-    const { data: amenityData, error: amenityError } = await countQuery;
-
-    if (amenityError) {
-      console.error("Error fetching amenity counts:", amenityError);
-      amenityFilters.forEach((filter) => {
-        counts[filter] = 0;
-      });
-    } else {
-      amenityFilters.forEach((filter) => {
-        counts[filter] = (amenityData || []).filter(
-          (r: any) => r[filter] === true,
-        ).length;
-      });
-    }
+        const { count, error } = await q;
+        if (error) {
+          console.error(`Error counting ${filter}:`, error);
+          counts[filter] = 0;
+        } else {
+          counts[filter] = count ?? 0;
+        }
+      }),
+    );
 
     const { data: cuisineData, error: cuisineError } = await supabase
       .from("restaurants")
