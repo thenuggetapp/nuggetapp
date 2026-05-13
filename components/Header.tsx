@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { LogOut, Bookmark, Settings, User, Crown, Shield, Store, TrendingUp, Menu, X, Handshake, Award, HelpCircle, Home } from 'lucide-react';
+import { LogOut, Bookmark, Settings, User, Crown, Shield, Store, TrendingUp, Menu, X, Handshake, Award, HelpCircle, Home, CirclePlus as PlusCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { getRoleName } from '@/lib/permissions';
@@ -175,9 +175,9 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <div className="flex items-center space-x-2">
-              <Link href="/partner">
+              <Link href="/suggest">
                 <Button variant="ghost" size="sm" className="text-white hover:text-white">
-                  For Restaurants
+                  Add a Restaurant
                 </Button>
               </Link>
               <Link href="/login">
@@ -264,6 +264,15 @@ export function Header() {
                 >
                   <Home className="h-5 w-5" aria-hidden="true" />
                   <span className="font-medium">Home</span>
+                </Link>
+
+                <Link
+                  href="/suggest"
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <PlusCircle className="h-5 w-5" aria-hidden="true" />
+                  <span className="font-medium">Add a Restaurant</span>
                 </Link>
 
                 <Link

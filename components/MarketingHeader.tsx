@@ -10,6 +10,7 @@ export function MarketingHeader() {
 
   const navLinks = [
     { href: '/', label: 'Home' },
+    { href: '/suggest', label: 'Add a Restaurant' },
     { href: '/about', label: 'About' },
     { href: '/blog', label: 'Blog' },
     { href: '/partner', label: 'Partner' },
@@ -77,6 +78,7 @@ export function MarketingHeader() {
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-6">
           <a href="/" className="text-slate-900 hover:text-slate-600 font-medium">Home</a>
+          <a href="/suggest" className="text-slate-900 hover:text-slate-600 font-medium">Add a Restaurant</a>
           <a href="/about" className="text-slate-900 hover:text-slate-600 font-medium">About</a>
           <a href="/blog" className="text-slate-900 hover:text-slate-600 font-medium">Blog</a>
           <a href="/partner" className="text-slate-900 hover:text-slate-600 font-medium">Partner</a>
