@@ -103,10 +103,10 @@ export default async function Home() {
           <div className="relative z-20 container mx-auto px-4 pt-8 md:pt-16 pb-16 md:pb-24">
             <div className="max-w-4xl mx-auto text-center">
               <div className="space-y-4 mt-[120px] md:mt-24">
-                <h1 className="text-[2.8125rem] sm:text-4xl md:text-5xl lg:text-6xl font-extralight text-white tracking-tight font-serif drop-shadow-lg leading-[1] sm:leading-tight">
+                <h1 className="text-[2.8125rem] sm:text-4xl md:text-5xl lg:text-6xl font-extralight text-white tracking-tight font-serif drop-shadow-lg leading-[1] sm:leading-tight whitespace-nowrap">
                   We called ahead so you don&apos;t have to
                 </h1>
-                <p className="text-base sm:text-lg text-white/80 font-light drop-shadow">
+                <p className="text-base sm:text-lg text-white font-semibold drop-shadow-lg">
                   30+ filters per restaurant — high chairs, kids menus, dietary needs, and yes, exactly where the baby change is.
                 </p>
               </div>
