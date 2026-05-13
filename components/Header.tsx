@@ -175,11 +175,11 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <div className="flex items-center space-x-2">
-              <a href="https://www.thenugget.app/suggest" target="_blank" rel="noopener noreferrer">
+              <Link href="/suggest">
                 <Button variant="ghost" size="sm" className="text-white hover:text-white">
                   Add a Restaurant
                 </Button>
-              </a>
+              </Link>
               <Link href="/login">
                 <Button variant="ghost" size="sm" className="text-white hover:text-white">
                   Sign in
@@ -266,16 +266,14 @@ export function Header() {
                   <span className="font-medium">Home</span>
                 </Link>
 
-                <a
-                  href="https://www.thenugget.app/suggest"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/suggest"
                   className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <PlusCircle className="h-5 w-5" aria-hidden="true" />
                   <span className="font-medium">Add a Restaurant</span>
-                </a>
+                </Link>
 
                 <Link
                   href="/partner"
