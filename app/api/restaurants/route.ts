@@ -284,6 +284,10 @@ export async function GET(request: Request) {
     // SUGGESTIONS
     if (type === "suggestions") {
       const safeQuery = sanitizeQuery(query ?? "");
+      if (!safeQuery) {
+        return NextResponse.json({ data: [], error: null });
+      }
+
       const searchTerm = `%${safeQuery.toLowerCase()}%`;
 
       const [restaurantsResult, citiesResult] = await Promise.all([
