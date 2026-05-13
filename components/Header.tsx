@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { LogOut, Bookmark, Settings, User, Crown, Shield, Store, TrendingUp, Menu, X, Handshake, Award, HelpCircle, Home } from 'lucide-react';
+import { LogOut, Bookmark, Settings, User, Crown, Shield, Store, TrendingUp, Menu, X, Handshake, Award, CircleHelp as HelpCircle, Chrome as Home, CirclePlus as PlusCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { getRoleName } from '@/lib/permissions';
@@ -175,6 +175,11 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <div className="flex items-center space-x-2">
+              <a href="https://www.thenugget.app/suggest" target="_blank" rel="noopener noreferrer">
+                <Button variant="ghost" size="sm" className="text-white hover:text-white">
+                  Add a Restaurant
+                </Button>
+              </a>
               <Link href="/partner">
                 <Button variant="ghost" size="sm" className="text-white hover:text-white">
                   For Restaurants
@@ -265,6 +270,17 @@ export function Header() {
                   <Home className="h-5 w-5" aria-hidden="true" />
                   <span className="font-medium">Home</span>
                 </Link>
+
+                <a
+                  href="https://www.thenugget.app/suggest"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <PlusCircle className="h-5 w-5" aria-hidden="true" />
+                  <span className="font-medium">Add a Restaurant</span>
+                </a>
 
                 <Link
                   href="/partner"

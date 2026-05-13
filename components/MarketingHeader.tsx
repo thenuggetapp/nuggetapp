@@ -10,6 +10,7 @@ export function MarketingHeader() {
 
   const navLinks = [
     { href: '/', label: 'Home' },
+    { href: 'https://www.thenugget.app/suggest', label: 'Add a Restaurant', external: true },
     { href: '/about', label: 'About' },
     { href: '/blog', label: 'Blog' },
     { href: '/partner', label: 'Partner' },
@@ -39,6 +40,7 @@ export function MarketingHeader() {
                 <a
                   key={link.href}
                   href={link.href}
+                  {...('external' in link && link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   className="text-lg font-medium text-slate-900 hover:text-slate-600 transition-colors py-2"
                   onClick={() => setIsOpen(false)}
                 >
@@ -77,6 +79,7 @@ export function MarketingHeader() {
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-6">
           <a href="/" className="text-slate-900 hover:text-slate-600 font-medium">Home</a>
+          <a href="https://www.thenugget.app/suggest" target="_blank" rel="noopener noreferrer" className="text-slate-900 hover:text-slate-600 font-medium">Add a Restaurant</a>
           <a href="/about" className="text-slate-900 hover:text-slate-600 font-medium">About</a>
           <a href="/blog" className="text-slate-900 hover:text-slate-600 font-medium">Blog</a>
           <a href="/partner" className="text-slate-900 hover:text-slate-600 font-medium">Partner</a>
