@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { LogOut, Bookmark, Settings, User, Crown, Shield, Store, TrendingUp, Menu, X, Handshake, Award, CircleHelp as HelpCircle, Home, CirclePlus as PlusCircle } from 'lucide-react';
+import { LogOut, Bookmark, Settings, User, Crown, Shield, Store, TrendingUp, Menu, X, Handshake, Award, HelpCircle, Home, CirclePlus as PlusCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { getRoleName } from '@/lib/permissions';
