@@ -23,7 +23,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { MapboxMap } from "@/components/MapboxMap";
-import { FilterPanel, FilterState } from "@/components/FilterPanel";
+import { FilterPanel } from "@/components/FilterPanel";
+import { FilterState } from "@/lib/filters";
 import { QuickAddRestaurantModal } from "@/components/QuickAddRestaurantModal";
 import { MobileSearchModal } from "@/components/MobileSearchModal";
 import { SuggestRestaurantModal } from "@/components/SuggestRestaurantModal";
@@ -35,10 +36,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Restaurant } from "@/lib/dummy-restaurants";
 import { getRestaurantDisplayImageUrlOrFallback } from "@/lib/restaurant-image";
 import { supabase } from "@/lib/supabase/client";
-import {
-  parseNaturalLanguageQuery,
-  buildSupabaseQuery,
-} from "@/lib/natural-language-search";
 import {
   Search,
   MapPin,
@@ -88,12 +85,12 @@ interface PaginationInfo {
   totalPages: number;
 }
 
-function getFiltersFromURLParams(searchParams: URLSearchParams): FilterState {
+function getFiltersFromURLParams(searchParams: any): FilterState {
   return {
     cuisines: [],
     kidsMenu: searchParams.get("kids_menu") === "true",
     highChairs: searchParams.get("high_chairs") === "true",
-    changingTable: searchParams.get("changing_table") === "true",
+    // changingTable: searchParams.get("changing_table") === "true",
     wheelchairAccess: searchParams.get("wheelchair_access") === "true",
     babyChangeWomens: searchParams.get("baby_change_womens") === "true",
     babyChangeUnisex: searchParams.get("baby_change_unisex") === "true",
@@ -959,7 +956,8 @@ function SearchContent() {
                     Filters
                   </DrawerTitle>
                   {Object.entries(filters).filter(([key, value]) => {
-                    if (key === "cuisines") return value.length > 0;
+                    if (key === "cuisines")
+                      return Array.isArray(value) && value.length > 0;
                     return value === true;
                   }).length > 0 && (
                     <Badge
@@ -968,7 +966,8 @@ function SearchContent() {
                     >
                       {
                         Object.entries(filters).filter(([key, value]) => {
-                          if (key === "cuisines") return value.length > 0;
+                          if (key === "cuisines")
+                            return Array.isArray(value) && value.length > 0;
                           return value === true;
                         }).length
                       }
@@ -1237,7 +1236,9 @@ function SearchContent() {
               data-filter-toggle
               className={`h-11 px-4 rounded-lg relative ${
                 Object.entries(filters).some(([key, value]) =>
-                  key === "cuisines" ? value.length > 0 : value === true,
+                  key === "cuisines"
+                    ? Array.isArray(value) && value.length > 0
+                    : value === true,
                 )
                   ? "border-[#8dbf65] bg-[#8dbf65]/10"
                   : "border-slate-300"
@@ -1247,12 +1248,16 @@ function SearchContent() {
             >
               <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
               {Object.entries(filters).some(([key, value]) =>
-                key === "cuisines" ? value.length > 0 : value === true,
+                key === "cuisines"
+                  ? Array.isArray(value) && value.length > 0
+                  : value === true,
               ) && (
                 <span className="absolute -top-1 -right-1 bg-[#8dbf65] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {
                     Object.entries(filters).filter(([key, value]) =>
-                      key === "cuisines" ? value.length > 0 : value === true,
+                      key === "cuisines"
+                        ? Array.isArray(value) && value.length > 0
+                        : value === true,
                     ).length
                   }
                 </span>

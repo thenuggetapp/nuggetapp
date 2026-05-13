@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { apiFetcher } from "@/lib/swr-fetcher";
+import { useState, useEffect } from "react";
 
 // Featured restaurants
 export function useFeaturedRestaurants() {
@@ -9,7 +10,7 @@ export function useFeaturedRestaurants() {
     {
       revalidateOnFocus: false, // Featured restaurants don't change often
       dedupingInterval: 60000, // Cache for 1 minute
-    }
+    },
   );
 
   return {
@@ -22,17 +23,27 @@ export function useFeaturedRestaurants() {
 
 // Search suggestions (with debouncing)
 export function useSearchSuggestions(query: string) {
-  const shouldFetch = query.trim().length > 1;
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  const shouldFetch = debouncedQuery.trim().length > 1;
 
   const { data, error, isLoading } = useSWR(
     shouldFetch
-      ? `/api/restaurants?type=suggestions&q=${encodeURIComponent(query)}`
+      ? `/api/restaurants?type=suggestions&q=${encodeURIComponent(debouncedQuery)}`
       : null,
     apiFetcher,
     {
-      dedupingInterval: 200, // Cache for 200ms (debouncing effect)
+      dedupingInterval: 5000,
       revalidateOnFocus: false,
-    }
+    },
   );
 
   return {
@@ -70,7 +81,7 @@ export function useRestaurantDetail(restaurantId: string | null) {
     {
       revalidateOnFocus: false,
       dedupingInterval: 60000, // Cache for 1 minute
-    }
+    },
   );
 
   return {
