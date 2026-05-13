@@ -180,11 +180,6 @@ export function Header() {
                   Add a Restaurant
                 </Button>
               </a>
-              <Link href="/partner">
-                <Button variant="ghost" size="sm" className="text-white hover:text-white">
-                  For Restaurants
-                </Button>
-              </Link>
               <Link href="/login">
                 <Button variant="ghost" size="sm" className="text-white hover:text-white">
                   Sign in
