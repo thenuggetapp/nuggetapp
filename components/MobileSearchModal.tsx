@@ -425,7 +425,7 @@ export function MobileSearchModal({
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Content className="fixed inset-0 z-50 w-full h-full bg-white md:hidden focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right">
+        <DialogPrimitive.Content className="fixed inset-0 z-50 w-full h-full bg-white focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right">
           <div className="flex flex-col h-full">
             <div className="border-b border-slate-200">
               <div className="flex items-center gap-3 px-4 py-3">
@@ -450,7 +450,7 @@ export function MobileSearchModal({
                         handleSearch(searchQuery);
                       }
                     }}
-                    autoFocus
+                    autoFocus={open}
                     className="pl-12 pr-12 h-12 text-base border-slate-300 rounded-full focus-visible:ring-2 focus-visible:ring-slate-300"
                   />
                   {searchQuery && (

@@ -68,6 +68,7 @@ import {
   useToggleBookmark,
   useToggleLike,
 } from "@/hooks/useUserData";
+import { isTouchDevice } from "@/lib/utils";
 
 interface SearchSuggestion {
   id: string;
@@ -255,6 +256,7 @@ function SearchContent() {
 
     return "family friendly";
   };
+
   const [isMobile, setIsMobile] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "restaurants" | "discounts" | "events"
@@ -279,6 +281,12 @@ function SearchContent() {
     return [searchQuery, ...filters.cuisines].filter(Boolean).join(" ");
   }, [searchQuery, filters.cuisines]);
 
+  const activeFilterCount = Object.entries(filters).filter(([key, value]) =>
+    key === "cuisines"
+      ? Array.isArray(value) && value.length > 0
+      : value === true,
+  ).length;
+
   // Scroll to hovered card when hovering over a marker
   useEffect(() => {
     if (hoveredRestaurantId) {
@@ -300,7 +308,7 @@ function SearchContent() {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024); // lg breakpoint
+      setIsMobile(isTouchDevice() && window.innerWidth < 1024);
     };
 
     checkMobile();
@@ -703,19 +711,19 @@ function SearchContent() {
 
   // Touch handlers for drawer
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (window.innerWidth >= 1024) return; // Only on mobile
+    if (!isTouchDevice() || window.innerWidth >= 1024) return; // Only on mobile
     setIsDragging(true);
     setStartY(e.touches[0].clientY);
     setCurrentY(e.touches[0].clientY);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging || window.innerWidth >= 1024) return;
+    if (!isTouchDevice() || window.innerWidth >= 1024) return;
     setCurrentY(e.touches[0].clientY);
   };
 
   const handleTouchEnd = () => {
-    if (!isDragging || window.innerWidth >= 1024) return;
+    if (!isTouchDevice() || window.innerWidth >= 1024) return;
 
     const deltaY = currentY - startY;
     const threshold = 50; // Minimum swipe distance
@@ -931,7 +939,7 @@ function SearchContent() {
       </Sheet>
 
       <MobileSearchModal
-        open={mobileSearchOpen}
+        open={mobileSearchOpen && isTouchDevice()}
         onOpenChange={setMobileSearchOpen}
         initialQuery={searchQuery}
       />
@@ -955,22 +963,12 @@ function SearchContent() {
                   <DrawerTitle className="text-lg font-bold text-slate-900">
                     Filters
                   </DrawerTitle>
-                  {Object.entries(filters).filter(([key, value]) => {
-                    if (key === "cuisines")
-                      return Array.isArray(value) && value.length > 0;
-                    return value === true;
-                  }).length > 0 && (
+                  {activeFilterCount > 0 && (
                     <Badge
                       variant="secondary"
                       className="bg-[#8dbf65] text-white"
                     >
-                      {
-                        Object.entries(filters).filter(([key, value]) => {
-                          if (key === "cuisines")
-                            return Array.isArray(value) && value.length > 0;
-                          return value === true;
-                        }).length
-                      }
+                      {activeFilterCount}
                     </Badge>
                   )}
                 </div>
@@ -1017,31 +1015,33 @@ function SearchContent() {
               <Menu className="h-6 w-6" aria-hidden="true" />
             </Button>
             <div className="flex-1 flex items-center gap-2">
-              <div
-                className="relative flex-1"
-                onClick={() => setMobileSearchOpen(true)}
-              >
-                <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 pointer-events-none"
-                  aria-hidden="true"
-                />
+              <div className="relative flex-1">
                 <Input
                   type="text"
                   placeholder={searchQuery || "london"}
                   value={searchQuery}
-                  readOnly
-                  aria-label="Search for restaurants"
-                  className="pl-10 pr-10 h-11 bg-slate-50 border-slate-200 rounded-full cursor-pointer"
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch(e as any)}
+                  className="pl-10 pr-10 h-11 bg-slate-50 border-slate-200 rounded-full"
                 />
               </div>
               <Button
                 variant="outline"
                 size="sm"
-                className="h-11 w-11 p-0 border-slate-300 rounded-xl flex-shrink-0"
+                className={`h-11 w-11 p-0 rounded-xl flex-shrink-0 relative ${
+                  activeFilterCount > 0
+                    ? "border-[#8dbf65] bg-[#8dbf65]/10"
+                    : "border-slate-300"
+                }`}
                 onClick={() => setShowFilters(!showFilters)}
                 aria-label="Open filters"
               >
                 <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
+                {activeFilterCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#8dbf65] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {activeFilterCount}
+                  </span>
+                )}
               </Button>
             </div>
           </div>
@@ -1235,11 +1235,7 @@ function SearchContent() {
               size="sm"
               data-filter-toggle
               className={`h-11 px-4 rounded-lg relative ${
-                Object.entries(filters).some(([key, value]) =>
-                  key === "cuisines"
-                    ? Array.isArray(value) && value.length > 0
-                    : value === true,
-                )
+                activeFilterCount > 0
                   ? "border-[#8dbf65] bg-[#8dbf65]/10"
                   : "border-slate-300"
               }`}
@@ -1247,19 +1243,9 @@ function SearchContent() {
               aria-label="Toggle filters"
             >
               <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
-              {Object.entries(filters).some(([key, value]) =>
-                key === "cuisines"
-                  ? Array.isArray(value) && value.length > 0
-                  : value === true,
-              ) && (
+              {activeFilterCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#8dbf65] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {
-                    Object.entries(filters).filter(([key, value]) =>
-                      key === "cuisines"
-                        ? Array.isArray(value) && value.length > 0
-                        : value === true,
-                    ).length
-                  }
+                  {activeFilterCount}
                 </span>
               )}
             </Button>

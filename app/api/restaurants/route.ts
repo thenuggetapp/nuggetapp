@@ -109,10 +109,10 @@ export async function GET(request: Request) {
       const safeQuery = sanitizeQuery(rawQuery);
       const parsed = safeQuery ? parseNaturalLanguageQuery(safeQuery) : null;
 
-      console.log(
-        "Natural language parse result:",
-        JSON.stringify(parsed, null, 2),
-      );
+      // console.log(
+      //   "Natural language parse result:",
+      //   JSON.stringify(parsed, null, 2),
+      // );
 
       // Base query
       let supabaseQuery = supabase
