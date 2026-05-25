@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +9,6 @@ import { CityRequestModal } from "@/components/CityRequestModal";
 
 interface CityData {
   name: string;
-  count: number;
   image: string;
   description: string;
 }
@@ -17,19 +16,16 @@ interface CityData {
 const FEATURED_CITIES: CityData[] = [
   {
     name: "London",
-    count: 273,
     image: "/jamie-davies-7intev_ztru-unsplash.jpg",
     description: "Explore family-friendly restaurants across London"
   },
   {
     name: "Chicago",
-    count: 43,
     image: "/neal-kharawala-xxa8ptuld1y-unsplash.jpg",
     description: "Discover the best spots for families in Chicago"
   },
   {
     name: "San Francisco",
-    count: 22,
     image: "/amogh-manjunath-hksflo1t8ia-unsplash.jpg",
     description: "Find family dining options in San Francisco"
   }
@@ -38,6 +34,33 @@ const FEATURED_CITIES: CityData[] = [
 export function CityBrowse() {
   const router = useRouter();
   const [showCityRequestModal, setShowCityRequestModal] = useState(false);
+  const [cityCounts, setCityCounts] = useState<Record<string, number>>({});
+  const [loadingCounts, setLoadingCounts] = useState(true);
+
+  useEffect(() => {
+    const fetchCityCounts = async () => {
+      try {
+        const results = await Promise.all(
+          FEATURED_CITIES.map(async (city) => {
+            const params = new URLSearchParams({
+              city: city.name,
+              mode: "location",
+            });
+            const response = await fetch(`/api/filter-counts?${params.toString()}`);
+            const data = await response.json();
+            return [city.name, data.total ?? 0] as const;
+          }),
+        );
+        setCityCounts(Object.fromEntries(results));
+      } catch (error) {
+        console.error("Error fetching city counts:", error);
+      } finally {
+        setLoadingCounts(false);
+      }
+    };
+
+    fetchCityCounts();
+  }, []);
 
   const handleCityClick = (cityName: string) => {
     const cityRoutes: Record<string, string> = {
@@ -79,7 +102,7 @@ export function CityBrowse() {
               <div className="flex justify-end">
                 <Badge className="bg-[#8dbf65] hover:bg-[#7aaa56] text-white border-0 px-3 py-1.5 shadow-lg">
                   <MapPin className="h-3 w-3 mr-1" />
-                  {city.count} restaurants
+                  {loadingCounts ? "..." : cityCounts[city.name] ?? 0} restaurants
                 </Badge>
               </div>
 
