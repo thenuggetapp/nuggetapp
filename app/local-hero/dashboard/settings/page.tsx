@@ -10,7 +10,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { validateWebsiteUrl } from '@/lib/validate-website-url';
@@ -23,8 +22,6 @@ export default function SettingsPage() {
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
-    phone: '',
-    bio: '',
     website: '',
   });
 
@@ -44,22 +41,13 @@ export default function SettingsPage() {
     }
   }, [user, userProfile, authLoading, router]);
 
-  const loadSettings = async () => {
-    try {
-      setLoading(true);
-
-      setFormData({
-        full_name: userProfile?.full_name || '',
-        email: user?.email || '',
-        phone: '',
-        bio: '',
-        website: userProfile?.website || '',
-      });
-    } catch (error) {
-      console.error('Error loading settings:', error);
-    } finally {
-      setLoading(false);
-    }
+  const loadSettings = () => {
+    setFormData({
+      full_name: userProfile?.full_name || '',
+      email: user?.email || '',
+      website: userProfile?.website || '',
+    });
+    setLoading(false);
   };
 
   const handleSave = async () => {
@@ -81,6 +69,12 @@ export default function SettingsPage() {
         .eq('id', user?.id);
 
       if (error) throw error;
+
+      setFormData((prev) => ({
+        ...prev,
+        full_name: formData.full_name,
+        website: websiteValidation.sanitized || '',
+      }));
 
       await refreshProfile();
       toast.success('Settings saved successfully');
@@ -145,19 +139,6 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  placeholder="+1 (555) 123-4567"
-                />
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="website">Website</Label>
                 <Input
                   id="website"
@@ -171,19 +152,6 @@ export default function SettingsPage() {
                 <p className="text-xs text-gray-500">
                   Your public website link shown on restaurants you recommend.
                 </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="bio">Bio</Label>
-                <Textarea
-                  id="bio"
-                  value={formData.bio}
-                  onChange={(e) =>
-                    setFormData({ ...formData, bio: e.target.value })
-                  }
-                  placeholder="Tell us about yourself..."
-                  rows={4}
-                />
               </div>
             </CardContent>
           </Card>
