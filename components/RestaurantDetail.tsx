@@ -69,6 +69,10 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
     if (!restaurantData) return null;
 
     const data = restaurantData;
+    const addedByProfile = Array.isArray(data.added_by)
+      ? data.added_by[0]
+      : data.added_by;
+
     return {
       id: data.id,
       name: data.name,
@@ -131,6 +135,13 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
       pramStorage: data.pram_storage,
       likesCount: data.likes_count || 0,
       visible: data.visible,
+      addedBy: addedByProfile
+        ? {
+            id: addedByProfile.id,
+            fullName: addedByProfile.full_name,
+            website: addedByProfile.website,
+          }
+        : null,
     } as Restaurant;
   }, [restaurantData]);
 
@@ -494,6 +505,26 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                           <span className="text-sm lg:text-base text-slate-600">
                             {restaurant.cuisine}
                           </span>
+                          {restaurant.addedBy?.fullName && (
+                            <>
+                              <span className="text-slate-400">•</span>
+                              <span className="text-sm lg:text-base text-slate-600">
+                                by{" "}
+                                {restaurant.addedBy.website ? (
+                                  <a
+                                    href={restaurant.addedBy.website}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[#4a7c37] hover:underline font-medium"
+                                  >
+                                    {restaurant.addedBy.fullName}
+                                  </a>
+                                ) : (
+                                  restaurant.addedBy.fullName
+                                )}
+                              </span>
+                            </>
+                          )}
                           {restaurant.nuggetVerified && (
                             <Badge className="bg-[#8dbf65] hover:bg-[#7aaa56] text-white border-0 flex items-center gap-1 px-2 py-0.5">
                               <Shield className="h-3 w-3" />
@@ -1087,6 +1118,31 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                                 );
                               })}
                             </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {restaurant.addedBy?.fullName && (
+                        <div className="flex items-start gap-3">
+                          <User className="h-5 w-5 text-slate-500 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-medium text-sm lg:text-base text-slate-900">
+                              Recommended by
+                            </p>
+                            {restaurant.addedBy.website ? (
+                              <a
+                                href={restaurant.addedBy.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm lg:text-base text-[#4a7c37] hover:underline font-medium"
+                              >
+                                {restaurant.addedBy.fullName}
+                              </a>
+                            ) : (
+                              <p className="text-sm lg:text-base text-slate-600">
+                                {restaurant.addedBy.fullName}
+                              </p>
+                            )}
                           </div>
                         </div>
                       )}

@@ -12,6 +12,7 @@ export interface UserProfile {
   email: string | null;
   full_name: string | null;
   avatar_url: string | null;
+  website?: string | null;
   role: UserRole;
   preferences: Record<string, any>;
   created_at: string;

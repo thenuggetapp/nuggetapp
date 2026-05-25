@@ -27,6 +27,47 @@ export async function POST(request: Request) {
       );
     }
 
+    const { data: callingUserProfile } = await supabase
+      .from('user_profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    const requestedAddedByUserId =
+      restaurantData.added_by_user_id === undefined ||
+      restaurantData.added_by_user_id === ''
+        ? null
+        : restaurantData.added_by_user_id;
+
+    let addedByUserId: string | null = requestedAddedByUserId;
+
+    if (addedByUserId) {
+      if (callingUserProfile?.role === 'admin') {
+        const { data: heroProfile } = await supabase
+          .from('user_profiles')
+          .select('id, role')
+          .eq('id', addedByUserId)
+          .maybeSingle();
+
+        if (!heroProfile || heroProfile.role !== 'local_hero') {
+          return NextResponse.json(
+            { error: 'Invalid local hero selected' },
+            { status: 400 }
+          );
+        }
+      } else if (addedByUserId !== user.id) {
+        return NextResponse.json(
+          { error: 'You can only attribute restaurants to yourself' },
+          { status: 403 }
+        );
+      } else if (callingUserProfile?.role !== 'local_hero') {
+        return NextResponse.json(
+          { error: 'Only local heroes can be attributed as restaurant recommenders' },
+          { status: 403 }
+        );
+      }
+    }
+
     // Generate slug from restaurant name
     const generateSlug = (name: string): string => {
       return name
@@ -110,6 +151,7 @@ export async function POST(request: Request) {
         free_kids_meal: restaurantData.free_kids_meal || false,
         one_pound_kids_meal: restaurantData.one_pound_kids_meal || false,
         tourist_attraction_nearby: restaurantData.tourist_attraction_nearby || false,
+        added_by_user_id: addedByUserId,
       })
       .select()
       .single();

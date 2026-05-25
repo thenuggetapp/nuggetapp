@@ -55,9 +55,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loadingUserIdRef = useRef<string | null>(null); // Track which user ID is currently loading
   const router = useRouter();
 
-  const loadUserProfile = async (userId: string, sessionUser?: User) => {
+  const loadUserProfile = async (
+    userId: string,
+    sessionUser?: User,
+    options?: { force?: boolean }
+  ) => {
+    const force = options?.force ?? false;
+
     // Prevent duplicate loads - check if this exact user ID is already being loaded
-    if (loadingUserIdRef.current === userId) {
+    if (!force && loadingUserIdRef.current === userId) {
       console.log(
         "[AuthContext] ⏭️ Profile load already in progress for user:",
         userId,
@@ -67,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     // If profile already loaded for this user, skip
-    if (userProfile && userProfile.id === userId) {
+    if (!force && userProfile && userProfile.id === userId) {
       console.log(
         "[AuthContext] ✅ Profile already loaded for this user, skipping..."
       );
@@ -80,37 +86,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loadingUserIdRef.current = userId; // Mark this user ID as loading
       setIsLoadingProfile(true);
 
-      // Try to load from cache first for instant display (using safe storage)
-      try {
-        const cachedProfile = safeLocalStorage.getItem(`user_profile_${userId}`);
-        if (cachedProfile) {
-          const parsed = JSON.parse(cachedProfile);
-          const cacheAge = Date.now() - (parsed.cachedAt || 0);
-          // Use cache if less than 10 minutes old
-          if (cacheAge < 10 * 60 * 1000) {
-            console.log(
-              "[AuthContext] 💾 Using cached profile (age:",
-              Math.round(cacheAge / 1000),
-              "seconds)"
-            );
-            setUserProfile(parsed.profile);
-            setPermissions(getRolePermissions(parsed.profile.role, []));
-            // If cache is less than 5 minutes old, skip the database query entirely
-            if (cacheAge < 5 * 60 * 1000) {
-              console.log(
-                "[AuthContext] ⚡ Cache is fresh (<5min), skipping database query"
-              );
-              return { skipped: true };
-            }
-            console.log(
-              "[AuthContext] 🔄 Cache exists but refreshing in background"
-            );
-          } else {
-            console.log("[AuthContext] 🗑️ Cache expired, loading fresh data");
-          }
+      if (force) {
+        try {
+          safeLocalStorage.removeItem(`user_profile_${userId}`);
+        } catch (cacheError) {
+          console.warn("[AuthContext] ⚠️ Error clearing profile cache:", cacheError);
         }
-      } catch (cacheError) {
-        console.warn("[AuthContext] ⚠️ Error reading cache:", cacheError);
+      }
+
+      // Try to load from cache first for instant display (using safe storage)
+      if (!force) {
+        try {
+          const cachedProfile = safeLocalStorage.getItem(`user_profile_${userId}`);
+          if (cachedProfile) {
+            const parsed = JSON.parse(cachedProfile);
+            const cacheAge = Date.now() - (parsed.cachedAt || 0);
+            // Use cache if less than 10 minutes old
+            if (cacheAge < 10 * 60 * 1000) {
+              console.log(
+                "[AuthContext] 💾 Using cached profile (age:",
+                Math.round(cacheAge / 1000),
+                "seconds)"
+              );
+              setUserProfile(parsed.profile);
+              setPermissions(getRolePermissions(parsed.profile.role, []));
+              // If cache is less than 5 minutes old, skip the database query entirely
+              if (cacheAge < 5 * 60 * 1000) {
+                console.log(
+                  "[AuthContext] ⚡ Cache is fresh (<5min), skipping database query"
+                );
+                return { skipped: true };
+              }
+              console.log(
+                "[AuthContext] 🔄 Cache exists but refreshing in background"
+              );
+            } else {
+              console.log("[AuthContext] 🗑️ Cache expired, loading fresh data");
+            }
+          }
+        } catch (cacheError) {
+          console.warn("[AuthContext] ⚠️ Error reading cache:", cacheError);
+        }
       }
 
       // Query with timeout tracking and detailed debugging
@@ -176,7 +192,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const result = await supabase
             .from("user_profiles")
             .select(
-              "id, email, full_name, avatar_url, role, preferences, created_at, updated_at"
+              "id, email, full_name, avatar_url, website, role, preferences, created_at, updated_at"
             )
             .eq("id", userId)
             .maybeSingle();
@@ -1634,7 +1650,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshProfile = async () => {
     if (user) {
-      await loadUserProfile(user.id);
+      await loadUserProfile(user.id, undefined, { force: true });
     }
   };
 

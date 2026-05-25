@@ -22,9 +22,10 @@ interface QuickAddRestaurantModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
+  addedByUserId?: string | null;
 }
 
-export function QuickAddRestaurantModal({ open, onOpenChange, onSuccess }: QuickAddRestaurantModalProps) {
+export function QuickAddRestaurantModal({ open, onOpenChange, onSuccess, addedByUserId }: QuickAddRestaurantModalProps) {
   const router = useRouter();
   const { user, userProfile } = useAuth();
   const { toast } = useToast();
@@ -78,6 +79,7 @@ export function QuickAddRestaurantModal({ open, onOpenChange, onSuccess }: Quick
           longitude: -0.1278,
           price_level: 2,
           visible: false,
+          added_by_user_id: addedByUserId ?? null,
           nugget_verified: false,
           kids_menu: false,
           high_chairs: false,
