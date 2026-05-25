@@ -5,13 +5,13 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerClose,
-} from "@/components/ui/drawer";
+// import {
+//   Drawer,
+//   DrawerContent,
+//   DrawerHeader,
+//   DrawerTitle,
+//   DrawerClose,
+// } from "@/components/ui/drawer";
 import {
   Dialog,
   DialogContent,
@@ -23,8 +23,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { MapboxMap } from "@/components/MapboxMap";
-import { FilterPanel } from "@/components/FilterPanel";
-import { FilterState } from "@/lib/filters";
+import { FilterPanel } from "@/components/search/FilterPanel";
+import {
+  FilterState,
+  getFiltersFromURLParams,
+  getActiveFilterCount,
+  getFilterLabel,
+} from "@/lib/filters";
 import { QuickAddRestaurantModal } from "@/components/QuickAddRestaurantModal";
 import { MobileSearchModal } from "@/components/MobileSearchModal";
 import { SuggestRestaurantModal } from "@/components/SuggestRestaurantModal";
@@ -69,6 +74,8 @@ import {
   useToggleLike,
 } from "@/hooks/useUserData";
 import { isTouchDevice } from "@/lib/utils";
+import { SearchHeader } from "@/components/search/SearchHeader";
+import { RestaurantGrid } from "@/components/search/RestaurantGrid";
 
 interface SearchSuggestion {
   id: string;
@@ -84,48 +91,6 @@ interface PaginationInfo {
   limit: number;
   total: number;
   totalPages: number;
-}
-
-function getFiltersFromURLParams(searchParams: any): FilterState {
-  return {
-    cuisines: [],
-    kidsMenu: searchParams.get("kids_menu") === "true",
-    highChairs: searchParams.get("high_chairs") === "true",
-    // changingTable: searchParams.get("changing_table") === "true",
-    wheelchairAccess: searchParams.get("wheelchair_access") === "true",
-    babyChangeWomens: searchParams.get("baby_change_womens") === "true",
-    babyChangeUnisex: searchParams.get("baby_change_unisex") === "true",
-    babyChangeMens: searchParams.get("baby_change_mens") === "true",
-    kidsPottyToilet: searchParams.get("kids_potty_toilet") === "true",
-    pramStorage: searchParams.get("pram_storage") === "true",
-    outdoorSeating: searchParams.get("outdoor_seating") === "true",
-    playgroundNearby: searchParams.get("playground_nearby") === "true",
-    airConditioning: searchParams.get("air_conditioning") === "true",
-    dogFriendly: searchParams.get("dog_friendly") === "true",
-    vegetarianOptions: searchParams.get("vegetarian_options") === "true",
-    veganOptions: searchParams.get("vegan_options") === "true",
-    glutenFreeOptions: searchParams.get("gluten_free_options") === "true",
-    smallPlates: searchParams.get("small_plates") === "true",
-    healthyOptions: searchParams.get("healthy_options") === "true",
-    halal: searchParams.get("halal") === "true",
-    kosher: searchParams.get("kosher") === "true",
-    funQuirky: searchParams.get("fun_quirky") === "true",
-    relaxed: searchParams.get("relaxed") === "true",
-    buzzy: searchParams.get("buzzy") === "true",
-    posh: searchParams.get("posh") === "true",
-    goodForGroups: searchParams.get("good_for_groups") === "true",
-    kidsColoring: searchParams.get("kids_coloring") === "true",
-    gamesAvailable: searchParams.get("games_available") === "true",
-    kidsPlaySpace: searchParams.get("kids_play_space") === "true",
-    teenFavourite: searchParams.get("teen_favourite") === "true",
-    quickService: searchParams.get("quick_service") === "true",
-    friendlyStaff: searchParams.get("friendly_staff") === "true",
-    takeaway: searchParams.get("takeaway") === "true",
-    freeKidsMeal: searchParams.get("free_kids_meal") === "true",
-    onePoundKidsMeal: searchParams.get("one_pound_kids_meal") === "true",
-    touristAttractionNearby:
-      searchParams.get("tourist_attraction_nearby") === "true",
-  };
 }
 
 function SearchContent() {
@@ -190,45 +155,6 @@ function SearchContent() {
   const [currentY, setCurrentY] = useState(0);
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  // Map filter keys to display labels
-  const filterLabels: Record<string, string> = {
-    kidsMenu: "Kids Menu",
-    highChairs: "High Chairs",
-    changingTable: "Changing Table",
-    wheelchairAccess: "Wheelchair Access",
-    babyChangeWomens: "Baby Change (Women)",
-    babyChangeUnisex: "Baby Change (Unisex)",
-    babyChangeMens: "Baby Change (Men)",
-    kidsPottyToilet: "Kids Potty/Toilet",
-    pramStorage: "Pram Storage",
-    outdoorSeating: "Outdoor Seating",
-    playgroundNearby: "Playground Nearby",
-    airConditioning: "Air Conditioning",
-    dogFriendly: "Dog Friendly",
-    vegetarianOptions: "Vegetarian",
-    veganOptions: "Vegan",
-    glutenFreeOptions: "Gluten Free",
-    smallPlates: "Small Plates",
-    healthyOptions: "Healthy Options",
-    halal: "Halal",
-    kosher: "Kosher",
-    funQuirky: "Fun & Quirky",
-    relaxed: "Relaxed",
-    buzzy: "Buzzy",
-    posh: "Posh",
-    goodForGroups: "Good for Groups",
-    kidsColoring: "Kids Coloring",
-    gamesAvailable: "Games Available",
-    kidsPlaySpace: "Kids Play Space",
-    teenFavourite: "Teen Favourite",
-    quickService: "Quick Service",
-    friendlyStaff: "Friendly Staff",
-    takeaway: "Takeaway",
-    freeKidsMeal: "Free Kids Meal",
-    onePoundKidsMeal: "£1 Kids Meal",
-    touristAttractionNearby: "Tourist Attraction",
-  };
-
   // Get active filter labels for the heading
   const getActiveFilterLabel = () => {
     const activeFilterKeys = Object.entries(filters)
@@ -240,7 +166,7 @@ function SearchContent() {
     // Add amenity filter labels
     if (activeFilterKeys.length > 0) {
       labels.push(
-        ...activeFilterKeys.map((key) => filterLabels[key].toLowerCase()),
+        ...activeFilterKeys.map((key) => getFilterLabel(key).toLowerCase()),
       );
     }
 
@@ -281,11 +207,7 @@ function SearchContent() {
     return [searchQuery, ...filters.cuisines].filter(Boolean).join(" ");
   }, [searchQuery, filters.cuisines]);
 
-  const activeFilterCount = Object.entries(filters).filter(([key, value]) =>
-    key === "cuisines"
-      ? Array.isArray(value) && value.length > 0
-      : value === true,
-  ).length;
+  const activeFilterCount = getActiveFilterCount(filters);
 
   // Scroll to hovered card when hovering over a marker
   useEffect(() => {
@@ -775,9 +697,11 @@ function SearchContent() {
 
   return (
     <div className="flex h-screen bg-white">
+      {/* Desktop sidebar nav */}
       <div className="hidden lg:block">
         <Sidebar onAddClick={() => setShowAddModal(true)} />
       </div>
+
       <QuickAddRestaurantModal
         open={showAddModal}
         onOpenChange={setShowAddModal}
@@ -787,6 +711,7 @@ function SearchContent() {
         onOpenChange={setShowSuggestModal}
       />
 
+      {/* Mobile nav sheet */}
       <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
         <SheetContent side="left" className="w-80 p-0">
           <div className="flex flex-col h-full">
@@ -794,12 +719,11 @@ function SearchContent() {
               <Link href="/" onClick={() => setMobileMenuOpen(false)}>
                 <img
                   src="https://cdn.prod.website-files.com/65c4e3031d72984c18dbb698/65e621c26e369137d198cadf_Black%20logo%20-%20no%20background-p-500.png"
-                  alt="MapSearch"
+                  alt="Nugget"
                   className="h-16 w-auto"
                 />
               </Link>
             </div>
-
             <div className="flex-1 overflow-y-auto p-6">
               <div className="space-y-4">
                 {user ? (
@@ -814,16 +738,6 @@ function SearchContent() {
                         <span className="font-medium">Saved Places</span>
                       </Link>
                     )}
-
-                    {/* <Link
-                      href="/subscription"
-                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 transition-colors"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <Crown className="h-5 w-5" />
-                      <span className="font-medium">My Subscription</span>
-                    </Link> */}
-
                     {permissions.canAccessOwnerDashboard && (
                       <>
                         <div className="pt-4 pb-2">
@@ -851,7 +765,6 @@ function SearchContent() {
                         </Link>
                       </>
                     )}
-
                     {permissions.canAccessLocalHeroDashboard && (
                       <>
                         <div className="pt-4 pb-2">
@@ -869,7 +782,6 @@ function SearchContent() {
                         </Link>
                       </>
                     )}
-
                     {permissions.canApplyAsLocalHero &&
                       !permissions.canAccessOwnerDashboard && (
                         <Link
@@ -883,7 +795,6 @@ function SearchContent() {
                           </span>
                         </Link>
                       )}
-
                     {permissions.canAccessAdminPanel && (
                       <>
                         <div className="pt-4 pb-2">
@@ -921,16 +832,14 @@ function SearchContent() {
                     )}
                   </>
                 ) : (
-                  <>
-                    <Link
-                      href="/owner/register"
-                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 transition-colors"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <Store className="h-5 w-5" />
-                      <span className="font-medium">For Restaurants</span>
-                    </Link>
-                  </>
+                  <Link
+                    href="/owner/register"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Store className="h-5 w-5" />
+                    <span className="font-medium">For Restaurants</span>
+                  </Link>
                 )}
               </div>
             </div>
@@ -944,127 +853,67 @@ function SearchContent() {
         initialQuery={searchQuery}
       />
 
+      {/* Mobile filter - bottom sheet */}
       {isMobile && (
-        <Drawer
-          open={showFilters}
-          onOpenChange={setShowFilters}
-          dismissible={false}
-          shouldScaleBackground={false}
-          modal={false}
-        >
-          <DrawerContent
-            className="max-h-[85vh]"
-            onPointerDownOutside={(e) => e.preventDefault()}
-            onInteractOutside={(e) => e.preventDefault()}
+        <Sheet open={showFilters} onOpenChange={setShowFilters}>
+          <SheetContent
+            side="bottom"
+            className="h-[85vh] p-0 pt-6 rounded-t-3xl"
           >
-            <DrawerHeader className="text-left border-b border-slate-200 pb-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <DrawerTitle className="text-lg font-bold text-slate-900">
-                    Filters
-                  </DrawerTitle>
-                  {activeFilterCount > 0 && (
-                    <Badge
-                      variant="secondary"
-                      className="bg-[#8dbf65] text-white"
-                    >
-                      {activeFilterCount}
-                    </Badge>
-                  )}
-                </div>
-                <DrawerClose asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0"
-                    onClick={() => setShowFilters(false)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </DrawerClose>
-              </div>
-            </DrawerHeader>
-            <div
-              className="overflow-y-auto py-6"
-              onPointerDown={(e) => e.stopPropagation()}
-            >
-              <FilterPanel
-                onFilterChange={setFilters}
-                expanded={true}
-                searchQuery={filterCountsSearchString}
-                city={filteredCity || ""}
-                isSearching={loading}
-                currentFilters={filters}
-              />
-            </div>
-          </DrawerContent>
-        </Drawer>
+            <FilterPanel
+              expanded={true}
+              onFilterChange={setFilters}
+              onClose={() => setShowFilters(false)}
+              resultCount={pagination.total}
+              searchQuery={filterCountsSearchString}
+              city={filteredCity || ""}
+              isSearching={loading}
+              currentFilters={filters}
+            />
+          </SheetContent>
+        </Sheet>
       )}
 
-      <div className="flex flex-1 lg:ml-16 overflow-hidden flex-col lg:flex-row w-full h-full relative">
-        {/* Fixed mobile search bar at top */}
-        <div className="fixed top-0 left-0 right-0 z-20 lg:hidden bg-white border-b border-slate-200">
-          <div className="flex items-center gap-3 px-4 py-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setMobileMenuOpen(true)}
-              className="h-10 w-10 flex-shrink-0"
-              aria-label="Open navigation menu"
-            >
-              <Menu className="h-6 w-6" aria-hidden="true" />
-            </Button>
-            <div className="flex-1 flex items-center gap-2">
-              <div className="relative flex-1">
-                <Input
-                  type="text"
-                  placeholder={searchQuery || "london"}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch(e as any)}
-                  className="pl-10 pr-10 h-11 bg-slate-50 border-slate-200 rounded-full"
-                />
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                className={`h-11 w-11 p-0 rounded-xl flex-shrink-0 relative ${
-                  activeFilterCount > 0
-                    ? "border-[#8dbf65] bg-[#8dbf65]/10"
-                    : "border-slate-300"
-                }`}
-                onClick={() => setShowFilters(!showFilters)}
-                aria-label="Open filters"
-              >
-                <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
-                {activeFilterCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#8dbf65] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {activeFilterCount}
-                  </span>
-                )}
-              </Button>
-            </div>
+      {/* Main layout */}
+      <div className="flex flex-1 lg:ml-16 overflow-hidden w-full h-full">
+        {/* MOBILE FIXED HEADER - only on mobile, sits above everything */}
+        {isMobile && (
+          <div className="fixed top-0 left-0 right-0 z-30">
+            <SearchHeader
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              activeFilterCount={activeFilterCount}
+              showFilters={showFilters}
+              setShowFilters={setShowFilters}
+              suggestions={suggestions}
+              showSuggestions={showSuggestions}
+              setShowSuggestions={setShowSuggestions}
+              onSearch={handleSearch}
+              onSuggestionClick={handleSuggestionClick}
+              onMenuOpen={() => setMobileMenuOpen(true)}
+            />
           </div>
-        </div>
+        )}
 
-        {/* Map - Fixed background on mobile, standard layout on desktop */}
+        {/* MAP - fixed background on mobile, sits behind the drawer */}
         <div className="fixed inset-0 lg:relative lg:flex lg:flex-1 lg:order-2 z-0 lg:z-auto">
+          {/* Desktop filter sidebar */}
           <div
             ref={filterPanelRef}
-            className={`hidden lg:flex lg:flex-col bg-white border-r border-slate-200 transition-all duration-300 ease-in-out relative z-50 ${
-              showFilters ? "w-80" : "w-20"
+            className={`hidden lg:flex flex-col bg-white border-r border-slate-200 transition-all duration-300 ease-in-out ${
+              showFilters ? "w-80" : "w-16"
             }`}
           >
-            <div className="flex-1 overflow-y-auto">
-              <FilterPanel
-                onFilterChange={setFilters}
-                expanded={showFilters}
-                searchQuery={filterCountsSearchString}
-                city={filteredCity || ""}
-                isSearching={loading}
-                currentFilters={filters}
-              />
-            </div>
+            <FilterPanel
+              expanded={showFilters}
+              onFilterChange={setFilters}
+              onClose={() => setShowFilters(false)}
+              resultCount={pagination.total}
+              searchQuery={filterCountsSearchString}
+              city={filteredCity || ""}
+              isSearching={loading}
+              currentFilters={filters}
+            />
           </div>
 
           <div className="w-full h-full relative z-0 lg:flex-1">
@@ -1080,7 +929,6 @@ function SearchContent() {
               zoom={mapCenter ? 13 : 11}
             />
 
-            {/* Layout Toggle Button */}
             <div className="absolute top-4 left-4 z-10 hidden lg:block">
               <Button
                 variant="outline"
@@ -1092,15 +940,9 @@ function SearchContent() {
                 }
               >
                 {isWideLayout ? (
-                  <Columns2
-                    className="h-4 w-4 text-slate-600"
-                    aria-hidden="true"
-                  />
+                  <Columns2 className="h-4 w-4 text-slate-600" />
                 ) : (
-                  <Columns4
-                    className="h-4 w-4 text-slate-600"
-                    aria-hidden="true"
-                  />
+                  <Columns4 className="h-4 w-4 text-slate-600" />
                 )}
               </Button>
             </div>
@@ -1110,13 +952,9 @@ function SearchContent() {
                 className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-white px-3 sm:px-4 py-2 rounded-full shadow-lg border border-slate-200 max-w-[90vw] sm:max-w-none"
                 role="status"
                 aria-live="polite"
-                aria-atomic="true"
               >
                 <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
-                  <UtensilsCrossed
-                    className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600 flex-shrink-0"
-                    aria-hidden="true"
-                  />
+                  <UtensilsCrossed className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600 flex-shrink-0" />
                   <span className="text-slate-600 whitespace-nowrap">
                     Showing{" "}
                     <span className="font-medium text-slate-900">
@@ -1134,134 +972,52 @@ function SearchContent() {
           </div>
         </div>
 
-        {/* Content drawer - Slides over map on mobile */}
+        {/* LEFT PANEL - desktop: static column. Mobile: drawer that slides up over map */}
         <div
           ref={drawerRef}
-          className={`absolute lg:relative ${getDrawerTopPosition()} lg:top-0 left-0 right-0 bottom-0 lg:h-full bg-white rounded-t-3xl lg:rounded-none shadow-2xl lg:shadow-none z-10 lg:z-auto flex flex-col lg:border-r border-slate-200 ${
-            isDragging ? "" : "transition-all duration-300"
-          } ${
-            isWideLayout ? "lg:w-[calc(100%-300px)]" : "lg:w-[640px]"
-          } lg:order-1`}
+          className={`
+      flex flex-col bg-white
+      ${
+        isMobile
+          ? `fixed left-0 right-0 bottom-0 ${getDrawerTopPosition()} rounded-t-3xl shadow-2xl z-20`
+          : "relative w-[640px] h-full order-1 border-r border-slate-200"
+      }
+      ${isDragging ? "" : "transition-all duration-300"}
+    `}
         >
-          <div className="hidden lg:flex items-center gap-3 px-6 py-4 bg-white border-b border-slate-200">
-            <form onSubmit={handleSearch} className="flex-1 max-w-md">
-              <div ref={searchRef} className="relative">
-                <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 z-10"
-                  aria-hidden="true"
-                />
-                <Input
-                  ref={searchInputRef}
-                  type="text"
-                  placeholder={placeholders[placeholderIndex]}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => {
-                    if (suggestions.length > 0) {
-                      setShowSuggestions(true);
-                    }
-                  }}
-                  aria-label="Search for restaurants, cuisines, or locations"
-                  className={`pl-10 h-11 bg-slate-50 border-slate-200 rounded-lg transition-opacity duration-300 ${
-                    isAnimating ? "opacity-60" : "opacity-100"
-                  }`}
-                />
-                {showSuggestions && suggestions.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden z-50">
-                    {suggestions.map(
-                      (suggestion: SearchSuggestion, index: number) => (
-                        <button
-                          key={`${suggestion.type}-${suggestion.id}-${index}`}
-                          type="button"
-                          onClick={() => handleSuggestionClick(suggestion)}
-                          className="w-full px-6 py-4 text-left hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-b-0"
-                        >
-                          <div className="flex items-start gap-3">
-                            {suggestion.type === "city" ? (
-                              <Globe
-                                className="h-5 w-5 text-[#8dbf65] mt-0.5 flex-shrink-0"
-                                aria-hidden="true"
-                              />
-                            ) : (
-                              <MapPin
-                                className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0"
-                                aria-hidden="true"
-                              />
-                            )}
-                            <div className="flex-1 min-w-0">
-                              {suggestion.type === "city" ? (
-                                <>
-                                  <div className="font-semibold text-slate-900 truncate">
-                                    {suggestion.name}
-                                  </div>
-                                  <div className="text-sm text-slate-600">
-                                    Browse all family-friendly restaurants in
-                                    this city
-                                  </div>
-                                </>
-                              ) : (
-                                <>
-                                  <div className="font-semibold text-slate-900 truncate">
-                                    {suggestion.name}
-                                  </div>
-                                  <div className="text-sm text-slate-600 truncate">
-                                    {suggestion.cuisine}
-                                  </div>
-                                  <div className="text-xs text-slate-500 truncate">
-                                    {suggestion.address}
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                          </div>
-                        </button>
-                      ),
-                    )}
-                  </div>
-                )}
-              </div>
-            </form>
-            <Button
-              type="submit"
-              size="sm"
-              className="h-11 px-4 bg-[#8dbf65] hover:bg-[#7aaa56] rounded-lg"
-              onClick={handleSearch}
-              aria-label="Search"
-            >
-              <Search className="h-5 w-5" aria-hidden="true" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              data-filter-toggle
-              className={`h-11 px-4 rounded-lg relative ${
-                activeFilterCount > 0
-                  ? "border-[#8dbf65] bg-[#8dbf65]/10"
-                  : "border-slate-300"
-              }`}
-              onClick={() => setShowFilters(!showFilters)}
-              aria-label="Toggle filters"
-            >
-              <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
-              {activeFilterCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#8dbf65] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {activeFilterCount}
-                </span>
-              )}
-            </Button>
-          </div>
+          {/* Desktop search header - inside left panel */}
+          {!isMobile && (
+            <div className="flex-shrink-0">
+              <SearchHeader
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                activeFilterCount={activeFilterCount}
+                showFilters={showFilters}
+                setShowFilters={setShowFilters}
+                suggestions={suggestions}
+                showSuggestions={showSuggestions}
+                setShowSuggestions={setShowSuggestions}
+                onSearch={handleSearch}
+                onSuggestionClick={handleSuggestionClick}
+                onMenuOpen={() => setMobileMenuOpen(true)}
+              />
+            </div>
+          )}
 
-          {/* Drag handle for mobile */}
-          <div
-            className="lg:hidden w-full flex justify-center py-3 bg-white rounded-t-3xl cursor-grab active:cursor-grabbing"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            <div className="w-12 h-1.5 bg-slate-300 rounded-full"></div>
-          </div>
+          {/* Mobile drag handle */}
+          {isMobile && (
+            <div
+              className="flex-shrink-0 w-full flex justify-center py-3 bg-white rounded-t-3xl cursor-grab active:cursor-grabbing"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              <div className="w-12 h-1.5 bg-slate-300 rounded-full" />
+            </div>
+          )}
 
-          <div className="flex-1 overflow-y-auto lg:overflow-y-auto">
+          {/* Scrollable content */}
+          <div className="flex-1 overflow-y-auto">
             <div className="px-6 py-4 border-b border-slate-200">
               <div className="hidden lg:flex items-center gap-3 mb-4">
                 <Button
@@ -1293,12 +1049,8 @@ function SearchContent() {
                 <>
                   <h2 className="text-xl font-bold text-slate-900">
                     {filteredCity
-                      ? `${pagination.total} ${getActiveFilterLabel()} restaurant${
-                          pagination.total !== 1 ? "s" : ""
-                        } in ${filteredCity}`
-                      : `${pagination.total} ${getActiveFilterLabel()} restaurant${
-                          pagination.total !== 1 ? "s" : ""
-                        }`}
+                      ? `${pagination.total} ${getActiveFilterLabel()} restaurant${pagination.total !== 1 ? "s" : ""} in ${filteredCity}`
+                      : `${pagination.total} ${getActiveFilterLabel()} restaurant${pagination.total !== 1 ? "s" : ""}`}
                   </h2>
                   {pagination.total > 0 && pagination.totalPages > 1 && (
                     <p className="text-sm text-slate-600 mt-1">
@@ -1320,275 +1072,28 @@ function SearchContent() {
             </div>
 
             <div className="px-6 py-4">
-              {activeTab === "restaurants" && (
-                <>
-                  {error && (
-                    <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                      <p className="text-sm text-red-800">
-                        <strong>Error:</strong> {error}
-                      </p>
-                    </div>
-                  )}
-                  <div
-                    className={`grid grid-cols-1 gap-4 transition-all duration-300 ${
-                      isWideLayout ? "lg:grid-cols-4" : "lg:grid-cols-2"
-                    }`}
-                  >
-                    {loading ? (
-                      <>
-                        {[1, 2, 3, 4].map((i) => (
-                          <Card key={i} className="border-slate-200">
-                            <Skeleton className="h-32 w-full rounded-t-lg" />
-                            <CardContent className="pt-3">
-                              <Skeleton className="h-4 w-3/4 mb-2" />
-                              <Skeleton className="h-3 w-1/2" />
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </>
-                    ) : restaurants.length === 0 ? (
-                      <div className="flex flex-col items-center justify-center py-12 text-center">
-                        <Search className="h-12 w-12 text-slate-300 mb-4" />
-                        <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                          No restaurants found
-                        </h3>
-                        <p className="text-sm text-slate-500 max-w-sm mb-4">
-                          {searchQuery
-                            ? `No results for "${searchQuery}". Try a different search term.`
-                            : "No restaurants are currently available."}
-                        </p>
-                        {searchQuery && (
-                          <Button
-                            onClick={() => {
-                              setCityRequestName(searchQuery);
-                              setShowCityRequestDialog(true);
-                            }}
-                            className="mt-2 bg-[#8dbf65] hover:bg-[#7da857] text-white"
-                          >
-                            <MapPin className="h-4 w-4 mr-2" />
-                            Request this city
-                          </Button>
-                        )}
-                      </div>
-                    ) : (
-                      restaurants.map((restaurant) => (
-                        <Link
-                          key={restaurant.id}
-                          href={`/restaurant/${restaurant.id}`}
-                          prefetch={false}
-                          aria-label={`View details for ${restaurant.name}, ${restaurant.cuisine} restaurant in ${restaurant.address}`}
-                        >
-                          <Card
-                            ref={(el) => {
-                              if (el) {
-                                cardRefs.current.set(restaurant.id, el);
-                              } else {
-                                cardRefs.current.delete(restaurant.id);
-                              }
-                            }}
-                            className={`cursor-pointer transition-all overflow-hidden ${
-                              hoveredRestaurantId === restaurant.id
-                                ? "shadow-xl ring-4 ring-[#8dbf65] ring-opacity-50 scale-[1.02]"
-                                : "hover:shadow-lg border-slate-200"
-                            }`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedRestaurant(restaurant);
-                            }}
-                            onMouseEnter={() =>
-                              setHoveredRestaurantId(restaurant.id)
-                            }
-                            onMouseLeave={() => setHoveredRestaurantId(null)}
-                          >
-                            <div className="relative w-full overflow-hidden aspect-video lg:aspect-[4/3]">
-                              <img
-                                src={restaurant.imageUrl}
-                                alt={restaurant.name}
-                                className="w-full h-full object-cover"
-                              />
-                              <div className="absolute bottom-2 left-2 flex gap-2">
-                                <button
-                                  className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-slate-50"
-                                  onClick={(e) =>
-                                    handleToggleLike(restaurant.id, e)
-                                  }
-                                  aria-label={
-                                    likedIds.has(restaurant.id)
-                                      ? `Unlike ${restaurant.name}`
-                                      : `Like ${restaurant.name}`
-                                  }
-                                >
-                                  <Heart
-                                    className={`h-4 w-4 ${
-                                      likedIds.has(restaurant.id)
-                                        ? "text-red-500 fill-red-500"
-                                        : "text-slate-600"
-                                    }`}
-                                    aria-hidden="true"
-                                  />
-                                </button>
-                                <button
-                                  className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-slate-50"
-                                  onClick={(e) =>
-                                    handleToggleBookmark(restaurant.id, e)
-                                  }
-                                  aria-label={
-                                    bookmarkedIds.has(restaurant.id)
-                                      ? `Remove ${restaurant.name} from bookmarks`
-                                      : `Bookmark ${restaurant.name}`
-                                  }
-                                >
-                                  <Bookmark
-                                    className={`h-4 w-4 ${
-                                      bookmarkedIds.has(restaurant.id)
-                                        ? "text-blue-600 fill-blue-600"
-                                        : "text-slate-600"
-                                    }`}
-                                    aria-hidden="true"
-                                  />
-                                </button>
-                              </div>
-                            </div>
-                            <CardContent className="p-3">
-                              <h3 className="font-semibold text-sm text-slate-900 mb-1 line-clamp-1">
-                                {restaurant.name}
-                              </h3>
-                              <div className="flex items-center gap-2 mb-1">
-                                <div className="flex items-center gap-1">
-                                  <Heart className="h-3 w-3 fill-red-500 text-red-500" />
-                                  <span className="font-medium text-xs">
-                                    {restaurant.likesCount || 0}
-                                  </span>
-                                  <span className="text-xs text-slate-500">
-                                    likes
-                                  </span>
-                                </div>
-                                <span className="text-xs text-slate-600">
-                                  •
-                                </span>
-                                <p className="text-xs text-slate-600">
-                                  {restaurant.cuisine}
-                                </p>
-                              </div>
-                              <p className="text-xs text-slate-600 line-clamp-1">
-                                {restaurant.address}
-                              </p>
-                            </CardContent>
-                          </Card>
-                        </Link>
-                      ))
-                    )}
-                  </div>
-
-                  {/* Pagination Controls */}
-                  {!loading &&
-                    restaurants.length > 0 &&
-                    pagination.totalPages > 1 && (
-                      <div className="flex items-center justify-center gap-2 mt-8 pb-4">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handlePageChange(currentPage - 1)}
-                          disabled={currentPage === 1}
-                          className="h-9 w-9 p-0"
-                        >
-                          <ChevronLeft className="h-4 w-4" />
-                        </Button>
-
-                        {/* Page numbers */}
-                        <div className="flex items-center gap-1">
-                          {/* First page */}
-                          {currentPage > 3 && (
-                            <>
-                              <Button
-                                variant={
-                                  currentPage === 1 ? "default" : "outline"
-                                }
-                                size="sm"
-                                onClick={() => handlePageChange(1)}
-                                className="h-9 w-9 p-0"
-                              >
-                                1
-                              </Button>
-                              {currentPage > 4 && (
-                                <span className="px-2 text-slate-400">...</span>
-                              )}
-                            </>
-                          )}
-
-                          {/* Pages around current */}
-                          {Array.from(
-                            { length: pagination.totalPages },
-                            (_, i) => i + 1,
-                          )
-                            .filter((page) => {
-                              return (
-                                page === currentPage ||
-                                page === currentPage - 1 ||
-                                page === currentPage + 1 ||
-                                page === currentPage - 2 ||
-                                page === currentPage + 2
-                              );
-                            })
-                            .filter(
-                              (page) =>
-                                page > 0 && page <= pagination.totalPages,
-                            )
-                            .map((page) => (
-                              <Button
-                                key={page}
-                                variant={
-                                  currentPage === page ? "default" : "outline"
-                                }
-                                size="sm"
-                                onClick={() => handlePageChange(page)}
-                                className={`h-9 w-9 p-0 ${
-                                  currentPage === page
-                                    ? "bg-[#8dbf65] hover:bg-[#7aaa56]"
-                                    : ""
-                                }`}
-                              >
-                                {page}
-                              </Button>
-                            ))}
-
-                          {/* Last page */}
-                          {currentPage < pagination.totalPages - 2 && (
-                            <>
-                              {currentPage < pagination.totalPages - 3 && (
-                                <span className="px-2 text-slate-400">...</span>
-                              )}
-                              <Button
-                                variant={
-                                  currentPage === pagination.totalPages
-                                    ? "default"
-                                    : "outline"
-                                }
-                                size="sm"
-                                onClick={() =>
-                                  handlePageChange(pagination.totalPages)
-                                }
-                                className="h-9 w-9 p-0"
-                              >
-                                {pagination.totalPages}
-                              </Button>
-                            </>
-                          )}
-                        </div>
-
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handlePageChange(currentPage + 1)}
-                          disabled={currentPage === pagination.totalPages}
-                          className="h-9 w-9 p-0"
-                        >
-                          <ChevronRight className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    )}
-                </>
-              )}
+              <RestaurantGrid
+                restaurants={restaurants}
+                loading={loading}
+                error={error}
+                pagination={pagination}
+                currentPage={currentPage}
+                isWideLayout={isWideLayout}
+                searchQuery={searchQuery}
+                hoveredRestaurantId={hoveredRestaurantId}
+                likedIds={likedIds}
+                bookmarkedIds={bookmarkedIds}
+                onPageChange={handlePageChange}
+                onRestaurantClick={setSelectedRestaurant}
+                onMouseEnter={setHoveredRestaurantId}
+                onMouseLeave={() => setHoveredRestaurantId(null)}
+                onLike={handleToggleLike}
+                onBookmark={handleToggleBookmark}
+                onRequestCity={(query) => {
+                  setCityRequestName(query);
+                  setShowCityRequestDialog(true);
+                }}
+              />
 
               {activeTab === "discounts" && (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -1612,8 +1117,7 @@ function SearchContent() {
                   </h3>
                   <p className="text-slate-600 max-w-md">
                     We're working on bringing you exclusive restaurant discounts
-                    and special offers for families. Be the first to know when
-                    we launch!
+                    and special offers for families.
                   </p>
                 </div>
               )}
@@ -1640,8 +1144,6 @@ function SearchContent() {
                   </h3>
                   <p className="text-slate-600 max-w-md">
                     Discover family-friendly events at restaurants near you.
-                    From kids' cooking classes to themed dining experiences,
-                    we'll help you plan memorable outings!
                   </p>
                 </div>
               )}
@@ -1649,6 +1151,15 @@ function SearchContent() {
           </div>
         </div>
       </div>
+
+      {/* Mobile FAB */}
+      <button
+        onClick={() => setShowSuggestModal(true)}
+        className="lg:hidden fixed bottom-20 right-6 z-50 w-14 h-14 bg-[#9DC54B] text-white rounded-full shadow-xl flex items-center justify-center hover:bg-[#8AB43A] active:scale-95 transition-all duration-300"
+        aria-label="Suggest a restaurant"
+      >
+        <Plus className="h-7 w-7" strokeWidth={3} />
+      </button>
 
       <Dialog
         open={showCityRequestDialog}

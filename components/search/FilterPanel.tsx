@@ -23,20 +23,24 @@ import {
 
 interface FilterPanelProps {
   onFilterChange?: (filters: FilterState) => void;
+  onClose?: () => void;
   expanded?: boolean;
   searchQuery?: string;
   city?: string;
   isSearching?: boolean;
   currentFilters?: FilterState;
+  resultCount?: number;
 }
 
 export function FilterPanel({
   onFilterChange,
+  onClose,
   expanded = false,
   searchQuery = "",
   city = "",
   isSearching = false,
   currentFilters,
+  resultCount,
 }: FilterPanelProps) {
   const [activeFilters, setActiveFilters] = useState<FilterState>(
     currentFilters || emptyFilterState,
@@ -66,12 +70,8 @@ export function FilterPanel({
     const fetchFilterCounts = async () => {
       try {
         const params = new URLSearchParams();
-        if (city) {
-          params.append("city", city);
-        }
-        if (searchQuery) {
-          params.append("q", searchQuery);
-        }
+        if (city) params.append("city", city);
+        if (searchQuery) params.append("q", searchQuery);
 
         const data = await fetch(`/api/filter-counts?${params}`).then((r) =>
           r.json(),
@@ -148,89 +148,124 @@ export function FilterPanel({
 
   if (expanded) {
     return (
-      <ScrollArea className="h-full w-full">
-        <div className="space-y-6 px-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <h4 className="text-sm font-semibold text-slate-900">
-                Active Filters
-              </h4>
+      <div className="flex flex-col h-full">
+        <ScrollArea className="flex-1">
+          <div className="space-y-6 px-6 py-6">
+            {/* Header row */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <h4 className="text-sm font-semibold text-slate-900">
+                  Active Filters
+                </h4>
+                {activeFilterCount > 0 && (
+                  <Badge
+                    variant="secondary"
+                    className="bg-[#8dbf65] text-white"
+                  >
+                    {activeFilterCount}
+                  </Badge>
+                )}
+              </div>
               {activeFilterCount > 0 && (
-                <Badge variant="secondary" className="bg-[#8dbf65] text-white">
-                  {activeFilterCount}
-                </Badge>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => applyFilters(emptyFilterState)}
+                  {...stopProp}
+                  className="text-xs text-slate-600 hover:text-slate-900"
+                >
+                  Clear All
+                </Button>
               )}
             </div>
-            {activeFilterCount > 0 && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => applyFilters(emptyFilterState)}
-                {...stopProp}
-                className="text-xs text-slate-600 hover:text-slate-900"
-              >
-                Clear All
-              </Button>
-            )}
-          </div>
 
-          {filterCategories.map((category) => (
-            <div key={category.title}>
+            {/* Filter categories */}
+            {filterCategories.map((category) => (
+              <div key={category.title}>
+                <h4 className="text-sm font-semibold text-slate-900 mb-3">
+                  {category.title}
+                </h4>
+                <div className="grid grid-cols-2 gap-3">
+                  {category.filters.map(({ key, label, image }) => (
+                    <Button
+                      key={key}
+                      type="button"
+                      variant="outline"
+                      onClick={(e) => toggleFilter(key as FilterKey, e)}
+                      {...stopProp}
+                      className={`h-20 flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer ${
+                        activeFilters[key as FilterKey]
+                          ? activeClass
+                          : inactiveClass
+                      }`}
+                    >
+                      <img
+                        src={image}
+                        alt={label}
+                        className="h-7 w-7 object-contain"
+                      />
+                      <span className="text-xs font-medium text-center leading-tight whitespace-pre-line">
+                        {label}
+                      </span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            <Separator />
+
+            {/* Cuisine types */}
+            <div>
               <h4 className="text-sm font-semibold text-slate-900 mb-3">
-                {category.title}
+                Cuisine Type
               </h4>
-              <div className="grid grid-cols-2 gap-3">
-                {category.filters.map(({ key, label, image }) => (
+              <div className="flex flex-wrap gap-2">
+                {cuisineTypes.map((cuisine) => (
                   <Button
-                    key={key}
+                    key={cuisine}
                     type="button"
                     variant="outline"
-                    onClick={(e) => toggleFilter(key as FilterKey, e)}
+                    size="sm"
+                    onClick={(e) => toggleCuisine(cuisine, e)}
                     {...stopProp}
-                    className={`h-20 flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer ${activeFilters[key as FilterKey] ? activeClass : inactiveClass}`}
+                    className={`transition-colors cursor-pointer ${
+                      activeFilters.cuisines.includes(cuisine)
+                        ? activeClass
+                        : inactiveClass
+                    }`}
                   >
-                    <img
-                      src={image}
-                      alt={label}
-                      className="h-7 w-7 object-contain"
-                    />
-                    <span className="text-xs font-medium text-center leading-tight whitespace-pre-line">
-                      {label}
-                    </span>
+                    {cuisine}
                   </Button>
                 ))}
               </div>
             </div>
-          ))}
 
-          <Separator />
-
-          <div>
-            <h4 className="text-sm font-semibold text-slate-900 mb-3">
-              Cuisine Type
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {cuisineTypes.map((cuisine) => (
-                <Button
-                  key={cuisine}
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={(e) => toggleCuisine(cuisine, e)}
-                  {...stopProp}
-                  className={`transition-colors cursor-pointer ${activeFilters.cuisines.includes(cuisine) ? activeClass : inactiveClass}`}
-                >
-                  {cuisine}
-                </Button>
-              ))}
-            </div>
+            {/* Bottom padding so content doesn't hide behind sticky button */}
+            <div className="h-4" />
           </div>
-        </div>
-      </ScrollArea>
+        </ScrollArea>
+
+        {/* Sticky show results button */}
+        {onClose && (
+          <div className="flex-shrink-0 sticky bottom-0 bg-white border-t border-slate-200 p-4">
+            <Button
+              className="w-full bg-[#8dbf65] hover:bg-[#7aaa56] text-white font-semibold h-12 text-base"
+              onClick={onClose}
+              {...stopProp}
+            >
+              {resultCount !== undefined
+                ? `Show ${resultCount} restaurant${resultCount !== 1 ? "s" : ""}`
+                : "Show results"}
+            </Button>
+          </div>
+        )}
+      </div>
     );
   }
 
+  // Collapsed icon sidebar
   const topFilters = TOP_FILTERS.map(
     (key) => FILTERS.find((f) => f.key === key)!,
   ).filter((f) => shouldShow(f.key));
@@ -247,7 +282,11 @@ export function FilterPanel({
                   variant="ghost"
                   size="icon"
                   onClick={(e) => toggleFilter(key as FilterKey, e)}
-                  className={`w-[46px] h-[46px] rounded-lg transition-colors relative cursor-pointer ${activeFilters[key as FilterKey] ? "bg-[#8dbf65] text-white hover:bg-[#7aaa56]" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
+                  className={`w-[46px] h-[46px] rounded-lg transition-colors relative cursor-pointer ${
+                    activeFilters[key as FilterKey]
+                      ? "bg-[#8dbf65] text-white hover:bg-[#7aaa56]"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`}
                 >
                   <img
                     src={image}

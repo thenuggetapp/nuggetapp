@@ -328,3 +328,58 @@ export const emptyFilterState: FilterState = {
   vegetarianOptions: false,
   wheelchairAccess: false,
 };
+
+export function getFiltersFromURLParams(searchParams: {
+  get: (key: string) => string | null;
+}): FilterState {
+  return {
+    cuisines: [],
+    kidsMenu: searchParams.get("kids_menu") === "true",
+    highChairs: searchParams.get("high_chairs") === "true",
+    wheelchairAccess: searchParams.get("wheelchair_access") === "true",
+    babyChangeWomens: searchParams.get("baby_change_womens") === "true",
+    babyChangeUnisex: searchParams.get("baby_change_unisex") === "true",
+    babyChangeMens: searchParams.get("baby_change_mens") === "true",
+    kidsPottyToilet: searchParams.get("kids_potty_toilet") === "true",
+    pramStorage: searchParams.get("pram_storage") === "true",
+    outdoorSeating: searchParams.get("outdoor_seating") === "true",
+    playgroundNearby: searchParams.get("playground_nearby") === "true",
+    airConditioning: searchParams.get("air_conditioning") === "true",
+    dogFriendly: searchParams.get("dog_friendly") === "true",
+    vegetarianOptions: searchParams.get("vegetarian_options") === "true",
+    veganOptions: searchParams.get("vegan_options") === "true",
+    glutenFreeOptions: searchParams.get("gluten_free_options") === "true",
+    smallPlates: searchParams.get("small_plates") === "true",
+    healthyOptions: searchParams.get("healthy_options") === "true",
+    halal: searchParams.get("halal") === "true",
+    kosher: searchParams.get("kosher") === "true",
+    funQuirky: searchParams.get("fun_quirky") === "true",
+    relaxed: searchParams.get("relaxed") === "true",
+    buzzy: searchParams.get("buzzy") === "true",
+    posh: searchParams.get("posh") === "true",
+    goodForGroups: searchParams.get("good_for_groups") === "true",
+    kidsColoring: searchParams.get("kids_coloring") === "true",
+    gamesAvailable: searchParams.get("games_available") === "true",
+    kidsPlaySpace: searchParams.get("kids_play_space") === "true",
+    teenFavourite: searchParams.get("teen_favourite") === "true",
+    quickService: searchParams.get("quick_service") === "true",
+    friendlyStaff: searchParams.get("friendly_staff") === "true",
+    takeaway: searchParams.get("takeaway") === "true",
+    freeKidsMeal: searchParams.get("free_kids_meal") === "true",
+    onePoundKidsMeal: searchParams.get("one_pound_kids_meal") === "true",
+    touristAttractionNearby:
+      searchParams.get("tourist_attraction_nearby") === "true",
+  };
+}
+
+export function getActiveFilterCount(filters: FilterState): number {
+  return Object.entries(filters).filter(([key, value]) =>
+    key === "cuisines"
+      ? Array.isArray(value) && value.length > 0
+      : value === true,
+  ).length;
+}
+
+export function getFilterLabel(key: string): string {
+  return FILTERS.find((f) => f.key === key)?.label ?? key;
+}
