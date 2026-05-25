@@ -59,6 +59,7 @@ interface Restaurant {
   tourist_attraction_nearby: boolean;
   visible: boolean;
   opening_times?: any;
+  added_by_user_id?: string | null;
 }
 
 // Detect if running in iframe

@@ -180,6 +180,7 @@ export default function AddRestaurantPage() {
         website_url: formData.website_url.trim() || null,
         google_maps_url: formData.google_maps_url.trim() || null,
         booking_url: formData.booking_url.trim() || null,
+        added_by_user_id: user.id,
       };
 
       console.log('Attempting to insert restaurant:', dataToSave);

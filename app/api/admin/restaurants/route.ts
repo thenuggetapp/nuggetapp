@@ -77,6 +77,21 @@ export async function POST(request: Request) {
     // Get restaurant data from request body
     const restaurantData = await request.json();
 
+    if (restaurantData.added_by_user_id) {
+      const { data: heroProfile } = await supabase
+        .from('user_profiles')
+        .select('id, role')
+        .eq('id', restaurantData.added_by_user_id)
+        .maybeSingle();
+
+      if (!heroProfile || heroProfile.role !== 'local_hero') {
+        return NextResponse.json(
+          { error: 'Invalid local hero selected' },
+          { status: 400 }
+        );
+      }
+    }
+
     // Insert new restaurant
     const { data, error } = await supabase
       .from('restaurants')
@@ -131,6 +146,21 @@ export async function PATCH(request: Request) {
         { error: 'Restaurant ID is required' },
         { status: 400 }
       );
+    }
+
+    if (updateData.added_by_user_id) {
+      const { data: heroProfile } = await supabase
+        .from('user_profiles')
+        .select('id, role')
+        .eq('id', updateData.added_by_user_id)
+        .maybeSingle();
+
+      if (!heroProfile || heroProfile.role !== 'local_hero') {
+        return NextResponse.json(
+          { error: 'Invalid local hero selected' },
+          { status: 400 }
+        );
+      }
     }
 
     // Update restaurant

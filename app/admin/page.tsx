@@ -80,6 +80,10 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { GooglePlacesAutocomplete } from "@/components/GooglePlacesAutocomplete";
+import {
+  LocalHeroAutocomplete,
+  LocalHeroOption,
+} from "@/components/LocalHeroAutocomplete";
 import { mapGooglePlaceToRestaurant } from "@/lib/google-places-mapper";
 import { getRestaurantDisplayImageUrl } from "@/lib/restaurant-image";
 import { AdminSidebar } from "@/components/AdminSidebar";
@@ -157,6 +161,7 @@ interface Restaurant {
   tourist_attraction_nearby: boolean;
   visible: boolean;
   opening_times?: OpeningTimes;
+  added_by_user_id?: string | null;
 }
 
 const emptyRestaurant: Restaurant = {
@@ -241,6 +246,10 @@ export default function AdminDashboard() {
     string | null
   >(null);
   const [formData, setFormData] = useState<Restaurant>(emptyRestaurant);
+  const [selectedLocalHero, setSelectedLocalHero] =
+    useState<LocalHeroOption | null>(null);
+  const [localHeroTouched, setLocalHeroTouched] = useState(false);
+  const [isLocalHeroLoading, setIsLocalHeroLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLocalHeroDialogOpen, setIsLocalHeroDialogOpen] = useState(false);
   const [localHeroFormData, setLocalHeroFormData] = useState({
@@ -347,6 +356,9 @@ export default function AdminDashboard() {
   const handleCreate = () => {
     setEditingRestaurant(null);
     setFormData(emptyRestaurant);
+    setSelectedLocalHero(null);
+    setLocalHeroTouched(false);
+    setIsLocalHeroLoading(false);
     setIsDialogOpen(true);
   };
 
@@ -359,9 +371,29 @@ export default function AdminDashboard() {
     }));
   };
 
-  const handleEdit = (restaurant: Restaurant) => {
+  const handleEdit = async (restaurant: Restaurant) => {
     setEditingRestaurant(restaurant);
     setFormData(restaurant);
+    setSelectedLocalHero(null);
+    setLocalHeroTouched(false);
+    setIsLocalHeroLoading(!!restaurant.added_by_user_id);
+
+    if (restaurant.added_by_user_id) {
+      try {
+        const { data: heroProfile } = await supabase
+          .from("user_profiles")
+          .select("id, email, full_name")
+          .eq("id", restaurant.added_by_user_id)
+          .maybeSingle();
+
+        if (heroProfile) {
+          setSelectedLocalHero(heroProfile);
+        }
+      } finally {
+        setIsLocalHeroLoading(false);
+      }
+    }
+
     setIsDialogOpen(true);
   };
 
@@ -421,7 +453,22 @@ export default function AdminDashboard() {
       return;
     }
 
+    if (isLocalHeroLoading) {
+      toast({
+        title: "Please wait",
+        description: "Local hero details are still loading",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSaving(true);
+
+    const addedByUserId = editingRestaurant?.id
+      ? localHeroTouched
+        ? selectedLocalHero?.id ?? null
+        : editingRestaurant.added_by_user_id ?? selectedLocalHero?.id ?? null
+      : selectedLocalHero?.id ?? null;
 
     const dataToSave = {
       ...formData,
@@ -434,6 +481,7 @@ export default function AdminDashboard() {
       website_url: formData.website_url?.trim() || undefined,
       google_maps_url: formData.google_maps_url?.trim() || undefined,
       opening_times: formData.opening_times || {},
+      added_by_user_id: addedByUserId,
     };
 
     let result;
@@ -1253,6 +1301,14 @@ export default function AdminDashboard() {
                       />
                     </div>
                   </div>
+
+                  <LocalHeroAutocomplete
+                    value={selectedLocalHero}
+                    onChange={(hero) => {
+                      setLocalHeroTouched(true);
+                      setSelectedLocalHero(hero);
+                    }}
+                  />
 
                   <div className="space-y-2">
                     <Label htmlFor="address">Address *</Label>
@@ -2245,9 +2301,11 @@ export default function AdminDashboard() {
                   <Button
                     className="bg-[#8dbf65] hover:bg-[#7aaa56]"
                     onClick={handleSave}
-                    disabled={isSaving}
+                    disabled={isSaving || isLocalHeroLoading}
                   >
-                    {isSaving
+                    {isLocalHeroLoading
+                      ? "Loading..."
+                      : isSaving
                       ? "Saving..."
                       : editingRestaurant
                       ? "Update"

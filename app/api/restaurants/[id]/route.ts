@@ -9,7 +9,14 @@ export async function GET(
     const supabase = createClient();
     const { data, error } = await supabase
       .from('restaurants')
-      .select('*')
+      .select(`
+        *,
+        added_by:user_profiles!added_by_user_id(
+          id,
+          full_name,
+          website
+        )
+      `)
       .eq('id', params.id)
       .eq('visible', true)
       .maybeSingle();

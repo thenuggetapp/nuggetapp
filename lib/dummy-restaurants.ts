@@ -57,6 +57,11 @@ export interface Restaurant {
   pramStorage?: boolean;
   likesCount?: number;
   visible?: boolean;
+  addedBy?: {
+    id: string;
+    fullName: string | null;
+    website: string | null;
+  } | null;
 }
 
 export const dummyRestaurants: Restaurant[] = [

@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Save } from 'lucide-react';
 import { toast } from 'sonner';
+import { validateWebsiteUrl } from '@/lib/validate-website-url';
 
 export default function SettingsPage() {
   const { user, userProfile, loading: authLoading, refreshProfile } = useAuth();
@@ -24,6 +25,7 @@ export default function SettingsPage() {
     email: '',
     phone: '',
     bio: '',
+    website: '',
   });
 
   useEffect(() => {
@@ -51,6 +53,7 @@ export default function SettingsPage() {
         email: user?.email || '',
         phone: '',
         bio: '',
+        website: userProfile?.website || '',
       });
     } catch (error) {
       console.error('Error loading settings:', error);
@@ -63,10 +66,17 @@ export default function SettingsPage() {
     try {
       setSaving(true);
 
+      const websiteValidation = validateWebsiteUrl(formData.website);
+      if (!websiteValidation.valid) {
+        toast.error(websiteValidation.error || 'Invalid website URL');
+        return;
+      }
+
       const { error } = await supabase
         .from('user_profiles')
         .update({
           full_name: formData.full_name,
+          website: websiteValidation.sanitized,
         })
         .eq('id', user?.id);
 
@@ -145,6 +155,22 @@ export default function SettingsPage() {
                   }
                   placeholder="+1 (555) 123-4567"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="website">Website</Label>
+                <Input
+                  id="website"
+                  type="url"
+                  value={formData.website}
+                  onChange={(e) =>
+                    setFormData({ ...formData, website: e.target.value })
+                  }
+                  placeholder="https://your-website.com"
+                />
+                <p className="text-xs text-gray-500">
+                  Your public website link shown on restaurants you recommend.
+                </p>
               </div>
 
               <div className="space-y-2">

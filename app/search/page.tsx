@@ -773,6 +773,7 @@ function SearchContent() {
       <QuickAddRestaurantModal
         open={showAddModal}
         onOpenChange={setShowAddModal}
+        addedByUserId={null}
       />
       <SuggestRestaurantModal
         open={showSuggestModal}

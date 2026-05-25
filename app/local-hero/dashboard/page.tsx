@@ -392,6 +392,7 @@ export default function LocalHeroDashboard() {
           open={showAddModal}
           onOpenChange={setShowAddModal}
           onSuccess={loadDashboardData}
+          addedByUserId={user?.id ?? null}
         />
           </div>
         </div>
