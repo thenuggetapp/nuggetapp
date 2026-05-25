@@ -17,7 +17,7 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
 const RESTAURANT_SELECT = `
   id, name, slug, cuisine, address, city,
   rating, likes_count, price_level,
-  image_url, latitude, longitude, description,
+  image_url, google_place_id, latitude, longitude, description,
   kids_menu, high_chairs, wheelchair_access,
   outdoor_seating, dog_friendly, vegetarian_options,
   vegan_options, gluten_free_options, halal, kosher,
