@@ -4,6 +4,7 @@ import {
   type SupabaseClient,
 } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { validateWebsiteUrl } from "@/lib/validate-website-url";
 
 export const runtime = "nodejs";
 
@@ -131,12 +132,26 @@ export async function POST(request: Request) {
       typeof body.cityPreference === "string"
         ? body.cityPreference.trim()
         : "";
+    const websiteRaw =
+      typeof body.website === "string" ? body.website.trim() : "";
 
     if (!email || !password || !fullName) {
       return NextResponse.json(
         { error: "Email, password, and full name are required" },
         { status: 400 }
       );
+    }
+
+    let sanitizedWebsite: string | null = null;
+    if (websiteRaw) {
+      const websiteValidation = validateWebsiteUrl(websiteRaw);
+      if (!websiteValidation.valid) {
+        return NextResponse.json(
+          { error: websiteValidation.error || "Invalid website URL" },
+          { status: 400 }
+        );
+      }
+      sanitizedWebsite = websiteValidation.sanitized;
     }
 
     const adminClient = createSupabaseClient(supabaseUrl, supabaseServiceKey, {
@@ -213,6 +228,7 @@ export async function POST(request: Request) {
             email,
             full_name: fullName,
             role: "local_hero",
+            ...(sanitizedWebsite ? { website: sanitizedWebsite } : {}),
           })
           .select("id");
 
@@ -226,6 +242,7 @@ export async function POST(request: Request) {
             role: "local_hero",
             full_name: fullName,
             email,
+            ...(sanitizedWebsite ? { website: sanitizedWebsite } : {}),
           })
           .eq("id", userId)
           .select("id");
@@ -255,7 +272,6 @@ export async function POST(request: Request) {
             {
               user_id: userId,
               city_name: cityPreference,
-              assigned_by: session.user.id,
               is_active: true,
             },
             { onConflict: "user_id,city_name" }

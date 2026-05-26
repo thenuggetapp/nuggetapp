@@ -62,6 +62,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { validateWebsiteUrl } from "@/lib/validate-website-url";
 import {
   Search,
   Plus,
@@ -257,6 +258,7 @@ export default function AdminDashboard() {
     password: "",
     fullName: "",
     cityPreference: "",
+    website: "",
   });
   const [isCreatingLocalHero, setIsCreatingLocalHero] = useState(false);
   const { toast } = useToast();
@@ -546,6 +548,16 @@ export default function AdminDashboard() {
       return;
     }
 
+    const websiteValidation = validateWebsiteUrl(localHeroFormData.website);
+    if (!websiteValidation.valid) {
+      toast({
+        title: "Validation Error",
+        description: websiteValidation.error || "Invalid website URL",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsCreatingLocalHero(true);
     console.log("Creating Local Hero account...", {
       email: localHeroFormData.email,
@@ -563,6 +575,7 @@ export default function AdminDashboard() {
           password: localHeroFormData.password,
           fullName: localHeroFormData.fullName,
           cityPreference: localHeroFormData.cityPreference || undefined,
+          website: localHeroFormData.website.trim() || undefined,
         }),
       });
 
@@ -605,6 +618,7 @@ export default function AdminDashboard() {
         password: "",
         fullName: "",
         cityPreference: "",
+        website: "",
       });
     } catch (error: any) {
       console.error("Error creating Local Hero:", error);
@@ -2364,6 +2378,25 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="space-y-2">
+                    <Label htmlFor="hero-website">Website (Optional)</Label>
+                    <Input
+                      id="hero-website"
+                      type="url"
+                      value={localHeroFormData.website}
+                      onChange={(e) =>
+                        setLocalHeroFormData({
+                          ...localHeroFormData,
+                          website: e.target.value,
+                        })
+                      }
+                      placeholder="https://your-website.com"
+                    />
+                    <p className="text-xs text-slate-500">
+                      External landing page for recommendations from this Local Hero.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
                     <Label htmlFor="hero-city">
                       City Assignment (Optional)
                     </Label>
@@ -2395,6 +2428,7 @@ export default function AdminDashboard() {
                         password: "",
                         fullName: "",
                         cityPreference: "",
+                        website: "",
                       });
                     }}
                     disabled={isCreatingLocalHero}
