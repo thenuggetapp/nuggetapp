@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import {
+  createClient as createSupabaseClient,
+  type SupabaseClient,
+} from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
@@ -22,7 +25,7 @@ function isDuplicateUserError(message: string): boolean {
 }
 
 async function findAuthUserByEmail(
-  adminClient: ReturnType<typeof createSupabaseClient>,
+  adminClient: SupabaseClient,
   email: string
 ) {
   const normalizedEmail = normalizeEmail(email);
@@ -164,7 +167,7 @@ export async function POST(request: Request) {
       .maybeSingle();
 
     if (!profileById) {
-      const { error: profileInsertError, count: profileInsertCount } =
+      const { data: insertedProfiles, error: profileInsertError } =
         await adminClient
           .from("user_profiles")
           .insert({
@@ -173,12 +176,12 @@ export async function POST(request: Request) {
             full_name: fullName,
             role: "local_hero",
           })
-          .select("id", { count: "exact" });
+          .select("id");
 
       if (profileInsertError) throw profileInsertError;
-      profilesInserted = profileInsertCount ?? 1;
+      profilesInserted = insertedProfiles?.length ?? 0;
     } else {
-      const { error: profileUpdateError, count: profileUpdateCount } =
+      const { data: updatedProfiles, error: profileUpdateError } =
         await adminClient
           .from("user_profiles")
           .update({
@@ -187,10 +190,10 @@ export async function POST(request: Request) {
             email,
           })
           .eq("id", userId)
-          .select("id", { count: "exact" });
+          .select("id");
 
       if (profileUpdateError) throw profileUpdateError;
-      profilesUpdated = profileUpdateCount ?? 0;
+      profilesUpdated = updatedProfiles?.length ?? 0;
     }
 
     await adminClient.auth.admin.updateUserById(userId, {
@@ -198,7 +201,7 @@ export async function POST(request: Request) {
     });
 
     const escapedEmail = email.replace(/"/g, '""');
-    const { error: applicationError, count: applicationsApproved } =
+    const { data: approvedApplications, error: applicationError } =
       await adminClient
         .from("local_hero_applications")
         .update({
@@ -209,14 +212,16 @@ export async function POST(request: Request) {
         })
         .eq("status", "pending")
         .or(`user_id.eq.${userId},email.ilike."${escapedEmail}"`)
-        .select("id", { count: "exact" });
+        .select("id");
 
     if (applicationError) throw applicationError;
+
+    const applicationsApproved = approvedApplications?.length ?? 0;
 
     let assignmentsInserted = 0;
 
     if (cityPreference) {
-      const { error: assignmentError, count: assignmentCount } =
+      const { data: upsertedAssignments, error: assignmentError } =
         await adminClient
           .from("local_hero_assignments")
           .upsert(
@@ -228,10 +233,10 @@ export async function POST(request: Request) {
             },
             { onConflict: "user_id,city_name" }
           )
-          .select("id", { count: "exact" });
+          .select("id");
 
       if (assignmentError) throw assignmentError;
-      assignmentsInserted = assignmentCount ?? 1;
+      assignmentsInserted = upsertedAssignments?.length ?? 0;
     }
 
     return NextResponse.json({
@@ -243,7 +248,7 @@ export async function POST(request: Request) {
             rowsInserted: profilesInserted,
             rowsUpdated: profilesUpdated,
           },
-          applicationApproval: { rowsImpacted: applicationsApproved ?? 0 },
+          applicationApproval: { rowsImpacted: applicationsApproved },
           cityAssignment: { rowsImpacted: assignmentsInserted },
         },
       },
