@@ -51,6 +51,44 @@ async function findAuthUserByEmail(
   return null;
 }
 
+async function approvePendingApplications(
+  adminClient: SupabaseClient,
+  userId: string,
+  email: string,
+  reviewedBy: string
+) {
+  const approvalUpdate = {
+    user_id: userId,
+    status: "approved" as const,
+    reviewed_at: new Date().toISOString(),
+    reviewed_by: reviewedBy,
+  };
+
+  const approvedIds = new Set<string>();
+
+  const { data: approvedByEmail, error: emailError } = await adminClient
+    .from("local_hero_applications")
+    .update(approvalUpdate)
+    .eq("status", "pending")
+    .ilike("email", email)
+    .select("id");
+
+  if (emailError) throw emailError;
+  approvedByEmail?.forEach((row) => approvedIds.add(row.id));
+
+  const { data: approvedByUserId, error: userIdError } = await adminClient
+    .from("local_hero_applications")
+    .update(approvalUpdate)
+    .eq("status", "pending")
+    .eq("user_id", userId)
+    .select("id");
+
+  if (userIdError) throw userIdError;
+  approvedByUserId?.forEach((row) => approvedIds.add(row.id));
+
+  return approvedIds.size;
+}
+
 export async function POST(request: Request) {
   try {
     const supabase = createClient();
@@ -200,23 +238,12 @@ export async function POST(request: Request) {
       app_metadata: { role: "local_hero" },
     });
 
-    const escapedEmail = email.replace(/"/g, '""');
-    const { data: approvedApplications, error: applicationError } =
-      await adminClient
-        .from("local_hero_applications")
-        .update({
-          user_id: userId,
-          status: "approved",
-          reviewed_at: new Date().toISOString(),
-          reviewed_by: session.user.id,
-        })
-        .eq("status", "pending")
-        .or(`user_id.eq.${userId},email.ilike."${escapedEmail}"`)
-        .select("id");
-
-    if (applicationError) throw applicationError;
-
-    const applicationsApproved = approvedApplications?.length ?? 0;
+    const applicationsApproved = await approvePendingApplications(
+      adminClient,
+      userId,
+      email,
+      session.user.id
+    );
 
     let assignmentsInserted = 0;
 
