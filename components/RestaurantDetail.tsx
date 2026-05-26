@@ -549,7 +549,7 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                               />
                             </div>
                             <span className="text-xs font-medium text-slate-900">
-                              Playground
+                              Playground Nearby
                             </span>
                           </div>
                         )}
