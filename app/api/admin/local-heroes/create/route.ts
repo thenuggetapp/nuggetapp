@@ -265,21 +265,41 @@ export async function POST(request: Request) {
     let assignmentsInserted = 0;
 
     if (cityPreference) {
-      const { data: upsertedAssignments, error: assignmentError } =
-        await adminClient
-          .from("local_hero_assignments")
-          .upsert(
-            {
+      const { data: existingAssignment } = await adminClient
+        .from("local_hero_assignments")
+        .select("id")
+        .eq("user_id", userId)
+        .ilike("city_name", cityPreference)
+        .maybeSingle();
+
+      if (existingAssignment) {
+        const { data: updatedAssignments, error: assignmentUpdateError } =
+          await adminClient
+            .from("local_hero_assignments")
+            .update({
+              is_active: true,
+              assigned_by: session.user.id,
+            })
+            .eq("id", existingAssignment.id)
+            .select("id");
+
+        if (assignmentUpdateError) throw assignmentUpdateError;
+        assignmentsInserted = updatedAssignments?.length ?? 0;
+      } else {
+        const { data: insertedAssignments, error: assignmentInsertError } =
+          await adminClient
+            .from("local_hero_assignments")
+            .insert({
               user_id: userId,
               city_name: cityPreference,
+              assigned_by: session.user.id,
               is_active: true,
-            },
-            { onConflict: "user_id,city_name" }
-          )
-          .select("id");
+            })
+            .select("id");
 
-      if (assignmentError) throw assignmentError;
-      assignmentsInserted = upsertedAssignments?.length ?? 0;
+        if (assignmentInsertError) throw assignmentInsertError;
+        assignmentsInserted = insertedAssignments?.length ?? 0;
+      }
     }
 
     return NextResponse.json({
