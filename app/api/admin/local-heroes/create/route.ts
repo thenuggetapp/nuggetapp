@@ -277,8 +277,7 @@ export async function POST(request: Request) {
           await adminClient
             .from("local_hero_assignments")
             .update({
-              is_active: true,
-              assigned_by: session.user.id,
+              is_active: true
             })
             .eq("id", existingAssignment.id)
             .select("id");
@@ -292,7 +291,6 @@ export async function POST(request: Request) {
             .insert({
               user_id: userId,
               city_name: cityPreference,
-              assigned_by: session.user.id,
               is_active: true,
             })
             .select("id");
