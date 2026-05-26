@@ -552,87 +552,48 @@ export default function AdminDashboard() {
     });
 
     try {
-      console.log("Step 1: Calling signUp...");
-      const { data: authData, error: signUpError } = await supabase.auth.signUp(
-        {
+
+      const response = await fetch("/api/admin/local-heroes/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           email: localHeroFormData.email,
           password: localHeroFormData.password,
-          options: {
-            data: {
-              full_name: localHeroFormData.fullName,
-            },
-            emailRedirectTo: undefined,
-          },
-        }
+          fullName: localHeroFormData.fullName,
+          cityPreference: localHeroFormData.cityPreference || undefined,
+        }),
+      });
+
+      console.log("Creating or updating Local Hero...");
+
+      const result = await response.json();
+
+      if (!response.ok || result.error) {
+        throw new Error(result.error || "Failed to create Local Hero account");
+      }
+
+      const { steps, userId } = result.data;
+
+      console.log("Local hero creation results:");
+      console.log("Auth users created:", steps.userCreation.rowsImpacted);
+      console.log(
+        "User profiles inserted:",
+        steps.userProfile.rowsInserted,
+        "updated:",
+        steps.userProfile.rowsUpdated
       );
+      console.log(
+        "Applications approved:",
+        steps.applicationApproval.rowsImpacted
+      );
+      console.log(
+        "City assignments upserted:",
+        steps.cityAssignment.rowsImpacted
+      );
+      console.log("All steps complete! Local Hero user id:", userId);
 
-      console.log("Step 1 complete:", { authData, signUpError });
-
-      if (signUpError) {
-        console.error("SignUp error:", signUpError);
-        throw signUpError;
-      }
-
-      if (!authData.user) {
-        console.error("No user returned from signUp");
-        throw new Error("User creation failed - no user returned");
-      }
-
-      console.log("Step 2: Updating user profile role...");
-      const { error: profileError } = await supabase
-        .from("user_profiles")
-        .update({
-          role: "local_hero",
-        })
-        .eq("id", authData.user.id);
-
-      console.log("Step 2 complete:", { profileError });
-
-      if (profileError) {
-        console.error("Profile update error:", profileError);
-        throw profileError;
-      }
-
-      if (localHeroFormData.cityPreference) {
-        console.log("Step 3: Creating application record...");
-        const { error: applicationError } = await supabase
-          .from("local_hero_applications")
-          .insert({
-            user_id: authData.user.id,
-            city_preference: localHeroFormData.cityPreference,
-            motivation: "Created by admin",
-            status: "approved",
-            submitted_at: new Date().toISOString(),
-            reviewed_at: new Date().toISOString(),
-            reviewed_by: user?.id,
-          });
-
-        console.log("Step 3 complete:", { applicationError });
-
-        if (applicationError) {
-          console.error("Application creation error:", applicationError);
-          throw applicationError;
-        }
-
-        console.log("Step 4: Creating city assignment...");
-        const { error: assignmentError } = await supabase
-          .from("local_hero_assignments")
-          .insert({
-            user_id: authData.user.id,
-            city_name: localHeroFormData.cityPreference,
-            assigned_by: user?.id,
-            is_active: true,
-          });
-
-        console.log("Step 4 complete:", { assignmentError });
-
-        if (assignmentError) {
-          console.error("Assignment creation error:", assignmentError);
-          throw assignmentError;
-        }
-      }
-
-      console.log("All steps complete! Success!");
       toast({
         title: "Success",
         description: "Local Hero account created successfully",
