@@ -1030,10 +1030,19 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                       <h2 className="section-title text-base lg:text-lg font-bold text-slate-900 mb-3 lg:mb-4">
                         About
                       </h2>
-                      <p className="text-sm lg:text-base text-slate-600 leading-relaxed">
-                        {restaurant.description ||
-                          `${restaurant.name} is a wonderful${restaurant.nuggetVerified ? " family-friendly" : ""} restaurant offering delicious ${restaurant.cuisine.toLowerCase()} cuisine. With a welcoming atmosphere and excellent service, it's perfect for${restaurant.nuggetVerified ? " families" : " diners"} looking for a great dining experience. The restaurant features comfortable seating and a menu that caters to ${restaurant.nuggetVerified ? "both adults and children" : "a variety of tastes"}.`}
-                      </p>
+                      <div className="space-y-3">
+                        {(restaurant.description ||
+                          `${restaurant.name} is a wonderful${restaurant.nuggetVerified ? " family-friendly" : ""} restaurant offering delicious ${restaurant.cuisine.toLowerCase()} cuisine. With a welcoming atmosphere and excellent service, it's perfect for${restaurant.nuggetVerified ? " families" : " diners"} looking for a great dining experience. The restaurant features comfortable seating and a menu that caters to ${restaurant.nuggetVerified ? "both adults and children" : "a variety of tastes"}.`
+                        ).split(/\n+/).map((para, i) => (
+                          <p key={i} className="text-sm lg:text-base text-slate-600 leading-relaxed">
+                            {para.split(/(\*\*[^*]+\*\*)/).map((chunk, j) =>
+                              chunk.startsWith("**") && chunk.endsWith("**")
+                                ? <strong key={j}>{chunk.slice(2, -2)}</strong>
+                                : chunk
+                            )}
+                          </p>
+                        ))}
+                      </div>
                     </div>
 
                     <div className="contact-info-section border-t border-slate-200 pt-4 lg:pt-6 space-y-3 lg:space-y-4">
