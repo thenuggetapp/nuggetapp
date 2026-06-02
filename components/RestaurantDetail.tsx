@@ -509,7 +509,7 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                             <>
                               <span className="text-slate-400">•</span>
                               <span className="text-sm lg:text-base text-slate-600">
-                                by{" "}
+                                Recommended by{" "}
                                 {restaurant.addedBy.website ? (
                                   <a
                                     href={restaurant.addedBy.website}
