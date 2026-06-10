@@ -80,6 +80,16 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const type = searchParams.get("type");
   const query = searchParams.get("q");
+  const externalLat = searchParams.get("lat")
+    ? parseFloat(searchParams.get("lat")!)
+    : null;
+  const externalLng = searchParams.get("lng")
+    ? parseFloat(searchParams.get("lng")!)
+    : null;
+  const bboxParam = searchParams.get("bbox");
+  const externalBbox = bboxParam
+    ? (bboxParam.split(",").map(Number) as [number, number, number, number])
+    : null;
 
   // Pagination parameters
   const page = parseInt(searchParams.get("page") || "1");
@@ -109,19 +119,15 @@ export async function GET(request: Request) {
       const safeQuery = sanitizeQuery(rawQuery);
       const parsed = safeQuery ? parseNaturalLanguageQuery(safeQuery) : null;
 
-      console.log(
-        "Natural language parse result:",
-        JSON.stringify(parsed, null, 2),
-      );
-
       // Base query
       let supabaseQuery = supabase
         .from("restaurants")
         .select(RESTAURANT_SELECT)
         .eq("visible", true);
 
-      // 1. City - hard exclude (always applied if we have a location)
-      const location = parsed?.location;
+      // 1. City - hard exclude from NL query, but skip if location box coordinates
+      // are provided (radius filter handles it instead)
+      const location = (externalLat === null || externalLng === null) ? parsed?.location : null;
       if (location) {
         supabaseQuery = supabaseQuery.ilike("city", `%${location}%`);
       }
@@ -185,27 +191,42 @@ export async function GET(request: Request) {
       let cityCoordinates: [number, number] | null = null;
       let matchedCity: string | null = null;
 
+      // Use pre-resolved coordinates from the location input if provided
+      if (externalLat !== null && externalLng !== null) {
+        cityCoordinates = [externalLng, externalLat];
+      }
+
       if (location && candidates && candidates.length > 0) {
         matchedCity = candidates[0].city ?? null;
 
-        try {
-          const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-          if (mapboxToken) {
-            const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${mapboxToken}&limit=1&types=place`;
-            const geocodeResponse = await fetch(geocodeUrl);
-            if (geocodeResponse.ok) {
-              const geocodeData = await geocodeResponse.json();
-              if (geocodeData.features?.length > 0) {
-                cityCoordinates = geocodeData.features[0].center;
+        if (!cityCoordinates) {
+          try {
+            const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+            if (mapboxToken) {
+              const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${mapboxToken}&limit=1&types=place`;
+              const geocodeResponse = await fetch(geocodeUrl);
+              if (geocodeResponse.ok) {
+                const geocodeData = await geocodeResponse.json();
+                if (geocodeData.features?.length > 0) {
+                  cityCoordinates = geocodeData.features[0].center;
+                }
               }
             }
+          } catch (geocodeError) {
+            console.error("Geocoding error:", geocodeError);
           }
-        } catch (geocodeError) {
-          console.error("Geocoding error:", geocodeError);
         }
       }
 
-      const radiusMeters = 20 * 1609.34; // 20 miles
+      // Derive radius from bbox (center → corner distance) if available,
+      // otherwise fall back to 20 miles
+      let radiusMeters = 20 * 1609.34;
+      if (externalBbox && externalLat !== null && externalLng !== null) {
+        const [, , east, north] = externalBbox; // [west, south, east, north]
+        const bboxRadius = calculateDistance(externalLat, externalLng, north, east);
+        const minRadius = 5 * 1609.34; // 5 mile floor for small localities
+        radiusMeters = Math.max(bboxRadius, minRadius);
+      }
 
       const filtered = (candidates || []).filter((restaurant: any) => {
         // If we have coordinates, apply radius filter

@@ -44,14 +44,11 @@ import {
   UtensilsCrossed,
   Bookmark,
   Menu,
-  Home,
-  Crown,
   Store,
   Settings,
   User,
   TrendingUp,
   Shield,
-  LogOut,
   X,
   Globe,
   ChevronLeft,
@@ -130,8 +127,15 @@ function getFiltersFromURLParams(searchParams: any): FilterState {
 function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { user, userProfile, permissions, signOut } = useAuth();
+  const { user, permissions } = useAuth();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
+  const [submittedQuery, setSubmittedQuery] = useState(searchParams.get("q") || "");
+  const [locationQuery, setLocationQuery] = useState("");
+  const [locationCoordinates, setLocationCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+  const [locationSuggestions, setLocationSuggestions] = useState<Array<{ id: string; text: string; place_name: string; center: [number, number]; bbox?: [number, number, number, number] }>>([]);
+  const [locationBbox, setLocationBbox] = useState<[number, number, number, number] | null>(null);
+  const [mapBounds, setMapBounds] = useState<[number, number, number, number] | null>(null);
+  const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<Restaurant | null>(null);
@@ -264,6 +268,8 @@ function SearchContent() {
   const filterPanelRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const locationRef = useRef<HTMLDivElement>(null);
+  const locationDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const placeholders = [
     "Try: 'Italian with kids menu'",
@@ -324,6 +330,16 @@ function SearchContent() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      if (locationRef.current && !locationRef.current.contains(event.target as Node)) {
+        setShowLocationSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       if (
         filterPanelRef.current &&
@@ -351,6 +367,7 @@ function SearchContent() {
     // Update search query when URL params change
     if (query) {
       setSearchQuery(query);
+      setSubmittedQuery(query);
     }
 
     // Remove focus from search input and hide suggestions on page load
@@ -367,12 +384,12 @@ function SearchContent() {
 
   useEffect(() => {
     const query = searchParams.get("q");
-    if (searchQuery) {
-      performSearch(searchQuery);
+    if (submittedQuery) {
+      performSearch(submittedQuery);
     } else if (!query) {
       loadRestaurants();
     }
-  }, [filters, currentPage, searchQuery]);
+  }, [filters, currentPage, submittedQuery, locationCoordinates]);
 
   // Show suggestions when they're available (handled by SWR hook)
   useEffect(() => {
@@ -386,6 +403,47 @@ function SearchContent() {
       setShowSuggestions(false);
     }
   }, [suggestions, searchQuery]);
+
+  const fetchLocationSuggestions = (value: string) => {
+    if (locationDebounceRef.current) clearTimeout(locationDebounceRef.current);
+
+    if (value.trim().length < 2) {
+      setLocationSuggestions([]);
+      setShowLocationSuggestions(false);
+      return;
+    }
+
+    locationDebounceRef.current = setTimeout(async () => {
+      try {
+        const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || 'pk.eyJ1Ijoid2lzZXJuIiwiYSI6ImNsczBwcmtoMzAyYTYya21raHBtYXFkdWkifQ.92tySIKG-TSBatGA3--0Wg';
+        const response = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(value)}.json?types=place,locality&access_token=${token}&limit=5`,
+        );
+        const data = await response.json();
+        if (data.features?.length > 0) {
+          setLocationSuggestions(data.features);
+          setShowLocationSuggestions(true);
+        } else {
+          setLocationSuggestions([]);
+        }
+      } catch (error) {
+        console.error("Error fetching location suggestions:", error);
+      }
+    }, 300);
+  };
+
+  const handleLocationSelect = (feature: {
+    id: string;
+    text: string;
+    place_name: string;
+    center: [number, number];
+    bbox?: [number, number, number, number];
+  }) => {
+    setLocationQuery(feature.text);
+    setShowLocationSuggestions(false);
+    setLocationCoordinates({ lat: feature.center[1], lng: feature.center[0] });
+    setLocationBbox(feature.bbox ?? null);
+  };
 
   const handleSuggestionClick = (suggestion: {
     id: string;
@@ -528,14 +586,8 @@ function SearchContent() {
         setPagination(paginationInfo);
       }
 
-      console.log("Loaded restaurants:", data?.length || 0);
-      console.log("First restaurant sample:", data?.[0]);
-
       const formattedRestaurants: Restaurant[] = (data || []).map((r: any) => {
         const coords: [number, number] = [r.longitude || 0, r.latitude || 0];
-        console.log(
-          `Restaurant ${r.name}: coords [${coords[0]}, ${coords[1]}]`,
-        );
 
         return {
           id: r.id,
@@ -589,7 +641,7 @@ function SearchContent() {
     setError(null);
     setFilteredCity(null);
     setCityCoordinates(null);
-    console.log("Performing search for:", query);
+    setMapBounds(null);
 
     try {
       const params = new URLSearchParams({
@@ -610,6 +662,14 @@ function SearchContent() {
         }
       });
 
+      if (locationCoordinates) {
+        params.append("lat", locationCoordinates.lat.toString());
+        params.append("lng", locationCoordinates.lng.toString());
+        if (locationBbox) {
+          params.append("bbox", locationBbox.join(","));
+        }
+      }
+
       const response = await fetch(`/api/restaurants?${params.toString()}`);
       const {
         data,
@@ -628,10 +688,6 @@ function SearchContent() {
       if (paginationInfo) {
         setPagination(paginationInfo);
       }
-
-      console.log("Search results count:", data?.length || 0);
-      console.log("City filter:", city);
-      console.log("City coordinates:", cityCoordinates);
 
       if (city) {
         setFilteredCity(city);
@@ -664,13 +720,22 @@ function SearchContent() {
         };
       });
 
-      console.log("Formatted search results:", formattedRestaurants.length);
       setRestaurants(formattedRestaurants);
 
       if (formattedRestaurants.length > 0) {
         setSelectedRestaurant(formattedRestaurants[0]);
-      } else {
-        console.warn("No restaurants found for search:", query);
+
+        const validCoords = formattedRestaurants.filter(
+          (r) => r.coordinates[0] !== 0 && r.coordinates[1] !== 0,
+        );
+        if (validCoords.length > 0) {
+          const lngs = validCoords.map((r) => r.coordinates[0]);
+          const lats = validCoords.map((r) => r.coordinates[1]);
+          setMapBounds([
+            Math.min(...lngs), Math.min(...lats),
+            Math.max(...lngs), Math.max(...lats),
+          ]);
+        }
       }
     } catch (error) {
       console.error("Error searching restaurants:", error);
@@ -691,6 +756,7 @@ function SearchContent() {
     if (searchQuery.trim()) {
       router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
     }
+    setSubmittedQuery(searchQuery);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -1071,6 +1137,7 @@ function SearchContent() {
           <div className="w-full h-full relative z-0 lg:flex-1">
             <MapboxMap
               coordinates={mapCenter}
+              fitBounds={mapBounds ?? undefined}
               markers={markers}
               onMarkerClick={(id) => {
                 const restaurant = restaurants.find((r) => r.id === id);
@@ -1144,126 +1211,200 @@ function SearchContent() {
             isWideLayout ? "lg:w-[calc(100%-300px)]" : "lg:w-[640px]"
           } lg:order-1`}
         >
-          <div className="hidden lg:flex items-center gap-3 px-6 py-4 bg-white border-b border-slate-200">
-            <form onSubmit={handleSearch} className="flex-1 max-w-md">
-              <div ref={searchRef} className="relative">
-                <Search
+          <div className="hidden lg:flex lg:flex-col gap-2 px-6 py-4 bg-white border-b border-slate-200">
+            <div className="flex items-center gap-2">
+              <form onSubmit={handleSearch} className="flex-1 min-w-0">
+                <div ref={searchRef} className="relative">
+                  <Search
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 z-10"
+                    aria-hidden="true"
+                  />
+                  <Input
+                    ref={searchInputRef}
+                    type="text"
+                    placeholder={placeholders[placeholderIndex]}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => {
+                      if (suggestions.length > 0) {
+                        setShowSuggestions(true);
+                      }
+                    }}
+                    aria-label="Search for restaurants, cuisines, or locations"
+                    className={`pl-10 h-11 bg-slate-50 border-slate-200 rounded-lg transition-opacity duration-300 ${
+                      isAnimating ? "opacity-60" : "opacity-100"
+                    }`}
+                  />
+                  {showSuggestions && suggestions.length > 0 && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden z-50">
+                      {suggestions.map(
+                        (suggestion: SearchSuggestion, index: number) => (
+                          <button
+                            key={`${suggestion.type}-${suggestion.id}-${index}`}
+                            type="button"
+                            onClick={() => handleSuggestionClick(suggestion)}
+                            className="w-full px-6 py-4 text-left hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-b-0"
+                          >
+                            <div className="flex items-start gap-3">
+                              {suggestion.type === "city" ? (
+                                <Globe
+                                  className="h-5 w-5 text-[#8dbf65] mt-0.5 flex-shrink-0"
+                                  aria-hidden="true"
+                                />
+                              ) : (
+                                <MapPin
+                                  className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0"
+                                  aria-hidden="true"
+                                />
+                              )}
+                              <div className="flex-1 min-w-0">
+                                {suggestion.type === "city" ? (
+                                  <>
+                                    <div className="font-semibold text-slate-900 truncate">
+                                      {suggestion.name}
+                                    </div>
+                                    <div className="text-sm text-slate-600">
+                                      Browse all family-friendly restaurants in
+                                      this city
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className="font-semibold text-slate-900 truncate">
+                                      {suggestion.name}
+                                    </div>
+                                    <div className="text-sm text-slate-600 truncate">
+                                      {suggestion.cuisine}
+                                    </div>
+                                    <div className="text-xs text-slate-500 truncate">
+                                      {suggestion.address}
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </button>
+                        ),
+                      )}
+                    </div>
+                  )}
+                </div>
+              </form>
+              <div ref={locationRef} className="relative w-52 flex-shrink-0">
+                <MapPin
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 z-10"
                   aria-hidden="true"
                 />
                 <Input
-                  ref={searchInputRef}
                   type="text"
-                  placeholder={placeholders[placeholderIndex]}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Select a location"
+                  value={locationQuery}
+                  onChange={(e) => {
+                    setLocationQuery(e.target.value);
+                    setLocationCoordinates(null);
+                    setLocationBbox(null);
+                    fetchLocationSuggestions(e.target.value);
+                  }}
                   onFocus={() => {
-                    if (suggestions.length > 0) {
-                      setShowSuggestions(true);
+                    if (locationSuggestions.length > 0) setShowLocationSuggestions(true);
+                  }}
+                  onBlur={() => {
+                    if (!locationCoordinates) {
+                      setLocationQuery("");
+                      setLocationSuggestions([]);
+                      setShowLocationSuggestions(false);
                     }
                   }}
-                  aria-label="Search for restaurants, cuisines, or locations"
-                  className={`pl-10 h-11 bg-slate-50 border-slate-200 rounded-lg transition-opacity duration-300 ${
-                    isAnimating ? "opacity-60" : "opacity-100"
-                  }`}
+                  className="pl-10 pr-8 h-11 bg-white border-2 border-slate-300 text-slate-900 placeholder:text-slate-400 rounded-lg"
                 />
-                {showSuggestions && suggestions.length > 0 && (
+                {locationCoordinates && (
+                  <button
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => {
+                      setLocationQuery("");
+                      setLocationCoordinates(null);
+                      setLocationBbox(null);
+                      setMapBounds(null);
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    aria-label="Clear location"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+                {showLocationSuggestions && locationSuggestions.length > 0 && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden z-50">
-                    {suggestions.map(
-                      (suggestion: SearchSuggestion, index: number) => (
-                        <button
-                          key={`${suggestion.type}-${suggestion.id}-${index}`}
-                          type="button"
-                          onClick={() => handleSuggestionClick(suggestion)}
-                          className="w-full px-6 py-4 text-left hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-b-0"
-                        >
-                          <div className="flex items-start gap-3">
-                            {suggestion.type === "city" ? (
-                              <Globe
-                                className="h-5 w-5 text-[#8dbf65] mt-0.5 flex-shrink-0"
-                                aria-hidden="true"
-                              />
-                            ) : (
-                              <MapPin
-                                className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0"
-                                aria-hidden="true"
-                              />
-                            )}
-                            <div className="flex-1 min-w-0">
-                              {suggestion.type === "city" ? (
-                                <>
-                                  <div className="font-semibold text-slate-900 truncate">
-                                    {suggestion.name}
-                                  </div>
-                                  <div className="text-sm text-slate-600">
-                                    Browse all family-friendly restaurants in
-                                    this city
-                                  </div>
-                                </>
-                              ) : (
-                                <>
-                                  <div className="font-semibold text-slate-900 truncate">
-                                    {suggestion.name}
-                                  </div>
-                                  <div className="text-sm text-slate-600 truncate">
-                                    {suggestion.cuisine}
-                                  </div>
-                                  <div className="text-xs text-slate-500 truncate">
-                                    {suggestion.address}
-                                  </div>
-                                </>
-                              )}
+                    {locationSuggestions.map((feature) => (
+                      <button
+                        key={feature.id}
+                        type="button"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => handleLocationSelect(feature)}
+                        className="w-full px-6 py-4 text-left hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-b-0"
+                      >
+                        <div className="flex items-start gap-3">
+                          <MapPin
+                            className="h-5 w-5 text-[#8dbf65] mt-0.5 flex-shrink-0"
+                            aria-hidden="true"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="font-semibold text-slate-900 truncate">
+                              {feature.text}
+                            </div>
+                            <div className="text-sm text-slate-600 truncate">
+                              {feature.place_name}
                             </div>
                           </div>
-                        </button>
-                      ),
-                    )}
+                        </div>
+                      </button>
+                    ))}
                   </div>
                 )}
               </div>
-            </form>
-            <Button
-              type="submit"
-              size="sm"
-              className="h-11 px-4 bg-[#8dbf65] hover:bg-[#7aaa56] rounded-lg"
-              onClick={handleSearch}
-              aria-label="Search"
-            >
-              <Search className="h-5 w-5" aria-hidden="true" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              data-filter-toggle
-              className={`h-11 px-4 rounded-lg relative ${
-                Object.entries(filters).some(([key, value]) =>
+              <Button
+                type="submit"
+                size="sm"
+                className="h-11 px-4 bg-[#8dbf65] hover:bg-[#7aaa56] rounded-lg flex-shrink-0"
+                onClick={handleSearch}
+                aria-label="Search"
+              >
+                <Search className="h-5 w-5" aria-hidden="true" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                data-filter-toggle
+                className={`h-11 px-4 rounded-lg relative flex-shrink-0 ${
+                  Object.entries(filters).some(([key, value]) =>
+                    key === "cuisines"
+                      ? Array.isArray(value) && value.length > 0
+                      : value === true,
+                  )
+                    ? "border-[#8dbf65] bg-[#8dbf65]/10"
+                    : "border-slate-300"
+                }`}
+                onClick={() => setShowFilters(!showFilters)}
+                aria-label="Toggle filters"
+              >
+                <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
+                {Object.entries(filters).some(([key, value]) =>
                   key === "cuisines"
                     ? Array.isArray(value) && value.length > 0
                     : value === true,
-                )
-                  ? "border-[#8dbf65] bg-[#8dbf65]/10"
-                  : "border-slate-300"
-              }`}
-              onClick={() => setShowFilters(!showFilters)}
-              aria-label="Toggle filters"
-            >
-              <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
-              {Object.entries(filters).some(([key, value]) =>
-                key === "cuisines"
-                  ? Array.isArray(value) && value.length > 0
-                  : value === true,
-              ) && (
-                <span className="absolute -top-1 -right-1 bg-[#8dbf65] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {
-                    Object.entries(filters).filter(([key, value]) =>
-                      key === "cuisines"
-                        ? Array.isArray(value) && value.length > 0
-                        : value === true,
-                    ).length
-                  }
-                </span>
-              )}
-            </Button>
+                ) && (
+                  <span className="absolute -top-1 -right-1 bg-[#8dbf65] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {
+                      Object.entries(filters).filter(([key, value]) =>
+                        key === "cuisines"
+                          ? Array.isArray(value) && value.length > 0
+                          : value === true,
+                      ).length
+                    }
+                  </span>
+                )}
+              </Button>
+            </div>
           </div>
 
           {/* Drag handle for mobile */}

@@ -6,6 +6,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface MapboxMapProps {
   coordinates?: [number, number];
+  flyToCoordinates?: [number, number];
+  fitBounds?: [number, number, number, number];
   markers?: Array<{
     id: string;
     coordinates: [number, number];
@@ -20,6 +22,8 @@ interface MapboxMapProps {
 
 export function MapboxMap({
   coordinates = [-0.1278, 51.5074],
+  flyToCoordinates,
+  fitBounds,
   markers = [],
   onMarkerClick,
   onMarkerHover,
@@ -183,6 +187,33 @@ export function MapboxMap({
       }
     });
   }, [hoveredMarkerId, mapLoaded]);
+
+  useEffect(() => {
+    if (!map.current || !mapLoaded || !flyToCoordinates) return;
+
+    map.current.flyTo({
+      center: flyToCoordinates,
+      zoom: 11,
+      duration: 2200,
+      easing: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
+    });
+  }, [flyToCoordinates, mapLoaded]);
+
+  useEffect(() => {
+    if (!map.current || !mapLoaded || !fitBounds) return;
+
+    const [swLng, swLat, neLng, neLat] = fitBounds;
+    map.current.fitBounds(
+      [[swLng, swLat], [neLng, neLat]],
+      {
+        padding: 80,
+        maxZoom: 14,
+        minZoom: 8,
+        duration: 1800,
+        easing: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
+      }
+    );
+  }, [fitBounds, mapLoaded]);
 
   return (
     <div ref={mapContainer} className="w-full h-full rounded-lg overflow-hidden" />

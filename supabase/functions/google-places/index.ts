@@ -10,6 +10,11 @@ interface AutocompleteRequest {
   input: string;
   location?: string;
   radius?: number;
+  types?: string;
+}
+
+interface GeocodeRequest {
+  input: string;
 }
 
 interface PlaceDetailsRequest {
@@ -35,7 +40,7 @@ Deno.serve(async (req: Request) => {
 
     // Autocomplete endpoint
     if (action === "autocomplete") {
-      const { input, location, radius = 50000 }: AutocompleteRequest = await req.json();
+      const { input, location, radius = 50000, types = "restaurant" }: AutocompleteRequest = await req.json();
 
       if (!input) {
         return new Response(
@@ -47,19 +52,15 @@ Deno.serve(async (req: Request) => {
         );
       }
 
-      const autocompleteUrl = new URL(
-        "https://maps.googleapis.com/maps/api/place/autocomplete/json"
-      );
-      autocompleteUrl.searchParams.set("input", input);
-      autocompleteUrl.searchParams.set("types", "restaurant");
-      autocompleteUrl.searchParams.set("key", GOOGLE_API_KEY);
+      // Build URL as a string to avoid URLSearchParams percent-encoding
+      // parentheses in collection types like (cities) and (regions)
+      let autocompleteUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&types=${types}&key=${GOOGLE_API_KEY}`;
 
       if (location) {
-        autocompleteUrl.searchParams.set("location", location);
-        autocompleteUrl.searchParams.set("radius", radius.toString());
+        autocompleteUrl += `&location=${encodeURIComponent(location)}&radius=${radius}`;
       }
 
-      const response = await fetch(autocompleteUrl.toString());
+      const response = await fetch(autocompleteUrl);
       const data = await response.json();
 
       return new Response(JSON.stringify(data), {
@@ -142,8 +143,36 @@ Deno.serve(async (req: Request) => {
       }
     }
 
+    // Geocode endpoint
+    if (action === "geocode") {
+      const { input }: GeocodeRequest = await req.json();
+
+      if (!input) {
+        return new Response(
+          JSON.stringify({ error: "Input is required" }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+
+      const geocodeUrl = new URL(
+        "https://maps.googleapis.com/maps/api/geocode/json"
+      );
+      geocodeUrl.searchParams.set("address", input);
+      geocodeUrl.searchParams.set("key", GOOGLE_API_KEY);
+
+      const response = await fetch(geocodeUrl.toString());
+      const data = await response.json();
+
+      return new Response(JSON.stringify(data), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     return new Response(
-      JSON.stringify({ error: "Invalid action. Use 'autocomplete', 'details', or 'photo'" }),
+      JSON.stringify({ error: "Invalid action. Use 'autocomplete', 'details', 'geocode', or 'photo'" }),
       {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
