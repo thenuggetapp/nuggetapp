@@ -107,7 +107,6 @@ async function fetchAutocompleteNew(
 
   const body: Record<string, unknown> = {
     input,
-    includedPrimaryTypes: ["restaurant"],
   };
 
   const locationBias = parseLocationBias(location, radius);
