@@ -8,12 +8,19 @@
  * Ranking order:
  *   1. Relevance score (slug/name, cuisine, description)
  *   2. Likes tiebreaker
- *   3. Feature count tiebreaker
+ *   3. Proximity — small locality (<15 mi radius) only
+ *   4. Feature keyword mentions tiebreaker
+ *   5. Feature count tiebreaker
+ *   6. Proximity — large city (≥15 mi radius), last resort
  */
 
 import { ParsedQuery } from "@/lib/search/natural-language-parser";
 import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/db-amenities";
 import { FEATURE_KEYWORDS } from "@/lib/search/synonym-map";
+import { calculateDistance } from "@/lib/search/distance";
+
+const SMALL_RADIUS_THRESHOLD = 25 * 1609.34; // 25 miles in metres
+const PROXIMITY_MIN_DIFF = 200; // ignore differences under 200 m
 
 const POINTS = {
   slugExact: 20, // full query phrase in slug
@@ -44,13 +51,47 @@ function getNgrams(terms: string[], n: number): string[] {
 // Tiebreaker
 const FEATURE_COLUMNS = Object.values(FILTER_KEY_TO_DB_COLUMN);
 
-function tiebreak(a: any, b: any, parsed?: ParsedQuery | null): number {
+function proximityDiff(
+  a: any,
+  b: any,
+  cityCoords: [number, number],
+): number {
+  const [lng, lat] = cityCoords;
+  const distA =
+    a.latitude && a.longitude
+      ? calculateDistance(lat, lng, a.latitude, a.longitude)
+      : Infinity;
+  const distB =
+    b.latitude && b.longitude
+      ? calculateDistance(lat, lng, b.latitude, b.longitude)
+      : Infinity;
+  return Math.abs(distA - distB) > PROXIMITY_MIN_DIFF ? distA - distB : 0;
+}
+
+function tiebreak(
+  a: any,
+  b: any,
+  parsed?: ParsedQuery | null,
+  cityCoords?: [number, number] | null,
+  radiusMeters?: number,
+): number {
   // 1. Likes
   const likesA = a.likes_count ?? 0;
   const likesB = b.likes_count ?? 0;
   if (likesB !== likesA) return likesB - likesA;
 
-  // 2. Description mentions any requested feature keywords (boolean)
+  const isSmallRadius =
+    cityCoords != null &&
+    radiusMeters != null &&
+    radiusMeters < SMALL_RADIUS_THRESHOLD;
+
+  // 2. Proximity — locality / small town (high priority)
+  if (isSmallRadius) {
+    const diff = proximityDiff(a, b, cityCoords);
+    if (diff !== 0) return diff;
+  }
+
+  // 3. Description mentions any requested feature keywords (boolean)
   if (parsed?.features) {
     const featureTerms = Object.keys(parsed.features)
       .filter((f) => parsed.features[f as keyof typeof parsed.features])
@@ -63,10 +104,17 @@ function tiebreak(a: any, b: any, parsed?: ParsedQuery | null): number {
     if (mentionsB !== mentionsA) return mentionsB - mentionsA;
   }
 
-  // 3. Feature count
+  // 4. Feature count
   const featuresA = FEATURE_COLUMNS.filter((col) => a[col] === true).length;
   const featuresB = FEATURE_COLUMNS.filter((col) => b[col] === true).length;
-  return featuresB - featuresA;
+  if (featuresB !== featuresA) return featuresB - featuresA;
+
+  // 5. Proximity — major city (low priority, last resort)
+  if (cityCoords != null && !isSmallRadius) {
+    return proximityDiff(a, b, cityCoords);
+  }
+
+  return 0;
 }
 
 // Scorers
@@ -128,6 +176,8 @@ function scoreDescription(restaurant: any, terms: string[]): number {
 export function scoreAndRank(
   restaurants: any[],
   parsed: ParsedQuery | null,
+  cityCoords?: [number, number] | null,
+  radiusMeters?: number,
 ): any[] {
   if (!parsed || restaurants.length === 0) return restaurants;
 
@@ -146,7 +196,9 @@ export function scoreAndRank(
   // No text terms to score on (e.g. city-only or feature-only query) —
   // skip scoring and apply tiebreaker chain directly.
   if (!hasTextTerms) {
-    return [...restaurants].sort((a, b) => tiebreak(a, b, parsed));
+    return [...restaurants].sort((a, b) =>
+      tiebreak(a, b, parsed, cityCoords, radiusMeters),
+    );
   }
 
   const scored = restaurants
@@ -160,7 +212,7 @@ export function scoreAndRank(
     })
     .sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
-      return tiebreak(a.restaurant, b.restaurant, parsed);
+      return tiebreak(a.restaurant, b.restaurant, parsed, cityCoords, radiusMeters);
     });
 
   return scored.map((r) => r.restaurant);

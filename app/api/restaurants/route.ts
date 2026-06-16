@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { parseNaturalLanguageQuery } from "@/lib/search/natural-language-parser";
 import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/db-amenities";
 import { scoreAndRank } from "@/lib/search/scorer";
+import { calculateDistance } from "@/lib/search/distance";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -37,23 +38,6 @@ function sanitizeQuery(input: string): string {
     .replace(/[(),.%*\\\x00]/g, " ")
     .replace(/\s{2,}/g, " ")
     .trim();
-}
-
-function calculateDistance(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number,
-): number {
-  const R = 6371e3;
-  const φ1 = (lat1 * Math.PI) / 180;
-  const φ2 = (lat2 * Math.PI) / 180;
-  const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-  const Δλ = ((lon2 - lon1) * Math.PI) / 180;
-
-  const a =
-    Math.sin(Δφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 function applyUiFilters(query: any, searchParams: URLSearchParams) {
@@ -196,6 +180,8 @@ export async function GET(request: Request) {
         cityCoordinates = [externalLng, externalLat];
       }
 
+      let nlBbox: [number, number, number, number] | null = null;
+
       if (location && candidates && candidates.length > 0) {
         matchedCity = candidates[0].city ?? null;
 
@@ -203,12 +189,14 @@ export async function GET(request: Request) {
           try {
             const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
             if (mapboxToken) {
-              const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${mapboxToken}&limit=1&types=place`;
+              const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${mapboxToken}&limit=1&types=place,locality`;
               const geocodeResponse = await fetch(geocodeUrl);
               if (geocodeResponse.ok) {
                 const geocodeData = await geocodeResponse.json();
                 if (geocodeData.features?.length > 0) {
-                  cityCoordinates = geocodeData.features[0].center;
+                  const feature = geocodeData.features[0];
+                  cityCoordinates = feature.center;
+                  if (feature.bbox) nlBbox = feature.bbox;
                 }
               }
             }
@@ -218,36 +206,41 @@ export async function GET(request: Request) {
         }
       }
 
-      // Derive radius from bbox (center → corner distance) if available,
-      // otherwise fall back to 20 miles
+      // Derive radius from bbox (center → NE corner distance).
+      // Prefer the explicit location-box bbox; fall back to bbox from NL geocoding.
+      // Cities (bbox radius ≥ 10 km) get a 1.5× multiplier to cover suburbs.
+      // Localities (bbox radius < 10 km) stay tight — trust the bbox as-is.
+      // Falls back to 20 miles when there is no bbox.
+      const effectiveBbox = externalBbox ?? nlBbox;
       let radiusMeters = 20 * 1609.34;
-      if (externalBbox && externalLat !== null && externalLng !== null) {
-        const [, , east, north] = externalBbox; // [west, south, east, north]
-        const bboxRadius = calculateDistance(externalLat, externalLng, north, east);
-        const minRadius = 5 * 1609.34; // 5 mile floor for small localities
-        radiusMeters = Math.max(bboxRadius, minRadius);
+      if (effectiveBbox && cityCoordinates) {
+        const [centerLng, centerLat] = cityCoordinates;
+        const [, , east, north] = effectiveBbox;
+        const bboxRadius = calculateDistance(centerLat, centerLng, north, east);
+        const isCityScale = bboxRadius >= 10_000; // 10 km threshold
+        radiusMeters = isCityScale ? bboxRadius * 1.5 : bboxRadius;
       }
 
-      const filtered = (candidates || []).filter((restaurant: any) => {
-        // If we have coordinates, apply radius filter
-        if (cityCoordinates) {
+      const filterByRadius = (radius: number) =>
+        (candidates || []).filter((restaurant: any) => {
+          if (!cityCoordinates) return true;
           if (!restaurant.latitude || !restaurant.longitude) return false;
           const [lng, lat] = cityCoordinates;
           return (
-            calculateDistance(
-              lat,
-              lng,
-              restaurant.latitude,
-              restaurant.longitude,
-            ) <= radiusMeters
+            calculateDistance(lat, lng, restaurant.latitude, restaurant.longitude) <= radius
           );
-        }
-        // No coordinates, keep everything that passed DB filters
-        return true;
-      });
+        });
+
+      let filtered = filterByRadius(radiusMeters);
+
+      // If the bbox gave a tight radius and returned nothing, expand once to 20 miles.
+      if (filtered.length === 0 && cityCoordinates && radiusMeters < 20 * 1609.34) {
+        radiusMeters = 20 * 1609.34;
+        filtered = filterByRadius(radiusMeters);
+      }
 
       // 8. Score, rank, paginate
-      const ranked = scoreAndRank(filtered, parsed);
+      const ranked = scoreAndRank(filtered, parsed, cityCoordinates, radiusMeters);
       const total = ranked.length;
       const paginatedData = ranked.slice(offset, offset + limit);
 
