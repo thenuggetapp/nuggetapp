@@ -59,6 +59,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSearchSuggestions } from "@/hooks/useRestaurants";
+import { parseNaturalLanguageQuery } from "@/lib/search/natural-language-parser";
+import { getLocationFromIP } from "@/lib/ip-geolocation";
 import {
   useUserBookmarks,
   useUserLikes,
@@ -129,13 +131,26 @@ function SearchContent() {
   const router = useRouter();
   const { user, permissions } = useAuth();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
-  const [submittedQuery, setSubmittedQuery] = useState(searchParams.get("q") || "");
-  const [locationQuery, setLocationQuery] = useState("");
-  const [locationCoordinates, setLocationCoordinates] = useState<{ lat: number; lng: number } | null>(null);
-  const [locationSuggestions, setLocationSuggestions] = useState<Array<{ id: string; text: string; place_name: string; center: [number, number]; bbox?: [number, number, number, number] }>>([]);
-  const [locationBbox, setLocationBbox] = useState<[number, number, number, number] | null>(null);
-  const [mapBounds, setMapBounds] = useState<[number, number, number, number] | null>(null);
-  const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
+  const [submittedQuery, setSubmittedQuery] = useState(
+    searchParams.get("q") || "",
+  );
+  const [locationCoordinates, setLocationCoordinates] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(() => {
+    const lat = searchParams.get("lat");
+    const lng = searchParams.get("lng");
+    if (lat && lng) return { lat: parseFloat(lat), lng: parseFloat(lng) };
+    try {
+      const sLat = localStorage.getItem("nugget_location_lat");
+      const sLng = localStorage.getItem("nugget_location_lng");
+      if (sLat && sLng) return { lat: parseFloat(sLat), lng: parseFloat(sLng) };
+    } catch {}
+    return null;
+  });
+  const [mapBounds, setMapBounds] = useState<
+    [number, number, number, number] | null
+  >(null);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<Restaurant | null>(null);
@@ -268,8 +283,10 @@ function SearchContent() {
   const filterPanelRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-  const locationRef = useRef<HTMLDivElement>(null);
-  const locationDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const [isUsingDeviceLocation, setIsUsingDeviceLocation] = useState(
+    () => searchParams.get("from_device") === "1",
+  );
+  const [isRequestingLocation, setIsRequestingLocation] = useState(false);
 
   const placeholders = [
     "Try: 'Italian with kids menu'",
@@ -284,6 +301,17 @@ function SearchContent() {
   const filterCountsSearchString = useMemo(() => {
     return [searchQuery, ...filters.cuisines].filter(Boolean).join(" ");
   }, [searchQuery, filters.cuisines]);
+
+  // Show "Use my location" banner when the query has no city and no coords are set yet
+  const queryHasLocation = useMemo(
+    () => !!parseNaturalLanguageQuery(submittedQuery).location,
+    [submittedQuery],
+  );
+  const showLocationBanner =
+    !!submittedQuery &&
+    !queryHasLocation &&
+    !locationCoordinates &&
+    !isRequestingLocation;
 
   // Scroll to hovered card when hovering over a marker
   useEffect(() => {
@@ -330,16 +358,6 @@ function SearchContent() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (locationRef.current && !locationRef.current.contains(event.target as Node)) {
-        setShowLocationSuggestions(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       if (
         filterPanelRef.current &&
@@ -361,13 +379,35 @@ function SearchContent() {
     const query = searchParams.get("q");
     const newFilters = getFiltersFromURLParams(searchParams);
 
-    // Update filters when URL params change (e.g., user navigates back/forward)
-    setFilters(newFilters);
+    // Functional update preserves the same object reference when nothing changed,
+    // preventing the search effect from re-firing on every navigation
+    setFilters((prev) =>
+      JSON.stringify(prev) === JSON.stringify(newFilters) ? prev : newFilters,
+    );
 
     // Update search query when URL params change
     if (query) {
       setSearchQuery(query);
       setSubmittedQuery(query);
+    }
+
+    // Sync sticky location from URL params — use functional update to avoid new-object churn
+    const lat = searchParams.get("lat");
+    const lng = searchParams.get("lng");
+    if (lat && lng) {
+      const newLat = parseFloat(lat);
+      const newLng = parseFloat(lng);
+      setLocationCoordinates((prev) =>
+        prev?.lat === newLat && prev?.lng === newLng
+          ? prev
+          : { lat: newLat, lng: newLng },
+      );
+      setIsUsingDeviceLocation(searchParams.get("from_device") === "1");
+    }
+
+    // Open city request dialog when navigated here with that flag
+    if (searchParams.get("openCityRequest")) {
+      setShowCityRequestDialog(true);
     }
 
     // Remove focus from search input and hide suggestions on page load
@@ -389,7 +429,22 @@ function SearchContent() {
     } else if (!query) {
       loadRestaurants();
     }
-  }, [filters, currentPage, submittedQuery, locationCoordinates]);
+  }, [filters, currentPage, submittedQuery]); // locationCoordinates intentionally excluded — see performSearch coordsOverride
+
+  // Persist sticky location to localStorage so it survives page reloads
+  useEffect(() => {
+    if (!locationCoordinates) return;
+    try {
+      localStorage.setItem(
+        "nugget_location_lat",
+        locationCoordinates.lat.toString(),
+      );
+      localStorage.setItem(
+        "nugget_location_lng",
+        locationCoordinates.lng.toString(),
+      );
+    } catch {}
+  }, [locationCoordinates]);
 
   // Show suggestions when they're available (handled by SWR hook)
   useEffect(() => {
@@ -403,47 +458,6 @@ function SearchContent() {
       setShowSuggestions(false);
     }
   }, [suggestions, searchQuery]);
-
-  const fetchLocationSuggestions = (value: string) => {
-    if (locationDebounceRef.current) clearTimeout(locationDebounceRef.current);
-
-    if (value.trim().length < 2) {
-      setLocationSuggestions([]);
-      setShowLocationSuggestions(false);
-      return;
-    }
-
-    locationDebounceRef.current = setTimeout(async () => {
-      try {
-        const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || 'pk.eyJ1Ijoid2lzZXJuIiwiYSI6ImNsczBwcmtoMzAyYTYya21raHBtYXFkdWkifQ.92tySIKG-TSBatGA3--0Wg';
-        const response = await fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(value)}.json?types=place,locality&access_token=${token}&limit=5`,
-        );
-        const data = await response.json();
-        if (data.features?.length > 0) {
-          setLocationSuggestions(data.features);
-          setShowLocationSuggestions(true);
-        } else {
-          setLocationSuggestions([]);
-        }
-      } catch (error) {
-        console.error("Error fetching location suggestions:", error);
-      }
-    }, 300);
-  };
-
-  const handleLocationSelect = (feature: {
-    id: string;
-    text: string;
-    place_name: string;
-    center: [number, number];
-    bbox?: [number, number, number, number];
-  }) => {
-    setLocationQuery(feature.text);
-    setShowLocationSuggestions(false);
-    setLocationCoordinates({ lat: feature.center[1], lng: feature.center[0] });
-    setLocationBbox(feature.bbox ?? null);
-  };
 
   const handleSuggestionClick = (suggestion: {
     id: string;
@@ -636,12 +650,20 @@ function SearchContent() {
     }
   };
 
-  const performSearch = async (query: string) => {
+  const performSearch = async (
+    query: string,
+    coordsOverride?: { lat: number; lng: number } | null,
+  ) => {
     setLoading(true);
     setError(null);
     setFilteredCity(null);
     setCityCoordinates(null);
     setMapBounds(null);
+
+    const parsedQuery = parseNaturalLanguageQuery(query);
+    // Use explicit override (from handleUseMyLocation) or fall back to state
+    const activeCoords =
+      coordsOverride !== undefined ? coordsOverride : locationCoordinates;
 
     try {
       const params = new URLSearchParams({
@@ -662,12 +684,10 @@ function SearchContent() {
         }
       });
 
-      if (locationCoordinates) {
-        params.append("lat", locationCoordinates.lat.toString());
-        params.append("lng", locationCoordinates.lng.toString());
-        if (locationBbox) {
-          params.append("bbox", locationBbox.join(","));
-        }
+      // Only send sticky coords when the query doesn't name its own city
+      if (activeCoords && !parsedQuery.location) {
+        params.append("lat", activeCoords.lat.toString());
+        params.append("lng", activeCoords.lng.toString());
       }
 
       const response = await fetch(`/api/restaurants?${params.toString()}`);
@@ -695,6 +715,17 @@ function SearchContent() {
 
       if (cityCoordinates) {
         setCityCoordinates(cityCoordinates);
+        // When query named a city, update sticky location — functional update avoids object churn
+        if (parsedQuery.location) {
+          const newLat = cityCoordinates[1];
+          const newLng = cityCoordinates[0];
+          setLocationCoordinates((prev) =>
+            prev?.lat === newLat && prev?.lng === newLng
+              ? prev
+              : { lat: newLat, lng: newLng },
+          );
+          setIsUsingDeviceLocation(false);
+        }
       }
 
       const formattedRestaurants: Restaurant[] = (data || []).map((r: any) => {
@@ -732,8 +763,10 @@ function SearchContent() {
           const lngs = validCoords.map((r) => r.coordinates[0]);
           const lats = validCoords.map((r) => r.coordinates[1]);
           setMapBounds([
-            Math.min(...lngs), Math.min(...lats),
-            Math.max(...lngs), Math.max(...lats),
+            Math.min(...lngs),
+            Math.min(...lats),
+            Math.max(...lngs),
+            Math.max(...lats),
           ]);
         }
       }
@@ -754,9 +787,51 @@ function SearchContent() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      const params = new URLSearchParams({ q: searchQuery });
+      const parsed = parseNaturalLanguageQuery(searchQuery);
+      // Preserve sticky location when the query doesn't specify its own city
+      if (!parsed.location && locationCoordinates) {
+        params.set("lat", locationCoordinates.lat.toString());
+        params.set("lng", locationCoordinates.lng.toString());
+        if (isUsingDeviceLocation) params.set("from_device", "1");
+      }
+      router.push(`/search?${params.toString()}`);
     }
     setSubmittedQuery(searchQuery);
+  };
+
+  const handleUseMyLocation = () => {
+    setIsRequestingLocation(true);
+
+    const applyCoords = (lat: number, lng: number) => {
+      const newCoords = { lat, lng };
+      setLocationCoordinates(newCoords);
+      setIsUsingDeviceLocation(true);
+      setIsRequestingLocation(false);
+      // Explicitly re-search since locationCoordinates is no longer a search effect dependency
+      if (submittedQuery) void performSearch(submittedQuery, newCoords);
+    };
+
+    const fallbackToIP = async () => {
+      try {
+        const ipLoc = await getLocationFromIP();
+        if (ipLoc) applyCoords(ipLoc.latitude, ipLoc.longitude);
+        else setIsRequestingLocation(false);
+      } catch {
+        setIsRequestingLocation(false);
+      }
+    };
+
+    if (!("geolocation" in navigator)) {
+      void fallbackToIP();
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => applyCoords(pos.coords.latitude, pos.coords.longitude),
+      () => void fallbackToIP(),
+      { timeout: 10_000, enableHighAccuracy: true, maximumAge: 300_000 },
+    );
   };
 
   const handlePageChange = (newPage: number) => {
@@ -1290,78 +1365,6 @@ function SearchContent() {
                   )}
                 </div>
               </form>
-              <div ref={locationRef} className="relative w-52 flex-shrink-0">
-                <MapPin
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 z-10"
-                  aria-hidden="true"
-                />
-                <Input
-                  type="text"
-                  placeholder="Select a location"
-                  value={locationQuery}
-                  onChange={(e) => {
-                    setLocationQuery(e.target.value);
-                    setLocationCoordinates(null);
-                    setLocationBbox(null);
-                    fetchLocationSuggestions(e.target.value);
-                  }}
-                  onFocus={() => {
-                    if (locationSuggestions.length > 0) setShowLocationSuggestions(true);
-                  }}
-                  onBlur={() => {
-                    if (!locationCoordinates) {
-                      setLocationQuery("");
-                      setLocationSuggestions([]);
-                      setShowLocationSuggestions(false);
-                    }
-                  }}
-                  className="pl-10 pr-8 h-11 bg-white border-2 border-slate-300 text-slate-900 placeholder:text-slate-400 rounded-lg"
-                />
-                {locationCoordinates && (
-                  <button
-                    type="button"
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => {
-                      setLocationQuery("");
-                      setLocationCoordinates(null);
-                      setLocationBbox(null);
-                      setMapBounds(null);
-                    }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                    aria-label="Clear location"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-                {showLocationSuggestions && locationSuggestions.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden z-50">
-                    {locationSuggestions.map((feature) => (
-                      <button
-                        key={feature.id}
-                        type="button"
-                        onMouseDown={(e) => e.preventDefault()}
-                        onClick={() => handleLocationSelect(feature)}
-                        className="w-full px-6 py-4 text-left hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-b-0"
-                      >
-                        <div className="flex items-start gap-3">
-                          <MapPin
-                            className="h-5 w-5 text-[#8dbf65] mt-0.5 flex-shrink-0"
-                            aria-hidden="true"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <div className="font-semibold text-slate-900 truncate">
-                              {feature.text}
-                            </div>
-                            <div className="text-sm text-slate-600 truncate">
-                              {feature.place_name}
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
               <Button
                 type="submit"
                 size="sm"
@@ -1447,6 +1450,24 @@ function SearchContent() {
               </div>
               {activeTab === "restaurants" && (
                 <>
+                  {(showLocationBanner || isRequestingLocation) && (
+                    <div className="flex items-center gap-2 mb-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                      <MapPin className="h-4 w-4 text-slate-400 flex-shrink-0" />
+                      <span className="text-sm text-slate-600">
+                        {isRequestingLocation
+                          ? "Finding your location…"
+                          : "No location in your search."}
+                      </span>
+                      {!isRequestingLocation && (
+                        <button
+                          onClick={handleUseMyLocation}
+                          className="text-sm font-semibold text-[#8dbf65] hover:underline ml-1"
+                        >
+                          Use my location
+                        </button>
+                      )}
+                    </div>
+                  )}
                   <h2 className="text-xl font-bold text-slate-900">
                     {filteredCity
                       ? `${pagination.total} ${getActiveFilterLabel()} restaurant${
@@ -1503,29 +1524,63 @@ function SearchContent() {
                         ))}
                       </>
                     ) : restaurants.length === 0 ? (
-                      <div className="flex flex-col items-center justify-center py-12 text-center">
-                        <Search className="h-12 w-12 text-slate-300 mb-4" />
-                        <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                          No restaurants found
-                        </h3>
-                        <p className="text-sm text-slate-500 max-w-sm mb-4">
-                          {searchQuery
-                            ? `No results for "${searchQuery}". Try a different search term.`
-                            : "No restaurants are currently available."}
-                        </p>
-                        {searchQuery && (
-                          <Button
-                            onClick={() => {
-                              setCityRequestName(searchQuery);
-                              setShowCityRequestDialog(true);
-                            }}
-                            className="mt-2 bg-[#8dbf65] hover:bg-[#7da857] text-white"
-                          >
-                            <MapPin className="h-4 w-4 mr-2" />
-                            Request this city
-                          </Button>
-                        )}
-                      </div>
+                      isUsingDeviceLocation ? (
+                        <div className="flex flex-col items-center justify-center py-16 text-center px-4">
+                          <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                            <MapPin className="h-8 w-8 text-slate-400" />
+                          </div>
+                          <h3 className="text-xl font-bold text-slate-900 mb-2">
+                            Nugget isn't in your area yet
+                          </h3>
+                          <p className="text-sm text-slate-500 max-w-xs mb-6">
+                            We don't have any restaurants mapped near your
+                            current location.
+                          </p>
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <Button
+                              onClick={() => {
+                                setCityRequestName("");
+                                setShowCityRequestDialog(true);
+                              }}
+                              className="bg-[#8dbf65] hover:bg-[#7da857] text-white"
+                            >
+                              <MapPin className="h-4 w-4 mr-2" />
+                              Request your city
+                            </Button>
+                            <Button
+                              variant="outline"
+                              onClick={() => router.push("/")}
+                              className="border-slate-300"
+                            >
+                              Search in another city
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center py-12 text-center">
+                          <Search className="h-12 w-12 text-slate-300 mb-4" />
+                          <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                            No restaurants found
+                          </h3>
+                          <p className="text-sm text-slate-500 max-w-sm mb-4">
+                            {searchQuery
+                              ? `No results for "${searchQuery}". Try a different search term.`
+                              : "No restaurants are currently available."}
+                          </p>
+                          {searchQuery && (
+                            <Button
+                              onClick={() => {
+                                setCityRequestName(searchQuery);
+                                setShowCityRequestDialog(true);
+                              }}
+                              className="mt-2 bg-[#8dbf65] hover:bg-[#7da857] text-white"
+                            >
+                              <MapPin className="h-4 w-4 mr-2" />
+                              Request this city
+                            </Button>
+                          )}
+                        </div>
+                      )
                     ) : (
                       restaurants.map((restaurant) => (
                         <Link

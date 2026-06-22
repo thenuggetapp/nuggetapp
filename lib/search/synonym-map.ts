@@ -317,9 +317,9 @@ export const VENUE_WORDS = new Set([
   "spot",
 ]);
 
-// ***Duplicates cities are intended for slug matching
+// ***Duplicates cities for slug matching
 export const COMMON_CITIES = [
-  // UK
+  // UK cities
   "birmingham",
   "brighton",
   "bristol",
@@ -341,6 +341,16 @@ export const COMMON_CITIES = [
   "sheffield",
   "southampton",
   "york",
+  // London areas (multi-word — single-word areas caught by Mapbox fallback)
+  "bethnal green",
+  "brick lane",
+  "camden town",
+  "canary wharf",
+  "covent garden",
+  "king's cross",
+  "kings cross",
+  "london bridge",
+  "notting hill",
   // US
   "atlanta",
   "austin",

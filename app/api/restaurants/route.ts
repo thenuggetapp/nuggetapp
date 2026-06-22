@@ -103,17 +103,92 @@ export async function GET(request: Request) {
       const safeQuery = sanitizeQuery(rawQuery);
       const parsed = safeQuery ? parseNaturalLanguageQuery(safeQuery) : null;
 
+      // Pre-geocoding: resolve any location string to coordinates + bbox before the
+      // Supabase query runs. Three sources, tried in priority order:
+      //   A. NL parser found a COMMON_CITIES city → geocode it for coordinates/bbox
+      //   B. Single remaining search term → single-word entity recognition
+      //   C. 2–3 remaining search terms with no food/cuisine → multi-word locality
+      //      (handles "camden town", "notting hill", "santa monica", etc.)
+      // Coords drive the radius filter. City ilike is derived separately (see below).
+      let resolvedCoords: [number, number] | null = null;
+      let resolvedBbox: [number, number, number, number] | null = null;
+      let resolvedPlaceName: string | null = null;
+      // "place" = city/town  |  "locality" / "district" = neighbourhood within a city
+      let resolvedPlaceType: string | null = null;
+      // Parent city extracted from Mapbox context for locality/district results.
+      // (e.g. Camden Town → "London") — used for the ilike guard since the city
+      // column in Supabase holds the parent city, not the neighbourhood name.
+      let resolvedParentCity: string | null = null;
+      let geocodeTarget: string | null = null;
+
+      if (externalLat === null && externalLng === null) {
+        const terms = parsed?.searchTerms ?? [];
+        // Only try geocoding a single leftover search term (multi-word terms are
+        // restaurant names, not locations — they stay in searchTerms for text search).
+        geocodeTarget =
+          parsed?.location ?? (terms.length === 1 ? terms[0] : null);
+
+        if (geocodeTarget) {
+          try {
+            const mapboxToken =
+              process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ||
+              "pk.eyJ1Ijoid2lzZXJuIiwiYSI6ImNsczBwcmtoMzAyYTYya21raHBtYXFkdWkifQ.92tySIKG-TSBatGA3--0Wg";
+            // proximity biases results toward London/UK so ambiguous names like
+            // "camden town" resolve to the UK not a US township.
+            const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(geocodeTarget)}.json?access_token=${mapboxToken}&limit=1&types=place,locality,district&proximity=-0.1278,51.5074`;
+            const geocodeRes = await fetch(geocodeUrl);
+            if (geocodeRes.ok) {
+              const geocodeData = await geocodeRes.json();
+              if (geocodeData.features?.length > 0) {
+                const feature = geocodeData.features[0];
+                resolvedCoords = feature.center;
+                resolvedBbox = feature.bbox ?? null;
+                resolvedPlaceName = feature.text ?? null;
+                resolvedPlaceType = feature.place_type?.[0] ?? null;
+                // For localities/districts, walk the context to find the parent city.
+                // The city column in Supabase holds "London" not "Camden Town".
+                if (resolvedPlaceType !== "place") {
+                  const parentPlace = (feature.context ?? []).find((c: any) =>
+                    c.id?.startsWith("place.")
+                  );
+                  resolvedParentCity = parentPlace?.text ?? null;
+                }
+                // The single search term was used as the geocode target → clear it
+                // so it isn't also used for restaurant-name matching.
+                if (parsed && !parsed.location && terms.length === 1) {
+                  parsed.searchTerms = [];
+                }
+              }
+            }
+          } catch {
+            // geocoding failed — radius won't apply; ilike still guards the query
+          }
+        }
+      }
+
       // Base query
       let supabaseQuery = supabase
         .from("restaurants")
         .select(RESTAURANT_SELECT)
         .eq("visible", true);
 
-      // 1. City - hard exclude from NL query, but skip if location box coordinates
-      // are provided (radius filter handles it instead)
-      const location = (externalLat === null || externalLng === null) ? parsed?.location : null;
-      if (location) {
-        supabaseQuery = supabaseQuery.ilike("city", `%${location}%`);
+      // 1. City ilike — hard DB-level guard applied before radius filtering.
+      // The Supabase city column holds the city name ("London"), not the neighbourhood
+      // ("Camden Town"), so locality/district results must use the parent city.
+      //
+      // Logic:
+      //   locality/district result → resolvedParentCity ("London") takes priority
+      //     over parsedLocation ("camden town") because ilike("%camden town%") = 0 rows
+      //   place result → parsedLocation (COMMON_CITIES) or resolvedPlaceName (geocoded)
+      const parsedLocation =
+        externalLat === null && externalLng === null ? parsed?.location : null;
+      const isLocality =
+        resolvedPlaceType === "locality" || resolvedPlaceType === "district";
+      const ilikeCity = isLocality
+        ? (resolvedParentCity ?? parsedLocation)
+        : (parsedLocation ?? (resolvedPlaceType === "place" ? resolvedPlaceName : null));
+      if (ilikeCity) {
+        supabaseQuery = supabaseQuery.ilike("city", `%${ilikeCity}%`);
       }
 
       // 2. Feature flags - hard AND from natural language
@@ -175,43 +250,18 @@ export async function GET(request: Request) {
       let cityCoordinates: [number, number] | null = null;
       let matchedCity: string | null = null;
 
-      // Use pre-resolved coordinates from the location input if provided
       if (externalLat !== null && externalLng !== null) {
         cityCoordinates = [externalLng, externalLat];
-      }
-
-      let nlBbox: [number, number, number, number] | null = null;
-
-      if (location && candidates && candidates.length > 0) {
-        matchedCity = candidates[0].city ?? null;
-
-        if (!cityCoordinates) {
-          try {
-            const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-            if (mapboxToken) {
-              const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${mapboxToken}&limit=1&types=place,locality`;
-              const geocodeResponse = await fetch(geocodeUrl);
-              if (geocodeResponse.ok) {
-                const geocodeData = await geocodeResponse.json();
-                if (geocodeData.features?.length > 0) {
-                  const feature = geocodeData.features[0];
-                  cityCoordinates = feature.center;
-                  if (feature.bbox) nlBbox = feature.bbox;
-                }
-              }
-            }
-          } catch (geocodeError) {
-            console.error("Geocoding error:", geocodeError);
-          }
-        }
+      } else if (resolvedCoords) {
+        cityCoordinates = resolvedCoords;
+        matchedCity = resolvedPlaceName;
       }
 
       // Derive radius from bbox (center → NE corner distance).
-      // Prefer the explicit location-box bbox; fall back to bbox from NL geocoding.
       // Cities (bbox radius ≥ 10 km) get a 1.5× multiplier to cover suburbs.
       // Localities (bbox radius < 10 km) stay tight — trust the bbox as-is.
       // Falls back to 20 miles when there is no bbox.
-      const effectiveBbox = externalBbox ?? nlBbox;
+      const effectiveBbox = externalBbox ?? resolvedBbox;
       let radiusMeters = 20 * 1609.34;
       if (effectiveBbox && cityCoordinates) {
         const [centerLng, centerLat] = cityCoordinates;
@@ -227,22 +277,52 @@ export async function GET(request: Request) {
           if (!restaurant.latitude || !restaurant.longitude) return false;
           const [lng, lat] = cityCoordinates;
           return (
-            calculateDistance(lat, lng, restaurant.latitude, restaurant.longitude) <= radius
+            calculateDistance(
+              lat,
+              lng,
+              restaurant.latitude,
+              restaurant.longitude,
+            ) <= radius
           );
         });
 
       let filtered = filterByRadius(radiusMeters);
 
       // If the bbox gave a tight radius and returned nothing, expand once to 20 miles.
-      if (filtered.length === 0 && cityCoordinates && radiusMeters < 20 * 1609.34) {
+      if (
+        filtered.length === 0 &&
+        cityCoordinates &&
+        radiusMeters < 20 * 1609.34
+      ) {
         radiusMeters = 20 * 1609.34;
         filtered = filterByRadius(radiusMeters);
       }
 
       // 8. Score, rank, paginate
-      const ranked = scoreAndRank(filtered, parsed, cityCoordinates, radiusMeters);
+      const ranked = scoreAndRank(
+        filtered,
+        parsed,
+        cityCoordinates,
+        radiusMeters,
+      );
       const total = ranked.length;
       const paginatedData = ranked.slice(offset, offset + limit);
+
+      // Debug: human-readable trace of every search step
+      const coordStr = cityCoordinates
+        ? `[${cityCoordinates[1].toFixed(4)}, ${cityCoordinates[0].toFixed(4)}]`
+        : "none";
+      const radiusMi = (radiusMeters / 1609.34).toFixed(1);
+      const featureKeys = Object.keys(parsed?.features ?? {}).filter(
+        (k) => (parsed?.features as any)?.[k],
+      );
+      console.log(
+        `\n[search] "${rawQuery}"\n` +
+        `  parsed  : location=${parsed?.location ?? "—"} | food=[${parsed?.foodKeywords?.join(", ") || "—"}] | cuisine=[${parsed?.cuisines?.join(", ") || "—"}] | terms=[${parsed?.searchTerms?.join(", ") || "—"}] | features=[${featureKeys.join(", ") || "—"}]\n` +
+        `  geocode : target=${geocodeTarget ?? "—"} | type=${resolvedPlaceType ?? "—"} | place=${resolvedPlaceName ?? "—"} | parent=${resolvedParentCity ?? "—"}\n` +
+        `  filter  : city ilike="${ilikeCity ?? "none"}" | coords=${coordStr} (external=${externalLat !== null})\n` +
+        `  results : radius=${radiusMi}mi | db→${candidates?.length ?? 0} | radius→${filtered.length} | ranked→${total}`,
+      );
 
       return NextResponse.json({
         data: paginatedData,

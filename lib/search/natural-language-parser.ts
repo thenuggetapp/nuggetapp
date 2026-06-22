@@ -67,11 +67,17 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
     }
   }
 
-  // Single-word cities fuzzy
+  // Single-word cities fuzzy — require ≥5 chars so short words ("eat", "free", "kids")
+  // don't fuzzy-match long city names (e.g. "eat" → "seattle" via substring containment)
   if (!parsed.location) {
     for (const queryWord of queryWords) {
+      if (queryWord.length < 5) continue;
       const cityMatch = cityFuse.search(queryWord);
-      if (cityMatch.length > 0 && !cityMatch[0].item.includes(" ")) {
+      if (
+        cityMatch.length > 0 &&
+        !cityMatch[0].item.includes(" ") &&
+        queryWord.length >= cityMatch[0].item.length * 0.65
+      ) {
         parsed.location = cityMatch[0].item;
         break;
       }

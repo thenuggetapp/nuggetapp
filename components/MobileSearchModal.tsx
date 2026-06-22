@@ -22,44 +22,6 @@ const CITIES = {
   "San Francisco": { lat: 37.7749, lng: -122.4194 },
 };
 
-function calculateDistance(
-  lat1: number,
-  lng1: number,
-  lat2: number,
-  lng2: number,
-): number {
-  const R = 6371;
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLng = ((lng2 - lng1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-function findNearestCity(userLat: number, userLng: number): string {
-  let nearestCity = "London";
-  let minDistance = Infinity;
-
-  for (const [city, coords] of Object.entries(CITIES)) {
-    const distance = calculateDistance(
-      userLat,
-      userLng,
-      coords.lat,
-      coords.lng,
-    );
-    if (distance < minDistance) {
-      minDistance = distance;
-      nearestCity = city;
-    }
-  }
-
-  return nearestCity;
-}
 
 function getCookie(name: string): string | null {
   if (typeof document === "undefined") return null;
@@ -130,6 +92,7 @@ export function MobileSearchModal({
   const [selectedCity, setSelectedCity] = useState<string | undefined>(
     defaultCity,
   );
+  const [detectedCoords, setDetectedCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [showCitySelector, setShowCitySelector] = useState(false);
 
   useEffect(() => {
@@ -244,17 +207,29 @@ export function MobileSearchModal({
     }
 
     if (query.trim()) {
-      let finalQuery = query.trim();
+      const params = new URLSearchParams({ q: query.trim() });
 
-      const parsed = parseNaturalLanguageQuery(finalQuery);
-      if (!parsed.location) {
-        finalQuery = `${selectedCity} ${finalQuery}`;
+      if (detectedCoords) {
+        params.set("lat", detectedCoords.lat.toString());
+        params.set("lng", detectedCoords.lng.toString());
+        params.set("from_device", "1");
+      } else {
+        const cityCoords = CITIES[selectedCity as keyof typeof CITIES];
+        if (cityCoords) {
+          params.set("lat", cityCoords.lat.toString());
+          params.set("lng", cityCoords.lng.toString());
+        } else {
+          const parsed = parseNaturalLanguageQuery(query.trim());
+          if (!parsed.location) {
+            params.set("q", `${selectedCity} ${query.trim()}`);
+          }
+        }
       }
 
-      const updated = saveRecentSearch(finalQuery);
+      const updated = saveRecentSearch(params.get("q") ?? query.trim());
       setRecentSearches(updated);
       onOpenChange(false);
-      router.push(`/search?q=${encodeURIComponent(finalQuery)}`);
+      router.push(`/search?${params.toString()}`);
     }
   };
 
@@ -290,128 +265,42 @@ export function MobileSearchModal({
     onOpenChange(false);
   };
 
-  const getLocationViaGeocode = async (
-    latitude: number,
-    longitude: number,
-  ): Promise<string | null> => {
-    try {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/mapbox-geocode?longitude=${longitude}&latitude=${latitude}`,
-        {
-          headers: {
-            Authorization: `Bearer ${supabaseAnonKey}`,
-            "Content-Type": "application/json",
-          },
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to get location information");
-      }
-
-      const data = await response.json();
-
-      if (data.features && data.features.length > 0) {
-        const place = data.features[0];
-        return place.text || place.place_name;
-      }
-
-      return null;
-    } catch (error) {
-      console.error("Error geocoding location:", error);
-      return null;
-    }
-  };
-
-  const handleIPFallback = async () => {
-    try {
-      const ipLocation = await getLocationFromIP();
-
-      if (ipLocation) {
-        const cityName = ipLocation.city;
-        onOpenChange(false);
-        router.push(`/search?q=${encodeURIComponent(cityName)}`);
-        toast.success(`Searching restaurants in ${cityName} (via IP location)`);
-      } else {
-        toast.error(
-          "Could not determine your location. Please search manually.",
-        );
-      }
-    } catch (error) {
-      console.error("Error with IP geolocation:", error);
-      toast.error("Could not determine your location. Please search manually.");
-    } finally {
-      setIsGettingLocation(false);
-    }
-  };
-
   const handleUseLocation = () => {
-    if (!navigator.geolocation) {
-      toast.info("Browser geolocation not available, using IP location...");
-      setIsGettingLocation(true);
-      handleIPFallback();
+    setIsGettingLocation(true);
+
+    const applyCoords = (lat: number, lng: number) => {
+      setDetectedCoords({ lat, lng });
+      setSelectedCity("Current location");
+      localStorage.setItem("nugget_nearest_city", "Current location");
+      setShowCitySelector(false);
+      setIsGettingLocation(false);
+      toast.success("Using your current location");
+    };
+
+    const fallbackToIP = async () => {
+      try {
+        const ipLocation = await getLocationFromIP();
+        if (ipLocation) {
+          applyCoords(ipLocation.latitude, ipLocation.longitude);
+        } else {
+          toast.error("Unable to detect your location");
+          setIsGettingLocation(false);
+        }
+      } catch {
+        toast.error("Unable to detect your location");
+        setIsGettingLocation(false);
+      }
+    };
+
+    if (!("geolocation" in navigator)) {
+      void fallbackToIP();
       return;
     }
 
-    setIsGettingLocation(true);
-
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        const nearestCity = findNearestCity(latitude, longitude);
-
-        setSelectedCity(nearestCity);
-        localStorage.setItem("nugget_nearest_city", nearestCity);
-        setShowCitySelector(false);
-        toast.success(`Location set to ${nearestCity}`);
-        setIsGettingLocation(false);
-      },
-      async (error) => {
-        if (error.code === error.PERMISSION_DENIED) {
-          toast.info(
-            "Location permission denied. Using IP location instead...",
-          );
-          try {
-            const ipLocation = await getLocationFromIP();
-            if (ipLocation) {
-              const nearestCity = findNearestCity(
-                ipLocation.latitude,
-                ipLocation.longitude,
-              );
-              setSelectedCity(nearestCity);
-              localStorage.setItem("nugget_nearest_city", nearestCity);
-              setShowCitySelector(false);
-              toast.success(`Location set to ${nearestCity}`);
-            } else {
-              toast.error("Unable to detect your location");
-            }
-          } catch (ipError) {
-            toast.error("Unable to detect your location");
-          } finally {
-            setIsGettingLocation(false);
-          }
-        } else {
-          setIsGettingLocation(false);
-          switch (error.code) {
-            case error.POSITION_UNAVAILABLE:
-              toast.error("Location information is unavailable.");
-              break;
-            case error.TIMEOUT:
-              toast.error("Location request timed out.");
-              break;
-            default:
-              toast.error("Failed to get your location.");
-          }
-        }
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      },
+      (position) => applyCoords(position.coords.latitude, position.coords.longitude),
+      () => void fallbackToIP(),
+      { enableHighAccuracy: true, timeout: 10_000, maximumAge: 300_000 },
     );
   };
 

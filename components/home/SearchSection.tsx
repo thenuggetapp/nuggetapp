@@ -60,25 +60,6 @@ function calculateDistance(
   return R * c;
 }
 
-function findNearestCity(userLat: number, userLng: number): string {
-  let nearestCity = "London";
-  let minDistance = Infinity;
-
-  for (const [city, coords] of Object.entries(CITIES)) {
-    const distance = calculateDistance(
-      userLat,
-      userLng,
-      coords.lat,
-      coords.lng,
-    );
-    if (distance < minDistance) {
-      minDistance = distance;
-      nearestCity = city;
-    }
-  }
-
-  return nearestCity;
-}
 
 function getCookie(name: string): string | null {
   if (typeof document === "undefined") return null;
@@ -138,9 +119,9 @@ export function SearchSection({
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [hasBeenFocused, setHasBeenFocused] = useState(false);
   const [isDetectingLocation, setIsDetectingLocation] = useState(false);
-  const [detectedCity, setDetectedCity] = useState<string | undefined>(
-    defaultCity,
-  );
+  const [detectedCity, setDetectedCity] = useState<string | undefined>(defaultCity);
+  const [detectedCoords, setDetectedCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [locationNotSupported, setLocationNotSupported] = useState(false);
   const [showCityDropdown, setShowCityDropdown] = useState(false);
   const router = useRouter();
   const searchRef = useRef<HTMLDivElement>(null);
@@ -240,18 +221,34 @@ export function SearchSection({
     }
 
     if (searchQuery.trim()) {
-      let finalQuery = searchQuery.trim();
+      const params = new URLSearchParams({ q: searchQuery.trim() });
 
-      const parsed = parseNaturalLanguageQuery(finalQuery);
-      if (!parsed.location) {
-        finalQuery = `${detectedCity} ${finalQuery}`;
+      if (detectedCoords) {
+        // GPS/IP coords — pass with device flag so search page knows it's a device location
+        params.set("lat", detectedCoords.lat.toString());
+        params.set("lng", detectedCoords.lng.toString());
+        params.set("from_device", "1");
+      } else {
+        const cityCoords = CITIES[detectedCity as keyof typeof CITIES];
+        if (cityCoords) {
+          // Known city — pass its coords so search page can sticky them across queries
+          params.set("lat", cityCoords.lat.toString());
+          params.set("lng", cityCoords.lng.toString());
+        } else {
+          // Unknown city — fall back to prepending city to query
+          const parsed = parseNaturalLanguageQuery(searchQuery.trim());
+          if (!parsed.location) {
+            params.set("q", `${detectedCity} ${searchQuery.trim()}`);
+          }
+        }
       }
 
+      const finalQuery = params.get("q") || searchQuery.trim();
       const updated = saveRecentSearch(finalQuery);
       setRecentSearches(updated);
       setShowSuggestions(false);
       setHasBeenFocused(false);
-      router.push(`/search?q=${encodeURIComponent(finalQuery)}`);
+      router.push(`/search?${params.toString()}`);
     }
   };
 
@@ -281,48 +278,45 @@ export function SearchSection({
 
   const handleUseCurrentLocation = async () => {
     setIsDetectingLocation(true);
+    setLocationNotSupported(false);
+
+    const applyCoords = (lat: number, lng: number) => {
+      const minDist = Math.min(
+        ...Object.values(CITIES).map((c) => calculateDistance(lat, lng, c.lat, c.lng)),
+      );
+      if (minDist > 300) {
+        setLocationNotSupported(true);
+        return;
+      }
+      setDetectedCoords({ lat, lng });
+      setDetectedCity("Current location");
+      localStorage.setItem("nugget_nearest_city", "Current location");
+      onLocationDetected?.("Current location");
+      setShowCityDropdown(false);
+      toast.success("Using your current location");
+    };
 
     try {
-      if ("geolocation" in navigator) {
-        const position = await new Promise<GeolocationPosition>(
-          (resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject, {
-              timeout: 5000,
-              enableHighAccuracy: true,
-            });
-          },
-        );
+      if (!("geolocation" in navigator)) throw new Error("not supported");
 
-        const nearestCity = findNearestCity(
-          position.coords.latitude,
-          position.coords.longitude,
-        );
+      const position = await new Promise<GeolocationPosition>((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          timeout: 10_000,
+          enableHighAccuracy: true,
+          maximumAge: 300_000,
+        }),
+      );
 
-        setDetectedCity(nearestCity);
-        localStorage.setItem("nugget_nearest_city", nearestCity);
-        onLocationDetected?.(nearestCity);
-        setShowCityDropdown(false);
-        toast.success(`Location set to ${nearestCity}`);
-      } else {
-        throw new Error("Geolocation not supported");
-      }
-    } catch (error) {
+      applyCoords(position.coords.latitude, position.coords.longitude);
+    } catch {
       try {
         const ipLocation = await getLocationFromIP();
         if (ipLocation) {
-          const nearestCity = findNearestCity(
-            ipLocation.latitude,
-            ipLocation.longitude,
-          );
-          setDetectedCity(nearestCity);
-          localStorage.setItem("nugget_nearest_city", nearestCity);
-          onLocationDetected?.(nearestCity);
-          setShowCityDropdown(false);
-          toast.success(`Location set to ${nearestCity}`);
+          applyCoords(ipLocation.latitude, ipLocation.longitude);
         } else {
           toast.error("Unable to detect your location");
         }
-      } catch (ipError) {
+      } catch {
         toast.error("Unable to detect your location");
       }
     } finally {
@@ -483,19 +477,40 @@ export function SearchSection({
                     type="button"
                     onClick={handleUseCurrentLocation}
                     disabled={isDetectingLocation}
-                    className="w-full px-6 py-4 text-left hover:bg-slate-50 transition-colors border-b border-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className={`w-full px-6 py-4 text-left transition-colors border-b border-slate-100 disabled:opacity-50 disabled:cursor-not-allowed ${locationNotSupported ? "bg-red-50" : "hover:bg-slate-50"}`}
                   >
                     <div className="flex items-center gap-3">
                       <Navigation
-                        className={`h-5 w-5 text-[#8dbf65] ${isDetectingLocation ? "animate-pulse" : ""}`}
+                        className={`h-5 w-5 ${locationNotSupported ? "text-red-400" : "text-[#8dbf65]"} ${isDetectingLocation ? "animate-pulse" : ""}`}
                       />
-                      <span className="font-medium text-slate-900">
-                        {isDetectingLocation
-                          ? "Detecting..."
-                          : "Use Current Location"}
+                      <span className={`font-medium ${locationNotSupported ? "text-red-500 line-through" : "text-slate-900"}`}>
+                        {isDetectingLocation ? "Detecting..." : "Use Current Location"}
                       </span>
                     </div>
                   </button>
+
+                  {locationNotSupported && (
+                    <div className="px-5 py-4 bg-red-50 border-b border-slate-100">
+                      <p className="text-sm font-semibold text-red-700 mb-0.5">Nugget isn't in your area yet</p>
+                      <p className="text-xs text-red-500 mb-3">We don't have restaurants mapped near your location.</p>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => router.push("/search?openCityRequest=1")}
+                          className="text-xs font-semibold text-white bg-[#8dbf65] hover:bg-[#7aa857] px-3 py-1.5 rounded-full"
+                        >
+                          Request your city
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setLocationNotSupported(false)}
+                          className="text-xs font-semibold text-slate-500 hover:text-slate-700 px-3 py-1.5"
+                        >
+                          Dismiss
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   {Object.keys(CITIES).map((city) => (
                     <button
