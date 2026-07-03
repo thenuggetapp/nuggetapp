@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo, Suspense } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+  Suspense,
+} from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
@@ -198,6 +205,22 @@ function SearchContent() {
     null,
   );
   const [isWideLayout, setIsWideLayout] = useState(false);
+  const [showSearchHere, setShowSearchHere] = useState(false);
+  const [mapViewport, setMapViewport] = useState<{
+    center: [number, number];
+    bounds: [number, number, number, number];
+  } | null>(null);
+  // Suppresses the "Search in this area" button during programmatic map animations
+  const mapSettlingRef = useRef(false);
+  // Stable refs so the viewport callback doesn't need to re-register on every render
+  const restaurantsRef = useRef<Restaurant[]>([]);
+  const submittedQueryRef = useRef(submittedQuery);
+  const mapInstanceRef = useRef<import("mapbox-gl").Map | null>(null);
+  const [isSearchInAreaMode, setIsSearchInAreaMode] = useState(false);
+  const searchOriginRef = useRef<{
+    coords: { lat: number; lng: number } | null;
+    city: string | null;
+  } | null>(null);
 
   // Drawer state for mobile
   const [drawerPosition, setDrawerPosition] = useState<
@@ -446,6 +469,42 @@ function SearchContent() {
     } catch {}
   }, [locationCoordinates]);
 
+  // Keep stable refs in sync so the viewport callback doesn't capture stale closures
+  useEffect(() => {
+    restaurantsRef.current = restaurants;
+  }, [restaurants]);
+  useEffect(() => {
+    submittedQueryRef.current = submittedQuery;
+  }, [submittedQuery]);
+
+  // Every time new results arrive, suppress the button for long enough to cover
+  // the fitBounds animation (1500ms) plus buffer, regardless of API latency.
+  useEffect(() => {
+    if (restaurants.length === 0 || !submittedQuery) return;
+    mapSettlingRef.current = true;
+    const t = setTimeout(() => {
+      mapSettlingRef.current = false;
+    }, 2500);
+    return () => clearTimeout(t);
+  }, [restaurants, submittedQuery]);
+
+  const handleViewportChange = useCallback(
+    (viewport: {
+      center: [number, number];
+      bounds: [number, number, number, number];
+    }) => {
+      setMapViewport(viewport);
+      if (
+        !mapSettlingRef.current &&
+        restaurantsRef.current.length > 0 &&
+        submittedQueryRef.current
+      ) {
+        setShowSearchHere(true);
+      }
+    },
+    [],
+  );
+
   // Show suggestions when they're available (handled by SWR hook)
   useEffect(() => {
     if (
@@ -653,12 +712,19 @@ function SearchContent() {
   const performSearch = async (
     query: string,
     coordsOverride?: { lat: number; lng: number } | null,
+    bboxOverride?: [number, number, number, number] | null,
   ) => {
     setLoading(true);
     setError(null);
     setFilteredCity(null);
     setCityCoordinates(null);
     setMapBounds(null);
+    setShowSearchHere(false);
+    setIsSearchInAreaMode(!!bboxOverride);
+    mapSettlingRef.current = true;
+    setTimeout(() => {
+      mapSettlingRef.current = false;
+    }, 2200);
 
     const parsedQuery = parseNaturalLanguageQuery(query);
     // Use explicit override (from handleUseMyLocation) or fall back to state
@@ -684,8 +750,16 @@ function SearchContent() {
         }
       });
 
-      // Only send sticky coords when the query doesn't name its own city
-      if (activeCoords && !parsedQuery.location) {
+      if (bboxOverride) {
+        // Search-in-area: always use the explicit viewport coords, bypassing any
+        // location name in the query so the API doesn't geocode back to the city.
+        if (activeCoords) {
+          params.append("lat", activeCoords.lat.toString());
+          params.append("lng", activeCoords.lng.toString());
+        }
+        params.append("bbox", bboxOverride.join(","));
+      } else if (activeCoords && !parsedQuery.location) {
+        // Normal search: only send coords when the query doesn't name its own city
         params.append("lat", activeCoords.lat.toString());
         params.append("lng", activeCoords.lng.toString());
       }
@@ -756,18 +830,22 @@ function SearchContent() {
       if (formattedRestaurants.length > 0) {
         setSelectedRestaurant(formattedRestaurants[0]);
 
-        const validCoords = formattedRestaurants.filter(
-          (r) => r.coordinates[0] !== 0 && r.coordinates[1] !== 0,
-        );
-        if (validCoords.length > 0) {
-          const lngs = validCoords.map((r) => r.coordinates[0]);
-          const lats = validCoords.map((r) => r.coordinates[1]);
-          setMapBounds([
-            Math.min(...lngs),
-            Math.min(...lats),
-            Math.max(...lngs),
-            Math.max(...lats),
-          ]);
+        // Don't fit bounds when searching in a user-chosen area — the map should
+        // stay exactly where the user positioned it and just update the markers.
+        if (!bboxOverride) {
+          const validCoords = formattedRestaurants.filter(
+            (r) => r.coordinates[0] !== 0 && r.coordinates[1] !== 0,
+          );
+          if (validCoords.length > 0) {
+            const lngs = validCoords.map((r) => r.coordinates[0]);
+            const lats = validCoords.map((r) => r.coordinates[1]);
+            setMapBounds([
+              Math.min(...lngs),
+              Math.min(...lats),
+              Math.max(...lngs),
+              Math.max(...lats),
+            ]);
+          }
         }
       }
     } catch (error) {
@@ -832,6 +910,25 @@ function SearchContent() {
       () => void fallbackToIP(),
       { timeout: 10_000, enableHighAccuracy: true, maximumAge: 300_000 },
     );
+  };
+
+  const handleSearchInArea = () => {
+    if (!mapViewport) return;
+    mapInstanceRef.current?.stop();
+    searchOriginRef.current = { coords: locationCoordinates, city: filteredCity };
+    const [lng, lat] = mapViewport.center;
+    const newCoords = { lat, lng };
+    setLocationCoordinates(newCoords);
+    setIsUsingDeviceLocation(false);
+    void performSearch(submittedQuery || searchQuery, newCoords, mapViewport.bounds);
+  };
+
+  const handleReturnToCitySearch = () => {
+    const origin = searchOriginRef.current;
+    searchOriginRef.current = null;
+    const restoreCoords = origin?.coords ?? null;
+    if (restoreCoords) setLocationCoordinates(restoreCoords);
+    void performSearch(submittedQuery || searchQuery, restoreCoords);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -1221,7 +1318,26 @@ function SearchContent() {
               onMarkerHover={(id) => setHoveredRestaurantId(id)}
               hoveredMarkerId={hoveredRestaurantId}
               zoom={mapCenter ? 13 : 11}
+              onViewportChange={handleViewportChange}
+              onMapReady={(m) => {
+                mapInstanceRef.current = m;
+              }}
             />
+
+            {showSearchHere && (
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+                <Button
+                  onClick={handleSearchInArea}
+                  className="pointer-events-auto bg-white text-slate-800 border border-slate-200 shadow-lg hover:bg-slate-50 rounded-full px-5 py-2 text-sm font-semibold flex items-center gap-2 transition-all"
+                >
+                  <MapPin
+                    className="h-4 w-4 text-[#8dbf65]"
+                    aria-hidden="true"
+                  />
+                  Redo search in this area
+                </Button>
+              </div>
+            )}
 
             {/* Layout Toggle Button */}
             <div className="absolute top-4 left-4 z-10 hidden lg:block">
@@ -1524,7 +1640,33 @@ function SearchContent() {
                         ))}
                       </>
                     ) : restaurants.length === 0 ? (
-                      isUsingDeviceLocation ? (
+                      isSearchInAreaMode ? (
+                        <div className="flex flex-col items-center justify-center py-16 text-center px-4">
+                          <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                            <MapPin className="h-8 w-8 text-slate-400" />
+                          </div>
+                          <h3 className="text-xl font-bold text-slate-900 mb-2">
+                            No results in this area
+                          </h3>
+                          <p className="text-sm text-slate-500 max-w-xs mb-6">
+                            We haven't mapped any{" "}
+                            {submittedQuery ? `"${submittedQuery}" ` : ""}
+                            restaurants here yet.
+                          </p>
+                          {searchOriginRef.current && (
+                            <Button
+                              onClick={handleReturnToCitySearch}
+                              className="bg-[#8dbf65] hover:bg-[#7da857] text-white"
+                            >
+                              <ChevronLeft className="h-4 w-4 mr-1" />
+                              Return to{" "}
+                              {searchOriginRef.current.city
+                                ? `${searchOriginRef.current.city} search`
+                                : "previous search"}
+                            </Button>
+                          )}
+                        </div>
+                      ) : isUsingDeviceLocation ? (
                         <div className="flex flex-col items-center justify-center py-16 text-center px-4">
                           <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
                             <MapPin className="h-8 w-8 text-slate-400" />

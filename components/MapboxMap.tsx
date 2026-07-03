@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { useEffect, useRef, useState } from "react";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 interface MapboxMapProps {
   coordinates?: [number, number];
@@ -18,6 +18,11 @@ interface MapboxMapProps {
   onMarkerHover?: (id: string | null) => void;
   hoveredMarkerId?: string | null;
   zoom?: number;
+  onViewportChange?: (viewport: {
+    center: [number, number];
+    bounds: [number, number, number, number];
+  }) => void;
+  onMapReady?: (map: mapboxgl.Map) => void;
 }
 
 export function MapboxMap({
@@ -28,7 +33,9 @@ export function MapboxMap({
   onMarkerClick,
   onMarkerHover,
   hoveredMarkerId,
-  zoom = 11
+  zoom = 11,
+  onViewportChange,
+  onMapReady,
 }: MapboxMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -37,13 +44,22 @@ export function MapboxMap({
   const markerPopupsRef = useRef<Map<string, mapboxgl.Popup>>(new Map());
   const geolocateControlRef = useRef<mapboxgl.GeolocateControl | null>(null);
   const hasInitiallyPositioned = useRef(false);
+  // Stable refs so event handlers never need to re-register when callback identity changes
+  const onViewportChangeRef = useRef(onViewportChange);
+  useEffect(() => { onViewportChangeRef.current = onViewportChange; }, [onViewportChange]);
+  const onMapReadyRef = useRef(onMapReady);
+  useEffect(() => { onMapReadyRef.current = onMapReady; }, [onMapReady]);
 
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || 'pk.eyJ1Ijoid2lzZXJuIiwiYSI6ImNsczBwcmtoMzAyYTYya21raHBtYXFkdWkifQ.92tySIKG-TSBatGA3--0Wg';
-    if (!token || token.includes('example')) {
-      console.error('Mapbox token not configured. Please add a valid token to .env');
+    const token =
+      process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ||
+      "pk.eyJ1Ijoid2lzZXJuIiwiYSI6ImNsczBwcmtoMzAyYTYya21raHBtYXFkdWkifQ.92tySIKG-TSBatGA3--0Wg";
+    if (!token || token.includes("example")) {
+      console.error(
+        "Mapbox token not configured. Please add a valid token to .env",
+      );
       return;
     }
 
@@ -51,12 +67,12 @@ export function MapboxMap({
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
+      style: "mapbox://styles/mapbox/streets-v12",
       center: coordinates,
       zoom: zoom,
     });
 
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+    map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
 
     const geolocateControl = new mapboxgl.GeolocateControl({
       positionOptions: {
@@ -67,17 +83,29 @@ export function MapboxMap({
     });
 
     geolocateControlRef.current = geolocateControl;
-    map.current.addControl(geolocateControl, 'top-right');
+    map.current.addControl(geolocateControl, "top-right");
 
-    geolocateControl.on('geolocate', (e: any) => {
+    geolocateControl.on("geolocate", () => {
       const isMobile = window.innerWidth <= 768;
       if (isMobile && map.current) {
         map.current.setZoom(17);
       }
     });
 
-    map.current.on('load', () => {
+    map.current.on("load", () => {
       setMapLoaded(true);
+      if (map.current) onMapReadyRef.current?.(map.current);
+    });
+
+    map.current.on("moveend", () => {
+      if (!onViewportChangeRef.current || !map.current) return;
+      const center = map.current.getCenter();
+      const currentBounds = map.current.getBounds();
+      if (!currentBounds) return;
+      onViewportChangeRef.current({
+        center: [center.lng, center.lat],
+        bounds: [currentBounds.getWest(), currentBounds.getSouth(), currentBounds.getEast(), currentBounds.getNorth()],
+      });
     });
 
     return () => {
@@ -89,7 +117,7 @@ export function MapboxMap({
     if (!map.current || !mapLoaded) return;
 
     // Clear existing markers
-    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
     markerPopupsRef.current.clear();
 
@@ -98,25 +126,25 @@ export function MapboxMap({
       const bounds = new mapboxgl.LngLatBounds();
 
       markers.forEach((markerData) => {
-        const el = document.createElement('div');
-        el.className = 'custom-marker';
-        el.style.width = '32px';
-        el.style.height = '44px';
-        el.style.cursor = 'pointer';
-        el.style.backgroundImage = 'url(/nugget_map_marker.svg)';
-        el.style.backgroundSize = 'contain';
-        el.style.backgroundRepeat = 'no-repeat';
-        el.style.backgroundPosition = 'center';
+        const el = document.createElement("div");
+        el.className = "custom-marker";
+        el.style.width = "32px";
+        el.style.height = "44px";
+        el.style.cursor = "pointer";
+        el.style.backgroundImage = "url(/nugget_map_marker.svg)";
+        el.style.backgroundSize = "contain";
+        el.style.backgroundRepeat = "no-repeat";
+        el.style.backgroundPosition = "center";
 
         const popup = new mapboxgl.Popup({
           offset: 25,
           closeButton: false,
-          closeOnClick: false
+          closeOnClick: false,
         }).setHTML(
           `<div class="p-2">
             <h3 class="font-bold text-sm">${markerData.title}</h3>
-            ${markerData.description ? `<p class="text-xs text-gray-600 mt-1">${markerData.description}</p>` : ''}
-          </div>`
+            ${markerData.description ? `<p class="text-xs text-gray-600 mt-1">${markerData.description}</p>` : ""}
+          </div>`,
         );
 
         const marker = new mapboxgl.Marker(el)
@@ -125,12 +153,12 @@ export function MapboxMap({
           .addTo(map.current!);
 
         if (onMarkerClick) {
-          el.addEventListener('click', () => onMarkerClick(markerData.id));
+          el.addEventListener("click", () => onMarkerClick(markerData.id));
         }
 
         if (onMarkerHover) {
-          el.addEventListener('mouseenter', () => onMarkerHover(markerData.id));
-          el.addEventListener('mouseleave', () => onMarkerHover(null));
+          el.addEventListener("mouseenter", () => onMarkerHover(markerData.id));
+          el.addEventListener("mouseleave", () => onMarkerHover(null));
         }
 
         markersRef.current.push(marker);
@@ -138,23 +166,12 @@ export function MapboxMap({
         bounds.extend(markerData.coordinates);
       });
 
-      // Handle zoom/positioning based on number of markers (only on initial load)
+      // Initial positioning: jump instantly so there's no distracting camera arc
       if (!hasInitiallyPositioned.current) {
         if (markers.length > 1) {
-          // Multiple markers - fit to bounds
-          map.current.fitBounds(bounds, {
-            padding: 100,
-            maxZoom: 13,
-            duration: 1500
-          });
+          map.current.fitBounds(bounds, { padding: 100, maxZoom: 13, duration: 0 });
         } else if (markers.length === 1) {
-          // Single marker - fly to it
-          map.current.flyTo({
-            center: markers[0].coordinates,
-            zoom: zoom,
-            duration: 1500,
-            easing: (t) => t * (2 - t)
-          });
+          map.current.jumpTo({ center: markers[0].coordinates, zoom });
         }
         hasInitiallyPositioned.current = true;
       }
@@ -164,13 +181,11 @@ export function MapboxMap({
       const [lng, lat] = coordinates;
 
       // Only fly if coordinates changed significantly (prevents continuous re-rendering)
-      if (Math.abs(currentCenter.lng - lng) > 0.01 || Math.abs(currentCenter.lat - lat) > 0.01) {
-        map.current.flyTo({
-          center: coordinates,
-          zoom: zoom,
-          duration: 1500,
-          easing: (t) => t * (2 - t)
-        });
+      if (
+        Math.abs(currentCenter.lng - lng) > 0.01 ||
+        Math.abs(currentCenter.lat - lat) > 0.01
+      ) {
+        map.current.jumpTo({ center: coordinates, zoom });
         hasInitiallyPositioned.current = true;
       }
     }
@@ -195,7 +210,7 @@ export function MapboxMap({
       center: flyToCoordinates,
       zoom: 11,
       duration: 2200,
-      easing: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
+      easing: (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
     });
   }, [flyToCoordinates, mapLoaded]);
 
@@ -204,18 +219,24 @@ export function MapboxMap({
 
     const [swLng, swLat, neLng, neLat] = fitBounds;
     map.current.fitBounds(
-      [[swLng, swLat], [neLng, neLat]],
+      [
+        [swLng, swLat],
+        [neLng, neLat],
+      ],
       {
         padding: 80,
         maxZoom: 14,
         minZoom: 8,
         duration: 1800,
-        easing: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
-      }
+        easing: (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
+      },
     );
   }, [fitBounds, mapLoaded]);
 
   return (
-    <div ref={mapContainer} className="w-full h-full rounded-lg overflow-hidden" />
+    <div
+      ref={mapContainer}
+      className="w-full h-full rounded-lg overflow-hidden"
+    />
   );
 }

@@ -289,10 +289,13 @@ export async function GET(request: Request) {
       let filtered = filterByRadius(radiusMeters);
 
       // If the bbox gave a tight radius and returned nothing, expand once to 20 miles.
+      // Skip this fallback when the user explicitly chose a viewport (search-in-area)
+      // so that a true zero-result area shows 0 results rather than snapping back.
       if (
         filtered.length === 0 &&
         cityCoordinates &&
-        radiusMeters < 20 * 1609.34
+        radiusMeters < 20 * 1609.34 &&
+        !externalBbox
       ) {
         radiusMeters = 20 * 1609.34;
         filtered = filterByRadius(radiusMeters);
@@ -308,21 +311,6 @@ export async function GET(request: Request) {
       const total = ranked.length;
       const paginatedData = ranked.slice(offset, offset + limit);
 
-      // Debug: human-readable trace of every search step
-      const coordStr = cityCoordinates
-        ? `[${cityCoordinates[1].toFixed(4)}, ${cityCoordinates[0].toFixed(4)}]`
-        : "none";
-      const radiusMi = (radiusMeters / 1609.34).toFixed(1);
-      const featureKeys = Object.keys(parsed?.features ?? {}).filter(
-        (k) => (parsed?.features as any)?.[k],
-      );
-      console.log(
-        `\n[search] "${rawQuery}"\n` +
-        `  parsed  : location=${parsed?.location ?? "—"} | food=[${parsed?.foodKeywords?.join(", ") || "—"}] | cuisine=[${parsed?.cuisines?.join(", ") || "—"}] | terms=[${parsed?.searchTerms?.join(", ") || "—"}] | features=[${featureKeys.join(", ") || "—"}]\n` +
-        `  geocode : target=${geocodeTarget ?? "—"} | type=${resolvedPlaceType ?? "—"} | place=${resolvedPlaceName ?? "—"} | parent=${resolvedParentCity ?? "—"}\n` +
-        `  filter  : city ilike="${ilikeCity ?? "none"}" | coords=${coordStr} (external=${externalLat !== null})\n` +
-        `  results : radius=${radiusMi}mi | db→${candidates?.length ?? 0} | radius→${filtered.length} | ranked→${total}`,
-      );
 
       return NextResponse.json({
         data: paginatedData,

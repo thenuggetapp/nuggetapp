@@ -87,12 +87,7 @@ export async function GET(request: Request) {
           q = applyLocationAndCuisineFilters(q, city, parsed);
 
           const { count, error } = await q;
-          if (error) {
-            console.error(`Error counting ${filter}:`, error);
-            counts[filter] = 0;
-          } else {
-            counts[filter] = count ?? 0;
-          }
+          counts[filter] = error ? 0 : (count ?? 0);
         }),
       );
 
@@ -127,7 +122,6 @@ export async function GET(request: Request) {
       totalQuery = applyLocationAndCuisineFilters(totalQuery, city, parsed);
       const { count: totalCount, error: totalError } = await totalQuery;
       if (totalError) {
-        console.error("Error counting total restaurants:", totalError);
         response.total = 0;
       } else {
         response.total = totalCount ?? 0;
