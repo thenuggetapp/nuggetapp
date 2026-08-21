@@ -38,10 +38,10 @@ export default function RestaurantPartnerPage() {
         <div className="relative z-20 container mx-auto px-4 pt-8 md:pt-16 pb-16 md:pb-24">
           <div className="max-w-6xl mx-auto text-center">
             <h1 className="text-[2.25rem] sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extralight font-serif text-white mb-6 leading-[0.924] sm:leading-tight drop-shadow-lg">
-              Welcome, Restaurants &amp; Family-Friendly Spots!
+              List your place. Meet local families in under 5 minutes.
             </h1>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white mb-8 leading-relaxed drop-shadow-md">
-              Showcase your space. Get new customers.
+              Free. No contract. Show parents you're kid-friendly — baby to grandparent.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/signup" className="w-full sm:w-auto">
@@ -82,7 +82,7 @@ export default function RestaurantPartnerPage() {
                Why restaurants love Nugget
             </h2>
             <p className="text-center text-slate-600 text-base sm:text-lg mb-8 md:mb-12 max-w-3xl mx-auto">
-             We're glad you're here. Nugget is all about connecting great places like yours with families who want to enjoy relaxed, kid-friendly dining experiences — without the stress.</p>
+             Local families are already looking for spots like yours. Nugget puts you in front of them.</p>
 
             
 
@@ -94,7 +94,7 @@ export default function RestaurantPartnerPage() {
                     <FileText className="h-8 w-8 text-white" />
                   </div>
                   <p className="text-white/90 text-base leading-relaxed">
-                    A simple listing that highlights your family-friendly features
+                    A free listing that shows off what makes you family-friendly
                   </p>
                 </CardContent>
               </Card>
@@ -105,7 +105,7 @@ export default function RestaurantPartnerPage() {
                     <Users className="h-8 w-8 text-white" />
                   </div>
                   <p className="text-white/90 text-base leading-relaxed">
-                    A platform families already use to find great places to eat together
+                    Local families and parent groups already searching here
                   </p>
                 </CardContent>
               </Card>
@@ -116,14 +116,14 @@ export default function RestaurantPartnerPage() {
                     <Heart className="h-8 w-8 text-white" />
                   </div>
                   <p className="text-white/90 text-base leading-relaxed">
-                    Stories and community engagement that help parents feel confident choosing your venue
+                    A way for parents to feel confident before they even walk in
                   </p>
                 </CardContent>
               </Card>
             </div>
 
             <p className="text-center text-base sm:text-lg text-white/80 max-w-3xl mx-auto">
-              We're not about heavy tracking or complicated sales language — just helping you connect meaningfully with families in your neighbourhood.
+              No heavy tracking, no sales pitch — just a simple way to connect with families nearby.
             </p>
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function RestaurantPartnerPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">
-                No pitchy sales talk. No long contracts. Just a simple way to share what makes your place special with parents looking for just what you offer.
+                No pitchy sales talk. No long contracts. Just a simple way to reach families nearby.
             </h2>
 
           </div>
@@ -154,7 +154,7 @@ export default function RestaurantPartnerPage() {
                     Be seen by the right people
                   </h3>
                   <p className="text-slate-600">
-                    Families don’t want to guess what to expect — they want to find places where everyone feels comfortable, from toddlers to grandparents. Nugget helps you get in front of those families actively searching for kid-friendly spots in your city. 
+                    Local families and parent groups are already searching for kid-friendly spots like yours.
                   </p>
                 </CardContent>
               </Card>
@@ -168,7 +168,7 @@ export default function RestaurantPartnerPage() {
                     Share what makes you family-friendly
                   </h3>
                   <p className="text-slate-600">
-                    Whether you’ve got high chairs, crayons & kids’ menus, outdoor space, or a calm vibe that parents appreciate, you can highlight those features in your listing. Parents want to know what’s there so they can plan great family time out together.
+                    High chairs, kids' menu, crayons, outdoor space, a calm vibe — tell parents what you've got.
                   </p>
                 </CardContent>
               </Card>
@@ -182,11 +182,8 @@ export default function RestaurantPartnerPage() {
                     Grow at your own pace
                   </h3>
                   <p className="text-slate-600">
-                    Getting started is free and only takes a few minutes — no credit card required. You control what you show and update. Upgrade only when you’re ready for extras like more photos or priority placement.
-
+                    Free to start, under 5 minutes, no credit card. Upgrade later if you want extras like more photos.
                   </p>
-
-                  Sharing this kind of info helps families trust your place and choose you confidently for meals out — whether that's a casual weeknight dinner or a weekend treat. Kid Friendly Near Me
                 </CardContent>
               </Card>
             </div>
@@ -257,7 +254,7 @@ export default function RestaurantPartnerPage() {
               Get Started Today
             </h2>
             <p className="text-base sm:text-lg md:text-xl mb-8 text-white/90">
-              It’s easy, quick, and free to join. You set up your listing in minutes, show off what you offer, and start welcoming more families who genuinely value what you do.
+              Free, easy, and ready in under 5 minutes.
             </p>
             <div className="flex justify-center">
               <Link href="/signup" className="w-full sm:w-auto">
