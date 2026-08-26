@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { LocalHeroNav } from "@/components/LocalHeroNav";
@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Save, Eye, AlertCircle, Loader2, ArrowLeft } from "lucide-react";
+import { Save, Eye, AlertCircle, Loader2, ArrowLeft, CircleHelp } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,6 +36,7 @@ import { RestaurantFormData } from "@/app/owner/restaurants/new/page";
 export default function EditRestaurantPage() {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const restaurantId = params.id as string;
   const { isAuthorized, isChecking, user, userProfile } = useRequireAuth({
     requiredRole: "local_hero",
@@ -44,7 +46,9 @@ export default function EditRestaurantPage() {
   const [formData, setFormData] = useState<RestaurantFormData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState("basic");
+  const [activeTab, setActiveTab] = useState(
+    searchParams.get("tab") === "amenities" ? "amenities" : "basic"
+  );
   const [validationDialogOpen, setValidationDialogOpen] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
@@ -132,6 +136,7 @@ export default function EditRestaurantPage() {
         tourist_attraction_nearby:
           restaurant.tourist_attraction_nearby || false,
         visible: restaurant.visible || false,
+        unverified_fields: restaurant.unverified_fields || [],
       });
     } catch (error: any) {
       console.error("Error loading restaurant:", error);
@@ -292,8 +297,23 @@ export default function EditRestaurantPage() {
           <div className="px-6 py-6">
             <Card>
               <CardHeader>
-                <CardTitle>Restaurant Information</CardTitle>
-                <CardDescription>Update the restaurant details</CardDescription>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <CardTitle>Restaurant Information</CardTitle>
+                    <CardDescription>Update the restaurant details</CardDescription>
+                  </div>
+                  {(formData.unverified_fields?.length ?? 0) > 0 && (
+                    <Badge
+                      className="bg-amber-100 text-amber-800 border border-amber-300 whitespace-nowrap cursor-pointer"
+                      onClick={() => setActiveTab("amenities")}
+                    >
+                      <CircleHelp className="h-3.5 w-3.5 mr-1" />
+                      {formData.unverified_fields!.length} field
+                      {formData.unverified_fields!.length === 1 ? "" : "s"} need
+                      {formData.unverified_fields!.length === 1 ? "s" : ""} your check
+                    </Badge>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
                 <Tabs
@@ -305,7 +325,14 @@ export default function EditRestaurantPage() {
                     <TabsTrigger value="basic">Basic Info</TabsTrigger>
                     <TabsTrigger value="location">Location</TabsTrigger>
                     <TabsTrigger value="hours">Opening Hours</TabsTrigger>
-                    <TabsTrigger value="amenities">Amenities</TabsTrigger>
+                    <TabsTrigger value="amenities" className="gap-1.5">
+                      Amenities
+                      {(formData.unverified_fields?.length ?? 0) > 0 && (
+                        <span className="inline-flex items-center justify-center h-4 min-w-4 px-1 rounded-full bg-amber-500 text-white text-[10px] font-semibold">
+                          {formData.unverified_fields!.length}
+                        </span>
+                      )}
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="basic" className="space-y-6">
