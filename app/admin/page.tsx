@@ -168,7 +168,7 @@ interface Restaurant {
 const emptyRestaurant: Restaurant = {
   name: "",
   cuisine: "",
-  likes_count: 0,
+  likes_count: 1,
   price_level: 2,
   address: "",
   city: "",
@@ -1411,7 +1411,8 @@ export default function AdminDashboard() {
                     <Input
                       id="likes_count"
                       type="number"
-                      value={formData.likes_count}
+                      value={editingRestaurant ? formData.likes_count : 1}
+                      disabled={!editingRestaurant}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -1420,6 +1421,11 @@ export default function AdminDashboard() {
                       }
                       placeholder="0"
                     />
+                    {!editingRestaurant && (
+                      <p className="text-sm text-muted-foreground">
+                        New restaurants always start with 1 like.
+                      </p>
+                    )}
                   </div>
 
                   {editingRestaurant?.id ? (
