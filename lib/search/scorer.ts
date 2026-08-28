@@ -127,23 +127,15 @@ function scoreDescription(restaurant: any, terms: string[]): number {
 
 function scoreLocalHero(
   restaurant: any,
-  terms: string[],
   matchedLocalHeroIds: Set<string>,
 ): number {
-  if (terms.length === 0 || matchedLocalHeroIds.size === 0) return 0;
+  if (matchedLocalHeroIds.size === 0) return 0;
 
   if (
     restaurant.added_by_user_id &&
     matchedLocalHeroIds.has(restaurant.added_by_user_id)
   ) {
     return POINTS.localHero;
-  }
-
-  const heroName = restaurant.added_by?.full_name?.toLowerCase() ?? "";
-  if (!heroName) return 0;
-
-  for (const term of terms) {
-    if (heroName.includes(term)) return POINTS.localHero;
   }
 
   return 0;
@@ -182,7 +174,7 @@ export function scoreAndRank(
       const slugName = scoreSlugAndName(r, allTerms, parsed);
       const cuisine = scoreCuisine(r, allTerms);
       const description = scoreDescription(r, allTerms);
-      const localHero = scoreLocalHero(r, allTerms, heroIdSet);
+      const localHero = scoreLocalHero(r, heroIdSet);
       const total = slugName + cuisine + description + localHero;
 
       return { restaurant: r, score: total };
