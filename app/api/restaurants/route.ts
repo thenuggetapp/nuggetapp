@@ -3,6 +3,10 @@ import { createClient } from "@supabase/supabase-js";
 import { parseNaturalLanguageQuery } from "@/lib/search/natural-language-parser";
 import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/db-amenities";
 import { scoreAndRank } from "@/lib/search/scorer";
+import {
+  buildAddedByUserIdCondition,
+  resolveLocalHeroIdsForSearch,
+} from "@/lib/search/local-hero-search";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -17,7 +21,7 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
 const RESTAURANT_SELECT = `
   id, name, slug, cuisine, address, city,
   rating, likes_count, price_level,
-  image_url, google_place_id, latitude, longitude, description,
+  image_url, google_place_id, latitude, longitude, description, added_by_user_id,
   kids_menu, high_chairs, wheelchair_access,
   outdoor_seating, dog_friendly, vegetarian_options,
   vegan_options, gluten_free_options, halal, kosher,
@@ -158,16 +162,28 @@ export async function GET(request: Request) {
         if (foodConditions) supabaseQuery = supabaseQuery.or(foodConditions);
       }
 
-      // 5. Search terms - catch-all OR across name and description
+      // 5. Search terms - catch-all OR across name, description, and local hero
+      const matchedLocalHeroIds = await resolveLocalHeroIdsForSearch(
+        supabase,
+        parsed,
+        safeQuery,
+      );
+      const termConditions: string[] = [];
+
       if (parsed?.searchTerms?.length) {
-        const termConditions = parsed.searchTerms
-          .flatMap((term) => [
+        termConditions.push(
+          ...parsed.searchTerms.flatMap((term) => [
             `name.ilike.%${term}%`,
             `description.ilike.%${term}%`,
-          ])
-          .join(",");
+          ]),
+        );
+      }
 
-        if (termConditions) supabaseQuery = supabaseQuery.or(termConditions);
+      const heroCondition = buildAddedByUserIdCondition(matchedLocalHeroIds);
+      if (heroCondition) termConditions.push(heroCondition);
+
+      if (termConditions.length > 0) {
+        supabaseQuery = supabaseQuery.or(termConditions.join(","));
       }
 
       // 6. UI panel filters (filter chips) - hard AND on top of NL filters
@@ -226,7 +242,7 @@ export async function GET(request: Request) {
       });
 
       // 8. Score, rank, paginate
-      const ranked = scoreAndRank(filtered, parsed);
+      const ranked = scoreAndRank(filtered, parsed, matchedLocalHeroIds);
       const total = ranked.length;
       const paginatedData = ranked.slice(offset, offset + limit);
 
