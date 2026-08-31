@@ -10,6 +10,7 @@ import {
   COMMON_CITIES,
 } from "./synonym-map";
 import Fuse from "fuse.js";
+import { stemWord } from "./stem";
 
 export type ParsedFeatures = Partial<
   Record<keyof typeof FILTER_KEY_TO_DB_COLUMN, boolean>
@@ -29,13 +30,6 @@ const cuisineFuse = new Fuse(CUISINE_KEYWORDS, { threshold: 0.15 });
 const foodFuse = new Fuse(FOOD_KEYWORDS, { threshold: 0.15 });
 const venueFuse = new Fuse([...VENUE_WORDS], { threshold: 0.2 });
 const cityFuse = new Fuse(COMMON_CITIES, { threshold: 0.15 });
-
-function stem(word: string): string {
-  if (word.endsWith("ies")) return word.slice(0, -3) + "y"; // burritos → burrito (catches parties etc)
-  if (word.endsWith("es")) return word.slice(0, -2); // sandwiches → sandwich
-  if (word.endsWith("s") && word.length > 4) return word.slice(0, -1); // burgers → burger, pizzas → pizza
-  return word;
-}
 
 export function parseNaturalLanguageQuery(query: string): ParsedQuery {
   const lowerQuery = query.toLowerCase();
@@ -88,11 +82,11 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
 
     let cuisineMatch = cuisineFuse.search(queryWord);
     if (cuisineMatch.length === 0)
-      cuisineMatch = cuisineFuse.search(stem(queryWord));
+      cuisineMatch = cuisineFuse.search(stemWord(queryWord));
     if (cuisineMatch.length > 0) cuisineMatches.add(cuisineMatch[0].item);
 
     let foodMatch = foodFuse.search(queryWord);
-    if (foodMatch.length === 0) foodMatch = foodFuse.search(stem(queryWord));
+    if (foodMatch.length === 0) foodMatch = foodFuse.search(stemWord(queryWord));
     if (foodMatch.length > 0) foodMatches.add(foodMatch[0].item);
   });
 
@@ -155,7 +149,7 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
   const words = query.split(/\s+/).filter((w) => w.length > 2);
   parsed.searchTerms = words.filter((word) => {
     const lower = word.toLowerCase();
-    const stemmed = stem(lower);
+    const stemmed = stemWord(lower);
     if (STOP_WORDS.has(lower)) return false;
     if (featureWords.has(lower)) return false;
     const isVenueWord =

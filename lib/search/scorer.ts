@@ -18,6 +18,7 @@ import { FEATURE_KEYWORDS } from "@/lib/search/synonym-map";
 const POINTS = {
   slugExact: 20, // full query phrase in slug
   nameExact: 18, // full query phrase in name
+  localHero: 5, // query term matches recommending local hero
   cuisine: 5, // any query term in cuisine field
   description: 1, // any query term in description (binary, not frequency)
 } as const;
@@ -124,10 +125,27 @@ function scoreDescription(restaurant: any, terms: string[]): number {
   return score;
 }
 
+function scoreLocalHero(
+  restaurant: any,
+  matchedLocalHeroIds: Set<string>,
+): number {
+  if (matchedLocalHeroIds.size === 0) return 0;
+
+  if (
+    restaurant.added_by_user_id &&
+    matchedLocalHeroIds.has(restaurant.added_by_user_id)
+  ) {
+    return POINTS.localHero;
+  }
+
+  return 0;
+}
+
 // PUBLIC ENTRY POINT
 export function scoreAndRank(
   restaurants: any[],
   parsed: ParsedQuery | null,
+  matchedLocalHeroIds: string[] = [],
 ): any[] {
   if (!parsed || restaurants.length === 0) return restaurants;
 
@@ -141,11 +159,13 @@ export function scoreAndRank(
     .map((t) => t.toLowerCase())
     .filter(Boolean);
 
+  const heroIdSet = new Set(matchedLocalHeroIds);
   const hasTextTerms = allTerms.length > 0;
+  const hasHeroMatches = heroIdSet.size > 0;
 
   // No text terms to score on (e.g. city-only or feature-only query) —
   // skip scoring and apply tiebreaker chain directly.
-  if (!hasTextTerms) {
+  if (!hasTextTerms && !hasHeroMatches) {
     return [...restaurants].sort((a, b) => tiebreak(a, b, parsed));
   }
 
@@ -154,7 +174,8 @@ export function scoreAndRank(
       const slugName = scoreSlugAndName(r, allTerms, parsed);
       const cuisine = scoreCuisine(r, allTerms);
       const description = scoreDescription(r, allTerms);
-      const total = slugName + cuisine + description;
+      const localHero = scoreLocalHero(r, heroIdSet);
+      const total = slugName + cuisine + description + localHero;
 
       return { restaurant: r, score: total };
     })
