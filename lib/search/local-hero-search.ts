@@ -2,15 +2,23 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import Fuse from "fuse.js";
 import { ParsedQuery } from "@/lib/search/natural-language-parser";
 
-/** Per-term fuzziness for token search (0 = exact, 1 = match anything). */
-export const LOCAL_HERO_FUSE_TOKEN_THRESHOLD = 0.35;
-
-/** Max combined Fuse score to accept (0 = perfect, 1 = worst). */
-export const LOCAL_HERO_MAX_MATCH_SCORE = 0.85;
+/** Per-term fuzziness for hero-token matching (0 = exact, 1 = match anything). */
+export const LOCAL_HERO_FUSE_THRESHOLD = 0.35;
+export const LOCAL_HERO_NAME_TOKEN_SCORE_THRESHOLD = 0;
 
 export interface LocalHeroCandidate {
   id: string;
   full_name: string;
+}
+
+interface ScoredHeroCandidate {
+  candidate: LocalHeroCandidate;
+  score: number;
+  tokenScores: Array<{
+    token: string;
+    fuseScore: number;
+    tokenScore: number;
+  }>;
 }
 
 let heroLookupClient: SupabaseClient | null = null;
@@ -34,6 +42,10 @@ function escapeIlikePattern(value: string): string {
   return value.replace(/[%_\\]/g, "\\$&");
 }
 
+function tokenizeHeroName(fullName: string): string[] {
+  return fullName.trim().split(/\s+/).filter(Boolean);
+}
+
 /** Tokens from the full query used for stage-1 ILIKE candidate retrieval. */
 export function collectIlikeCandidateTerms(safeQuery: string): string[] {
   const terms = new Set<string>();
@@ -54,40 +66,87 @@ export function shouldMatchLocalHeroNames(
 }
 
 /**
- * Stage 2: Fuse token search over ILIKE candidates using the full safeQuery.
- * tokenMatch 'any' — a hero matches if any query token fuzzy-matches their name.
+ * Score one hero by fuzzy-matching each name token against the full search phrase.
+ * Per matching token: (tokenLength / searchPhraseLength) * (1 - fuseScore).
  */
-export function filterHeroCandidatesWithTokenSearch(
+export function scoreHeroCandidate(
+  candidate: LocalHeroCandidate,
+  safeQuery: string,
+  fuseThreshold: number = LOCAL_HERO_FUSE_THRESHOLD,
+): ScoredHeroCandidate {
+  const searchPhrase = safeQuery.trim();
+  const searchPhraseLength = searchPhrase.length;
+  const tokenScores: ScoredHeroCandidate["tokenScores"] = [];
+  let score = 0;
+
+  if (searchPhraseLength === 0) {
+    return { candidate, score, tokenScores };
+  }
+
+  for (const token of tokenizeHeroName(candidate.full_name)) {
+    const match = Fuse.match(token, searchPhrase, { threshold: fuseThreshold });
+    if (!match.isMatch) continue;
+
+    const fuseScore = match.score ?? 1;
+    const tokenScore =
+      (token.length / searchPhraseLength) * (1 - fuseScore);
+
+    score += tokenScore;
+    tokenScores.push({ token, fuseScore, tokenScore });
+  }
+
+  return { candidate, score, tokenScores };
+}
+
+/**
+ * Stage 2: rank ILIKE candidates by locally computed token scores.
+ * Each hero name token is fuzzy-matched against the full safeQuery (not token search).
+ */
+export function rankHeroCandidatesByLocalScore(
   candidates: LocalHeroCandidate[],
   safeQuery: string,
-  fuseThreshold: number = LOCAL_HERO_FUSE_TOKEN_THRESHOLD,
-  maxScore: number = LOCAL_HERO_MAX_MATCH_SCORE,
+  fuseThreshold: number = LOCAL_HERO_FUSE_THRESHOLD,
   maxResults: number = 3,
 ): LocalHeroCandidate[] {
-  if (candidates.length === 0 || !safeQuery.trim()) return [];
+  const searchPhrase = safeQuery.trim();
+  if (candidates.length === 0 || !searchPhrase) return [];
 
-  const fuse = new Fuse(candidates, {
-    useTokenSearch: true,
-    tokenMatch: "any",
-    keys: ["full_name"],
-    threshold: fuseThreshold,
-    ignoreFieldNorm: true,
-    includeScore: true,
-  });
+  const ranked = candidates
+    .map((candidate) => scoreHeroCandidate(candidate, searchPhrase, fuseThreshold))
+    .filter((entry) => entry.score > LOCAL_HERO_NAME_TOKEN_SCORE_THRESHOLD)
+    .sort((a, b) => b.score - a.score);
 
-  return fuse
-    .search(safeQuery.trim())
-    .filter((result) => (result.score ?? 1) <= maxScore)
-    .sort((a, b) => (a.score ?? 1) - (b.score ?? 1))
-    .slice(0, maxResults)
-    .map((result) => result.item);
+  const rankedIds = new Set(ranked.map((entry) => entry.candidate.id));
+
+  for (const candidate of candidates) {
+    if (rankedIds.has(candidate.id)) continue;
+    console.log("Local hero score:", {
+      query: searchPhrase,
+      id: candidate.id,
+      full_name: candidate.full_name,
+      score: LOCAL_HERO_NAME_TOKEN_SCORE_THRESHOLD,
+      tokenScores: [],
+    });
+  }
+
+  for (const entry of ranked) {
+    console.log("Local hero score:", {
+      query: searchPhrase,
+      id: entry.candidate.id,
+      full_name: entry.candidate.full_name,
+      score: entry.score,
+      tokenScores: entry.tokenScores,
+    });
+  }
+
+  return ranked.slice(0, maxResults).map((entry) => entry.candidate);
 }
 
 export async function findLocalHeroIdsMatchingTerms(
   supabase: SupabaseClient,
   _parsed: ParsedQuery | null,
   safeQuery: string,
-  fuseThreshold: number = LOCAL_HERO_FUSE_TOKEN_THRESHOLD,
+  fuseThreshold: number = LOCAL_HERO_FUSE_THRESHOLD,
 ): Promise<string[]> {
   const ilikeTerms = collectIlikeCandidateTerms(safeQuery);
   if (ilikeTerms.length === 0) return [];
@@ -114,11 +173,9 @@ export async function findLocalHeroIdsMatchingTerms(
       Boolean(hero.id && hero.full_name),
   );
 
-  return filterHeroCandidatesWithTokenSearch(
-    candidates,
-    safeQuery,
-    fuseThreshold,
-  ).map((hero) => hero.id);
+  return rankHeroCandidatesByLocalScore(candidates, safeQuery, fuseThreshold).map(
+    (hero) => hero.id,
+  );
 }
 
 export function buildAddedByUserIdCondition(heroIds: string[]): string | null {
@@ -130,7 +187,7 @@ export async function resolveLocalHeroIdsForSearch(
   supabase: SupabaseClient,
   parsed: ParsedQuery | null,
   safeQuery: string,
-  fuseThreshold: number = LOCAL_HERO_FUSE_TOKEN_THRESHOLD,
+  fuseThreshold: number = LOCAL_HERO_FUSE_THRESHOLD,
 ): Promise<string[]> {
   if (!shouldMatchLocalHeroNames(parsed, safeQuery)) return [];
 
