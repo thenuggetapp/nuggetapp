@@ -80,8 +80,7 @@ function scoreSlugAndName(
 
   const slug = restaurant.slug ?? "";
   const name = restaurant.name?.toLowerCase() ?? "";
-  const isDiscoveryQuery =
-    parsed.foodKeywords.length > 0 || parsed.cuisines.length > 0;
+  const isDiscoveryQuery = parsed.cuisines.length > 0;
 
   if (isDiscoveryQuery) {
     const queryPhrase = terms.join(" ");
@@ -150,11 +149,7 @@ export function scoreAndRank(
   if (!parsed || restaurants.length === 0) return restaurants;
 
   const allTerms = [
-    ...new Set([
-      ...parsed.searchTerms,
-      ...parsed.foodKeywords,
-      ...parsed.cuisines,
-    ]),
+    ...new Set([...parsed.searchTerms, ...parsed.cuisines]),
   ]
     .map((t) => t.toLowerCase())
     .filter(Boolean);
