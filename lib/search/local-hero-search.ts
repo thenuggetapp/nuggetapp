@@ -75,8 +75,35 @@ export function filterHeroCandidatesWithTokenSearch(
     includeScore: true,
   });
 
-  return fuse
-    .search(safeQuery.trim())
+  const results = fuse.search(safeQuery.trim());
+  const scoredIds = new Set(results.map((result) => result.item.id));
+
+  for (const candidate of candidates) {
+    if (scoredIds.has(candidate.id)) continue;
+    console.log("Local hero Fuse score:", {
+      query: safeQuery.trim(),
+      id: candidate.id,
+      full_name: candidate.full_name,
+      score: null,
+      accepted: false,
+      maxScore,
+    });
+  }
+
+  for (const result of results) {
+    const score = result.score ?? 1;
+    const accepted = score <= maxScore;
+    console.log("Local hero Fuse score:", {
+      query: safeQuery.trim(),
+      id: result.item.id,
+      full_name: result.item.full_name,
+      score,
+      accepted,
+      maxScore,
+    });
+  }
+
+  return results
     .filter((result) => (result.score ?? 1) <= maxScore)
     .sort((a, b) => (a.score ?? 1) - (b.score ?? 1))
     .slice(0, maxResults)
