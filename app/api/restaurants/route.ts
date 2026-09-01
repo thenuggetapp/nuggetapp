@@ -190,11 +190,6 @@ export async function GET(request: Request) {
       // 6. UI panel filters (filter chips) - hard AND on top of NL filters
       supabaseQuery = applyUiFilters(supabaseQuery, searchParams);
 
-      console.log(
-        "Final supabase search query:",
-        JSON.stringify(supabaseQuery, null, 2),
-      );
-
       // Execute
       const { data: candidates, error: fetchError } = await supabaseQuery.order(
         "rating",

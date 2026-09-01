@@ -118,6 +118,7 @@ export function rankHeroCandidatesByLocalScore(
 
   const rankedIds = new Set(ranked.map((entry) => entry.candidate.id));
 
+  /*
   for (const candidate of candidates) {
     if (rankedIds.has(candidate.id)) continue;
     console.log("Local hero score:", {
@@ -138,6 +139,7 @@ export function rankHeroCandidatesByLocalScore(
       tokenScores: entry.tokenScores,
     });
   }
+    */
 
   return ranked.slice(0, maxResults).map((entry) => entry.candidate);
 }
