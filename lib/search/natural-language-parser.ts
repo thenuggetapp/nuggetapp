@@ -1,7 +1,6 @@
 import { FILTER_KEY_TO_DB_COLUMN } from "@/lib/db-amenities";
 import {
   CUISINE_KEYWORDS,
-  FOOD_KEYWORDS,
   FEATURE_KEYWORDS,
   PRICE_KEYWORDS,
   RATING_KEYWORDS,
@@ -18,7 +17,6 @@ export type ParsedFeatures = Partial<
 
 export interface ParsedQuery {
   cuisines: string[];
-  foodKeywords: string[];
   features: ParsedFeatures;
   priceLevel?: number;
   location?: string;
@@ -27,7 +25,6 @@ export interface ParsedQuery {
 }
 
 const cuisineFuse = new Fuse(CUISINE_KEYWORDS, { threshold: 0.15 });
-const foodFuse = new Fuse(FOOD_KEYWORDS, { threshold: 0.15 });
 const venueFuse = new Fuse([...VENUE_WORDS], { threshold: 0.2 });
 const cityFuse = new Fuse(COMMON_CITIES, { threshold: 0.15 });
 
@@ -46,7 +43,6 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
 
   const parsed: ParsedQuery = {
     cuisines: [],
-    foodKeywords: [],
     features: {},
     searchTerms: [],
   };
@@ -73,9 +69,7 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
   }
 
   const cuisineMatches = new Set<string>();
-  const foodMatches = new Set<string>();
 
-  // Use Fuses on each word
   queryWords.forEach((queryWord) => {
     if (parsed.location && parsed.location.split(" ").includes(queryWord))
       return;
@@ -84,19 +78,9 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
     if (cuisineMatch.length === 0)
       cuisineMatch = cuisineFuse.search(stemWord(queryWord));
     if (cuisineMatch.length > 0) cuisineMatches.add(cuisineMatch[0].item);
-
-    let foodMatch = foodFuse.search(queryWord);
-    if (foodMatch.length === 0) foodMatch = foodFuse.search(stemWord(queryWord));
-    if (foodMatch.length > 0) foodMatches.add(foodMatch[0].item);
   });
 
-  // Use Food Fuse on full search phrase
-  const fullFoodMatch = foodFuse.search(cleanQuery);
-  if (fullFoodMatch.length > 0) foodMatches.add(fullFoodMatch[0].item);
-
-  // Convert sets to arrays
   parsed.cuisines = Array.from(cuisineMatches);
-  parsed.foodKeywords = Array.from(foodMatches);
 
   const allPairs = Object.entries(FEATURE_KEYWORDS)
     .filter(([feature]) => feature in FILTER_KEY_TO_DB_COLUMN)
@@ -173,8 +157,6 @@ export function parseNaturalLanguageQuery(query: string): ParsedQuery {
     return (
       !CUISINE_KEYWORDS.includes(lower) &&
       !CUISINE_KEYWORDS.includes(stemmed) &&
-      !FOOD_KEYWORDS.includes(lower) &&
-      !FOOD_KEYWORDS.includes(stemmed) &&
       !Object.values(PRICE_KEYWORDS)
         .flat()
         .some((k) => k.includes(lower))

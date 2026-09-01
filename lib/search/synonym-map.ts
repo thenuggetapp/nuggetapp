@@ -27,41 +27,6 @@ export const CUISINE_KEYWORDS = [
   .concat(ALL_CUISINE_TYPES)
   .map((c) => c.toLowerCase());
 
-export const FOOD_KEYWORDS = [
-  "bbq",
-  "biryani",
-  "burger",
-  "burrito",
-  "chow mein",
-  "curry",
-  "dim sum",
-  "dumplings",
-  "falafel",
-  "fried rice",
-  "hummus",
-  "ice cream",
-  "kebab",
-  "masala",
-  "noodles",
-  "pad thai",
-  "pasta",
-  "pho",
-  "pizza",
-  "ramen",
-  "salad",
-  "sandwich",
-  "seafood",
-  "shawarma",
-  "soup",
-  "steak",
-  "sushi",
-  "tacos",
-  "tapas",
-  "tikka",
-  "wings",
-  "wrap",
-];
-
 export const FEATURE_KEYWORDS: Record<string, string[]> = {
   airConditioning: ["ac", "air conditioning", "air con", "climate control"],
   babyChangeMens: [

@@ -148,31 +148,32 @@ export async function GET(request: Request) {
         supabaseQuery = supabaseQuery.eq("price_level", parsed.priceLevel);
       }
 
-      // 4. Food/cuisine terms - OR within group
-      if (parsed?.foodKeywords?.length || parsed?.cuisines?.length) {
-        const foodConditions = [
-          ...(parsed?.foodKeywords ?? []).flatMap((food) => [
-            `name.ilike.%${food}%`,
-            `description.ilike.%${food}%`,
-            `cuisine.ilike.%${food}%`,
-          ]),
-          ...(parsed?.cuisines ?? []).map((c) => `cuisine.ilike.%${c}%`),
-        ].join(",");
-
-        if (foodConditions) supabaseQuery = supabaseQuery.or(foodConditions);
-      }
-
-      // 5. Search terms - catch-all OR across name, description, and local hero
       const matchedLocalHeroIds = await resolveLocalHeroIdsForSearch(
         supabase,
         parsed,
         safeQuery,
       );
+      const hasSearchTerms = (parsed?.searchTerms?.length ?? 0) > 0;
+      const hasLocalHeroMatches = matchedLocalHeroIds.length > 0;
+
+      // 4. Cuisine filter — only when there is no other text/hero signal to match on
+      if (
+        parsed?.cuisines?.length &&
+        !hasLocalHeroMatches &&
+        !hasSearchTerms
+      ) {
+        const cuisineConditions = parsed.cuisines
+          .map((cuisine) => `cuisine.ilike.%${cuisine}%`)
+          .join(",");
+        supabaseQuery = supabaseQuery.or(cuisineConditions);
+      }
+
+      // 5. Search terms — OR across name, description, and local hero
       const termConditions: string[] = [];
 
-      if (parsed?.searchTerms?.length) {
+      if (hasSearchTerms) {
         termConditions.push(
-          ...parsed.searchTerms.flatMap((term) => [
+          ...parsed!.searchTerms.flatMap((term) => [
             `name.ilike.%${term}%`,
             `description.ilike.%${term}%`,
           ]),
