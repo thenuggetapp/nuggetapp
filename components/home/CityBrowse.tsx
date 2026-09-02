@@ -25,6 +25,11 @@ const FEATURED_CITIES: CityData[] = [
     description: "Discover the best spots for families in Chicago"
   },
   {
+    name: "Milwaukee",
+    image: "/milwaukee-hero-01.jpg",
+    description: "Pick your family's next meal out in Milwaukee"
+  },
+  {
     name: "San Francisco",
     image: "/amogh-manjunath-hksflo1t8ia-unsplash.jpg",
     description: "Find family dining options in San Francisco"
@@ -66,6 +71,7 @@ export function CityBrowse() {
     const cityRoutes: Record<string, string> = {
       "London": "/london",
       "Chicago": "/chicago",
+      "Milwaukee": "/milwaukee",
       "San Francisco": "/sanfrancisco"
     };
 
@@ -121,28 +127,30 @@ export function CityBrowse() {
             </div>
           </Card>
         ))}
+      </div>
 
-        <Card
-          className="group cursor-pointer overflow-hidden border-0 transition-all duration-300 hover:shadow-xl h-80 relative bg-[#111728]"
-          onClick={() => setShowCityRequestModal(true)}
-        >
-          <div className="relative h-full flex flex-col items-center justify-center p-6 text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-[#8dbf65]/10 flex items-center justify-center group-hover:bg-[#8dbf65]/20 transition-colors">
-              <Plus className="h-8 w-8 text-[#8dbf65] group-hover:scale-110 transition-transform" />
-            </div>
+      <Card
+        className="group cursor-pointer overflow-hidden border-0 transition-all duration-300 hover:shadow-xl relative bg-[#111728] mt-6 lg:mt-8"
+        onClick={() => setShowCityRequestModal(true)}
+      >
+        <div className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-6 p-6 md:p-8 text-center sm:text-left">
+          <div className="w-16 h-16 flex-shrink-0 rounded-full bg-[#8dbf65]/10 flex items-center justify-center group-hover:bg-[#8dbf65]/20 transition-colors">
+            <Plus className="h-8 w-8 text-[#8dbf65] group-hover:scale-110 transition-transform" />
+          </div>
+          <div className="flex-1 space-y-1">
             <h3 className="text-2xl font-bold text-white">
               Request a New City
             </h3>
-            <p className="text-white text-sm">
+            <p className="text-white/90 text-sm">
               Don't see your city? Let us know where we should expand next
             </p>
-            <div className="flex items-center text-[#8dbf65] font-semibold group-hover:gap-2 transition-all">
-              <span>Make a request</span>
-              <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-            </div>
           </div>
-        </Card>
-      </div>
+          <div className="flex items-center text-[#8dbf65] font-semibold group-hover:gap-2 transition-all flex-shrink-0">
+            <span>Make a request</span>
+            <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+          </div>
+        </div>
+      </Card>
 
       <CityRequestModal
         open={showCityRequestModal}

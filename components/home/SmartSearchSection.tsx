@@ -8,6 +8,7 @@ import { useCookiePreferences } from '@/hooks/useCookiePreferences';
 const CITIES = {
   London: { lat: 51.5074, lng: -0.1278 },
   Chicago: { lat: 41.8781, lng: -87.6298 },
+  Milwaukee: { lat: 43.0389, lng: -87.9065 },
   'San Francisco': { lat: 37.7749, lng: -122.4194 }
 };
 

@@ -17,7 +17,7 @@ export function Footer() {
   const isOwner = userProfile?.role === 'owner' || userProfile?.role === 'admin';
   const restaurantPartnerLink = isOwner ? '/owner/dashboard' : '/partner';
 
-  const cities = ['London', 'Chicago', 'San Francisco'];
+  const cities = ['London', 'Chicago', 'Milwaukee', 'San Francisco'];
 
   const [showCityRequestModal, setShowCityRequestModal] = useState(false);
   const [cityName, setCityName] = useState('');
