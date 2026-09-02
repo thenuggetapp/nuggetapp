@@ -27,7 +27,7 @@ const FEATURED_CITIES: CityData[] = [
   {
     name: "Milwaukee",
     image: "/milwaukee-hero-01.jpg",
-    description: "Find family-friendly dining across Milwaukee"
+    description: "Pick your family's next meal out in Milwaukee"
   },
   {
     name: "San Francisco",
