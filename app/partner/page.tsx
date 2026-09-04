@@ -7,10 +7,8 @@ import { Header } from '@/components/Header';
 import {
   Users,
   TrendingUp,
-  Clock,
   Camera,
   BarChart3,
-  Gift,
   Target,
   CheckCircle2,
   ArrowRight,
@@ -38,10 +36,10 @@ export default function RestaurantPartnerPage() {
         <div className="relative z-20 container mx-auto px-4 pt-8 md:pt-16 pb-16 md:pb-24">
           <div className="max-w-6xl mx-auto text-center">
             <h1 className="text-[2.25rem] sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extralight font-serif text-white mb-6 leading-[0.924] sm:leading-tight drop-shadow-lg">
-              Welcome, Restaurants &amp; Family-Friendly Spots!
+              Open your place to local families – all in under 5 mins.
             </h1>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white mb-8 leading-relaxed drop-shadow-md">
-              Showcase your space. Get new customers.
+              Free listing. No contract needed. Show customers you're truly family-friendly, baby to grandparent.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/signup" className="w-full sm:w-auto">
@@ -59,15 +57,15 @@ export default function RestaurantPartnerPage() {
             <div className="mt-6 md:mt-8 flex flex-wrap items-center justify-center gap-4 md:gap-8 text-xs sm:text-sm text-white">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-white" />
-                <span>Feature listings</span>
+                <span>Featured listings</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-white" />
-                <span>Performance dashboard</span>
+                <span>Quick setup</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-white" />
-                <span>5-Min Setup</span>
+                <span>Local roots, growing reach</span>
               </div>
             </div>
           </div>
@@ -82,7 +80,7 @@ export default function RestaurantPartnerPage() {
                Why restaurants love Nugget
             </h2>
             <p className="text-center text-slate-600 text-base sm:text-lg mb-8 md:mb-12 max-w-3xl mx-auto">
-             We're glad you're here. Nugget is all about connecting great places like yours with families who want to enjoy relaxed, kid-friendly dining experiences — without the stress.</p>
+             Local families are already looking for spots like yours. Nugget puts you in front of them.</p>
 
             
 
@@ -94,7 +92,7 @@ export default function RestaurantPartnerPage() {
                     <FileText className="h-8 w-8 text-white" />
                   </div>
                   <p className="text-white/90 text-base leading-relaxed">
-                    A simple listing that highlights your family-friendly features
+                    A free listing that shows off what makes you family-friendly
                   </p>
                 </CardContent>
               </Card>
@@ -105,7 +103,7 @@ export default function RestaurantPartnerPage() {
                     <Users className="h-8 w-8 text-white" />
                   </div>
                   <p className="text-white/90 text-base leading-relaxed">
-                    A platform families already use to find great places to eat together
+                    Local families and parent groups already searching here
                   </p>
                 </CardContent>
               </Card>
@@ -116,26 +114,32 @@ export default function RestaurantPartnerPage() {
                     <Heart className="h-8 w-8 text-white" />
                   </div>
                   <p className="text-white/90 text-base leading-relaxed">
-                    Stories and community engagement that help parents feel confident choosing your venue
+                    A way for parents to feel welcome before they even walk in
                   </p>
                 </CardContent>
               </Card>
             </div>
 
             <p className="text-center text-base sm:text-lg text-white/80 max-w-3xl mx-auto">
-              We're not about heavy tracking or complicated sales language — just helping you connect meaningfully with families in your neighbourhood.
+              No heavy tracking, no sales pitch — just a simple way to connect with families nearby.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="py-12 md:py-16 bg-slate-50">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">
-                No pitchy sales talk. No long contracts. Just a simple way to share what makes your place special with parents looking for just what you offer.
+            <div className="rounded-lg overflow-hidden border border-slate-200 shadow-sm">
+              <img
+                src="/partner-family-dinner.jpg"
+                alt="A family enjoying a meal together at a family-friendly restaurant"
+                className="w-full h-auto object-contain"
+              />
+            </div>
+            <h2 className="mt-6 text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900">
+              No long talks. No long contracts. The fastest way to reach families nearby.
             </h2>
-
           </div>
         </div>
       </section>
@@ -154,7 +158,7 @@ export default function RestaurantPartnerPage() {
                     Be seen by the right people
                   </h3>
                   <p className="text-slate-600">
-                    Families don’t want to guess what to expect — they want to find places where everyone feels comfortable, from toddlers to grandparents. Nugget helps you get in front of those families actively searching for kid-friendly spots in your city. 
+                    Local families and parent groups are already searching for kid-friendly spots like yours.
                   </p>
                 </CardContent>
               </Card>
@@ -168,7 +172,7 @@ export default function RestaurantPartnerPage() {
                     Share what makes you family-friendly
                   </h3>
                   <p className="text-slate-600">
-                    Whether you’ve got high chairs, crayons & kids’ menus, outdoor space, or a calm vibe that parents appreciate, you can highlight those features in your listing. Parents want to know what’s there so they can plan great family time out together.
+                    High chairs, kids' menu, crayons, outdoor space, a calm vibe — tell parents what you've got.
                   </p>
                 </CardContent>
               </Card>
@@ -182,68 +186,10 @@ export default function RestaurantPartnerPage() {
                     Grow at your own pace
                   </h3>
                   <p className="text-slate-600">
-                    Getting started is free and only takes a few minutes — no credit card required. You control what you show and update. Upgrade only when you’re ready for extras like more photos or priority placement.
-
+                    Start with a free account, no credit card needed. Upgrade later for extras like featured listings or hosted events.
                   </p>
-
-                  Sharing this kind of info helps families trust your place and choose you confidently for meals out — whether that's a casual weeknight dinner or a weekend treat. Kid Friendly Near Me
                 </CardContent>
               </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-12 md:py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900 mb-8 md:mb-12">
-              Families Look for More than Food
-            </h2>
-
-            <div className="grid sm:grid-cols-2 gap-6 md:gap-8">
-              <div className="flex gap-4">
-                <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-[#8dbf65] rounded-lg flex items-center justify-center">
-                    <Clock className="h-5 w-5 text-white" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                    Clear, honest details about what to expect
-                  </h3>
-
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-[#8dbf65] rounded-lg flex items-center justify-center">
-                    <Gift className="h-5 w-5 text-white" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                   Visuals that show your space and vibe
-                  </h3>
-
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-[#8dbf65] rounded-lg flex items-center justify-center">
-                    <TrendingUp className="h-5 w-5 text-white" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                    A sense that kids (and parents!) will be welcomed and comfortable
-                  </h3>
-
-                </div>
-              </div>
-
             </div>
           </div>
         </div>
@@ -257,7 +203,7 @@ export default function RestaurantPartnerPage() {
               Get Started Today
             </h2>
             <p className="text-base sm:text-lg md:text-xl mb-8 text-white/90">
-              It’s easy, quick, and free to join. You set up your listing in minutes, show off what you offer, and start welcoming more families who genuinely value what you do.
+              Free, easy, and ready in under 5 minutes.
             </p>
             <div className="flex justify-center">
               <Link href="/signup" className="w-full sm:w-auto">
@@ -266,6 +212,109 @@ export default function RestaurantPartnerPage() {
                   <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
               </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900 mb-8 md:mb-12">
+              Let’s offer families more than just a meal
+            </h2>
+
+            <div className="grid sm:grid-cols-2 gap-6 md:gap-8">
+              <div className="flex gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#8dbf65] rounded-lg flex items-center justify-center">
+                    <FileText className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                    Share everything you love about your place in a clear and honest way.
+                  </h3>
+
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#8dbf65] rounded-lg flex items-center justify-center">
+                    <Heart className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                    Let families know that they’re welcome.
+                  </h3>
+
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#8dbf65] rounded-lg flex items-center justify-center">
+                    <Camera className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                    Add photos to bring your place to life - vibe, space, staff.
+                  </h3>
+
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#8dbf65] rounded-lg flex items-center justify-center">
+                    <TrendingUp className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                    Turn new visitors into regulars
+                  </h3>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 md:py-16 bg-slate-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900 mb-8 md:mb-12">
+              What families are saying
+            </h2>
+
+            <div className="grid sm:grid-cols-2 gap-6 md:gap-8">
+              <Card className="border-slate-200 shadow-sm">
+                <CardContent className="pt-6">
+                  <p className="text-slate-600 text-base leading-relaxed mb-4">
+                    “Thanks to The Nugget I know that my 2 kids will have what they need, so we can all actually enjoy a meal together.”
+                  </p>
+                  <p className="text-slate-900 font-semibold">
+                    Jenny, mom of 2
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-slate-200 shadow-sm">
+                <CardContent className="pt-6">
+                  <p className="text-slate-600 text-base leading-relaxed mb-4">
+                    “Finally a place where I can quickly find a restaurant with a kids' menu or a playground nearby. Such a lifesaver with two young kids!”
+                  </p>
+                  <p className="text-slate-900 font-semibold">
+                    Brian, dad of 2
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
