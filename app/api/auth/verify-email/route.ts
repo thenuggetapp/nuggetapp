@@ -109,6 +109,34 @@ export async function GET(request: NextRequest) {
 
     console.log('[verify-email API] ✅ User email confirmed successfully');
     console.log('[verify-email API] ✅ User ID:', tokenData.user_id);
+
+    // Apply the role the user signed up for. The handle_new_user() trigger only
+    // reads raw_app_meta_data (which the client cannot set), so self-serve owner
+    // / local hero signups land as 'customer' until we promote them here with the
+    // service key. Never honour 'admin' from client metadata.
+    const requestedRole = updateUserData?.user?.user_metadata?.role;
+    if (requestedRole === 'owner' || requestedRole === 'local_hero') {
+      const { error: roleProfileError } = await supabase
+        .from('user_profiles')
+        .update({ role: requestedRole })
+        .eq('id', tokenData.user_id);
+
+      if (roleProfileError) {
+        console.error('[verify-email API] ⚠️ Failed to set profile role:', roleProfileError);
+      }
+
+      const { error: roleMetaError } = await supabase.auth.admin.updateUserById(
+        tokenData.user_id,
+        { app_metadata: { role: requestedRole } }
+      );
+
+      if (roleMetaError) {
+        console.error('[verify-email API] ⚠️ Failed to set app_metadata role:', roleMetaError);
+      } else {
+        console.log(`[verify-email API] ✅ Role set to '${requestedRole}'`);
+      }
+    }
+
     console.log('='.repeat(80) + '\n');
 
     return NextResponse.json({

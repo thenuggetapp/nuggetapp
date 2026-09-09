@@ -37,7 +37,7 @@ interface AuthContextType {
     password: string,
     fullName: string,
     businessName: string
-  ) => Promise<{ error: any }>;
+  ) => Promise<{ error: any; data?: { user: any; session: any } }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -1322,20 +1322,79 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         data: {
           full_name: fullName,
           business_name: businessName,
+          // Stored on user_metadata; the /api/auth/verify-email route reads this
+          // and promotes the account to 'owner' (service key) once the email is
+          // confirmed. The DB trigger can't do it - it only reads app_metadata,
+          // which the client cannot set.
+          role: "owner",
         },
       },
     });
 
     if (error) return { error };
 
-    if (data.user) {
-      await supabase
-        .from("user_profiles")
-        .update({ role: "owner" })
-        .eq("id", data.user.id);
+    // Send the verification email via Resend (mirrors signUp()). The owner path
+    // previously relied on Supabase's default auth email, which is disabled since
+    // the Resend migration - so no confirmation email was ever sent.
+    if (data?.user) {
+      try {
+        const origin =
+          typeof window !== "undefined"
+            ? window.location.origin
+            : "https://thenugget.app";
+
+        const tokenResponse = await fetch(
+          "/api/auth/generate-verification-token",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              userId: data.user.id,
+              email: data.user.email,
+            }),
+          }
+        );
+
+        const tokenResult = await tokenResponse.json();
+
+        if (!tokenResponse.ok) {
+          console.error(
+            "[AuthContext] ⚠️ Failed to generate owner verification token (non-blocking):",
+            tokenResult
+          );
+        } else {
+          const verificationLink = `${origin}/verify-email?token=${tokenResult.token}`;
+          const emailResponse = await fetch("/api/auth/send-email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              type: "signup",
+              email: data.user.email,
+              link: verificationLink,
+              userName: fullName,
+            }),
+          });
+
+          if (!emailResponse.ok) {
+            console.error(
+              "[AuthContext] ⚠️ Failed to send owner verification email (non-blocking):",
+              await emailResponse.json()
+            );
+          } else {
+            console.log(
+              "[AuthContext] ✅ Owner verification email sent via Resend"
+            );
+          }
+        }
+      } catch (emailErr) {
+        console.error(
+          "[AuthContext] ⚠️ Owner verification flow error (non-blocking):",
+          emailErr
+        );
+      }
     }
 
-    return { error: null };
+    return { error: null, data };
   };
 
   const signOut = async () => {

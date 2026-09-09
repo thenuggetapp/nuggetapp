@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Store, Mail, Lock, User, Building2, ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
+import { Store, Mail, Lock, User, Building2, ArrowRight, AlertCircle, Loader2, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
@@ -20,6 +20,8 @@ export default function OwnerRegisterPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
+  const [confirmationSent, setConfirmationSent] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     businessName: '',
@@ -83,7 +85,7 @@ export default function OwnerRegisterPage() {
     setLoading(true);
 
     try {
-      const { error: signUpError } = await signUpAsOwner(
+      const { error: signUpError, data } = await signUpAsOwner(
         formData.email,
         formData.password,
         formData.fullName,
@@ -95,13 +97,68 @@ export default function OwnerRegisterPage() {
         return;
       }
 
-      router.push('/owner/dashboard?welcome=true');
+      // Supabase returns a user with no identities when the email already exists.
+      if (data?.user && (!data.user.identities || data.user.identities.length === 0)) {
+        setError('This email is already registered. Please sign in instead.');
+        return;
+      }
+
+      // If Supabase returned a live session, email confirmation is off - go straight in.
+      if (data?.session) {
+        router.push('/owner/dashboard?welcome=true');
+        return;
+      }
+
+      // Otherwise the account needs email verification first.
+      setRegisteredEmail(formData.email);
+      setConfirmationSent(true);
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }
   };
+
+  if (confirmationSent) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md text-center">
+          <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+            <Mail className="w-8 h-8 text-green-600" />
+          </div>
+          <h1 className="text-3xl font-bold text-slate-900 mb-4">Check your email</h1>
+          <p className="text-slate-600 mb-2">We sent a verification link to:</p>
+          <p className="font-semibold text-slate-900 mb-6">{registeredEmail}</p>
+
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-6 text-left">
+            <h3 className="font-semibold text-slate-900 mb-2">Next steps:</h3>
+            <ol className="text-sm text-slate-600 space-y-2">
+              <li className="flex items-start gap-2">
+                <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                <span>Open the email from hello@thenugget.app</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                <span>Click the verification link</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                <span>Sign in and set up your first restaurant listing</span>
+              </li>
+            </ol>
+          </div>
+
+          <p className="text-sm text-slate-500 mb-4">
+            Didn't receive the email? Check your spam folder or try signing up again.
+          </p>
+
+          <Link href="/login">
+            <Button variant="outline" className="w-full">Go to sign in</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center p-4">
