@@ -319,18 +319,14 @@ export default function OwnerRegisterPage() {
               </div>
 
               <div className="pt-4 border-t border-slate-200">
-                <div className="grid grid-cols-3 gap-4 text-center">
+                <div className="grid grid-cols-2 gap-4 text-center">
                   <div>
                     <div className="text-2xl font-bold text-[#8dbf65]">Free</div>
-                    <div className="text-xs text-slate-600">Forever</div>
+                    <div className="text-xs text-slate-600">Restaurant Page</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-[#8dbf65]">5</div>
                     <div className="text-xs text-slate-600">Free Photos</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-[#8dbf65]">24/7</div>
-                    <div className="text-xs text-slate-600">Support</div>
                   </div>
                 </div>
               </div>
