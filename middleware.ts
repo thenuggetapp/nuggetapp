@@ -125,7 +125,10 @@ export async function middleware(request: NextRequest) {
 
   // Protected admin and owner paths require authentication
   // BUT: Skip server-side auth checks if in iframe mode (handled client-side)
-  if ((path.startsWith("/admin") || path.startsWith("/owner")) && !isLikelyIframe) {
+  // AND: /owner/register is the public restaurant-owner signup entry point
+  const isProtectedOwnerPath =
+    path.startsWith("/owner") && path !== "/owner/register";
+  if ((path.startsWith("/admin") || isProtectedOwnerPath) && !isLikelyIframe) {
     try {
       console.log("[Middleware] 🔒 Checking auth for protected route:", path);
       // CRITICAL FIX: Use getSession() instead of getUser() - much faster, no API call

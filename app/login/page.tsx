@@ -389,7 +389,10 @@ export default function LoginPage() {
 
             <p className="text-sm text-center text-slate-600 pt-4">
               Don't have an account?{' '}
-              <Link href="/signup" className="text-slate-900 font-bold underline">
+              <Link
+                href={redirectTo?.startsWith('/owner') ? '/owner/register' : '/signup'}
+                className="text-slate-900 font-bold underline"
+              >
                 Sign up
               </Link>
             </p>

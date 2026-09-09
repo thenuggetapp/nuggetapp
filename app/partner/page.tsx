@@ -44,7 +44,7 @@ export default function RestaurantPartnerPage() {
               Free listing. No contract needed. Show customers you're truly family-friendly, baby to grandparent.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/signup" className="w-full sm:w-auto">
+              <Link href="/owner/register" className="w-full sm:w-auto">
                 <Button className="w-full sm:w-auto bg-[#8dbf65] hover:bg-[#7aaa56] h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg">
                   Create Free Account
                   <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
@@ -208,7 +208,7 @@ export default function RestaurantPartnerPage() {
               Free, easy, and ready in under 5 minutes.
             </p>
             <div className="flex justify-center">
-              <Link href="/signup" className="w-full sm:w-auto">
+              <Link href="/owner/register" className="w-full sm:w-auto">
                 <Button className="w-full sm:w-auto bg-[#8dbf65] text-white hover:bg-[#7aaa56] h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg">
                   Join Nugget today
                   <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
