@@ -36,7 +36,9 @@ export default function RestaurantPartnerPage() {
         <div className="relative z-20 container mx-auto px-4 pt-8 md:pt-16 pb-16 md:pb-24">
           <div className="max-w-6xl mx-auto text-center">
             <h1 className="text-[2.25rem] sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extralight font-serif text-white mb-6 leading-[0.924] sm:leading-tight drop-shadow-lg">
-              Open your place to local families – all in under 5 mins.
+              Open your place to local families –
+              <br />
+              all in under 5 mins.
             </h1>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white mb-8 leading-relaxed drop-shadow-md">
               Free listing. No contract needed. Show customers you're truly family-friendly, baby to grandparent.
