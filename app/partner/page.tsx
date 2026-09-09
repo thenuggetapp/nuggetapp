@@ -74,7 +74,7 @@ export default function RestaurantPartnerPage() {
         </div>
       </div>
 
-      <section className="py-12 md:py-16">
+      <section className="pt-12 md:pt-16 pb-6 md:pb-8">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
 
@@ -87,7 +87,7 @@ export default function RestaurantPartnerPage() {
             
 
 
-            <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-12">
+            <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               <Card className="bg-[#1e2738] border-slate-700">
                 <CardContent className="pt-8 text-center">
                   <div className="w-16 h-16 bg-[#8dbf65] rounded-full flex items-center justify-center mx-auto mb-4">
@@ -121,15 +121,11 @@ export default function RestaurantPartnerPage() {
                 </CardContent>
               </Card>
             </div>
-
-            <p className="text-center text-base sm:text-lg text-white/80 max-w-3xl mx-auto">
-              No heavy tracking, no sales pitch — just a simple way to connect with families nearby.
-            </p>
           </div>
         </div>
       </section>
 
-      <section className="py-12 md:py-16 bg-white">
+      <section className="pt-6 md:pt-8 pb-12 md:pb-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="rounded-lg overflow-hidden border border-slate-200 shadow-sm">
