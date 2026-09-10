@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { useMapCamera } from "@/hooks/useMapCamera";
 
 interface MapboxMapProps {
   coordinates?: [number, number];
@@ -43,7 +44,6 @@ export function MapboxMap({
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const markerPopupsRef = useRef<Map<string, mapboxgl.Popup>>(new Map());
   const geolocateControlRef = useRef<mapboxgl.GeolocateControl | null>(null);
-  const hasInitiallyPositioned = useRef(false);
   // Stable refs so event handlers never need to re-register when callback identity changes
   const onViewportChangeRef = useRef(onViewportChange);
   useEffect(() => { onViewportChangeRef.current = onViewportChange; }, [onViewportChange]);
@@ -123,8 +123,6 @@ export function MapboxMap({
 
     // Add markers if available
     if (markers.length > 0) {
-      const bounds = new mapboxgl.LngLatBounds();
-
       markers.forEach((markerData) => {
         const el = document.createElement("div");
         el.className = "custom-marker";
@@ -163,33 +161,9 @@ export function MapboxMap({
 
         markersRef.current.push(marker);
         markerPopupsRef.current.set(markerData.id, popup);
-        bounds.extend(markerData.coordinates);
       });
-
-      // Initial positioning: jump instantly so there's no distracting camera arc
-      if (!hasInitiallyPositioned.current) {
-        if (markers.length > 1) {
-          map.current.fitBounds(bounds, { padding: 100, maxZoom: 13, duration: 0 });
-        } else if (markers.length === 1) {
-          map.current.jumpTo({ center: markers[0].coordinates, zoom });
-        }
-        hasInitiallyPositioned.current = true;
-      }
-    } else if (coordinates && !hasInitiallyPositioned.current) {
-      // No markers but coordinates provided - fly to coordinates (only on initial load)
-      const currentCenter = map.current.getCenter();
-      const [lng, lat] = coordinates;
-
-      // Only fly if coordinates changed significantly (prevents continuous re-rendering)
-      if (
-        Math.abs(currentCenter.lng - lng) > 0.01 ||
-        Math.abs(currentCenter.lat - lat) > 0.01
-      ) {
-        map.current.jumpTo({ center: coordinates, zoom });
-        hasInitiallyPositioned.current = true;
-      }
     }
-  }, [markers, mapLoaded, onMarkerClick, coordinates, zoom]);
+  }, [markers, mapLoaded, onMarkerClick]);
 
   useEffect(() => {
     if (!mapLoaded) return;
@@ -203,35 +177,20 @@ export function MapboxMap({
     });
   }, [hoveredMarkerId, mapLoaded]);
 
-  useEffect(() => {
-    if (!map.current || !mapLoaded || !flyToCoordinates) return;
+  const markerCoordinates = useMemo(
+    () => markers.map((m) => m.coordinates),
+    [markers],
+  );
 
-    map.current.flyTo({
-      center: flyToCoordinates,
-      zoom: 11,
-      duration: 2200,
-      easing: (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
-    });
-  }, [flyToCoordinates, mapLoaded]);
-
-  useEffect(() => {
-    if (!map.current || !mapLoaded || !fitBounds) return;
-
-    const [swLng, swLat, neLng, neLat] = fitBounds;
-    map.current.fitBounds(
-      [
-        [swLng, swLat],
-        [neLng, neLat],
-      ],
-      {
-        padding: 80,
-        maxZoom: 14,
-        minZoom: 8,
-        duration: 1800,
-        easing: (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
-      },
-    );
-  }, [fitBounds, mapLoaded]);
+  useMapCamera({
+    map,
+    mapLoaded,
+    markerCoordinates,
+    coordinates,
+    fitBounds,
+    flyToCoordinates,
+    zoom,
+  });
 
   return (
     <div
