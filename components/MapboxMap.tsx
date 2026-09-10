@@ -9,6 +9,8 @@ interface MapboxMapProps {
   coordinates?: [number, number];
   flyToCoordinates?: [number, number];
   fitBounds?: [number, number, number, number];
+  /** Reserved space (e.g. an overlapping bottom sheet) that camera moves should treat as hidden. */
+  bottomPaddingPx?: number;
   markers?: Array<{
     id: string;
     coordinates: [number, number];
@@ -30,6 +32,7 @@ export function MapboxMap({
   coordinates = [-0.1278, 51.5074],
   flyToCoordinates,
   fitBounds,
+  bottomPaddingPx,
   markers = [],
   onMarkerClick,
   onMarkerHover,
@@ -190,6 +193,7 @@ export function MapboxMap({
     fitBounds,
     flyToCoordinates,
     zoom,
+    bottomPaddingPx,
   });
 
   return (

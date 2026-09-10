@@ -12,6 +12,7 @@ interface UseMapCameraArgs {
   fitBounds?: [number, number, number, number];
   flyToCoordinates?: [number, number];
   zoom: number;
+  bottomPaddingPx?: number;
 }
 
 /**
@@ -29,10 +30,29 @@ export function useMapCamera({
   fitBounds,
   flyToCoordinates,
   zoom,
+  bottomPaddingPx = 0,
 }: UseMapCameraArgs) {
   const hasInitiallyPositioned = useRef(false);
 
+  // Baseline so anything that moves the camera without its own padding
+  // (e.g. built-in controls) still respects the sheet. Real camera moves
+  // below pass their own merged padding, since fitBounds/flyTo/jumpTo
+  // overwrite this global value as a side effect otherwise (retainPadding
+  // defaults to true) — a plain `padding: 80` there would silently wipe out
+  // the sheet's bottom padding on the very next search.
+  useEffect(() => {
+    if (!map.current || !mapLoaded) return;
+    map.current.setPadding({
+      top: 0,
+      bottom: bottomPaddingPx,
+      left: 0,
+      right: 0,
+    });
+  }, [bottomPaddingPx, mapLoaded]);
+
   // Highest priority: an explicit bounding box (e.g. new search results).
+  // bottomPaddingPx is intentionally left out of the deps below — dragging
+  // the sheet shouldn't itself re-fly the camera, only the next real move should.
   useEffect(() => {
     if (!map.current || !mapLoaded || !fitBounds) return;
 
@@ -43,7 +63,7 @@ export function useMapCamera({
         [neLng, neLat],
       ],
       {
-        padding: 80,
+        padding: { top: 80, bottom: 80 + bottomPaddingPx, left: 80, right: 80 },
         maxZoom: 14,
         minZoom: 8,
         duration: 1800,
@@ -64,6 +84,7 @@ export function useMapCamera({
       zoom: 11,
       duration: 2200,
       easing: EASE_IN_OUT_QUAD,
+      padding: { top: 0, bottom: bottomPaddingPx, left: 0, right: 0 },
     });
     hasInitiallyPositioned.current = true;
   }, [flyToCoordinates, mapLoaded, fitBounds]);
@@ -86,13 +107,30 @@ export function useMapCamera({
         (b, c) => b.extend(c),
         new mapboxgl.LngLatBounds(),
       );
-      map.current.fitBounds(bounds, { padding: 100, maxZoom: 13, duration: 0 });
+      map.current.fitBounds(bounds, {
+        padding: {
+          top: 100,
+          bottom: 100 + bottomPaddingPx,
+          left: 100,
+          right: 100,
+        },
+        maxZoom: 13,
+        duration: 0,
+      });
       hasInitiallyPositioned.current = true;
     } else if (markerCoordinates.length === 1) {
-      map.current.jumpTo({ center: markerCoordinates[0], zoom });
+      map.current.jumpTo({
+        center: markerCoordinates[0],
+        zoom,
+        padding: { top: 0, bottom: bottomPaddingPx, left: 0, right: 0 },
+      });
       hasInitiallyPositioned.current = true;
     } else if (coordinates) {
-      map.current.jumpTo({ center: coordinates, zoom });
+      map.current.jumpTo({
+        center: coordinates,
+        zoom,
+        padding: { top: 0, bottom: bottomPaddingPx, left: 0, right: 0 },
+      });
       hasInitiallyPositioned.current = true;
     }
   }, [

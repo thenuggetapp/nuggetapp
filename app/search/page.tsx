@@ -133,6 +133,28 @@ function getFiltersFromURLParams(searchParams: any): FilterState {
   };
 }
 
+function boundsOverlapRatio(
+  original: [number, number, number, number],
+  current: [number, number, number, number],
+): number {
+  const [oMinLng, oMinLat, oMaxLng, oMaxLat] = original;
+  const [cMinLng, cMinLat, cMaxLng, cMaxLat] = current;
+
+  const intersectionWidth =
+    Math.min(oMaxLng, cMaxLng) - Math.max(oMinLng, cMinLng);
+  const intersectionHeight =
+    Math.min(oMaxLat, cMaxLat) - Math.max(oMinLat, cMinLat);
+
+  if (intersectionWidth <= 0 || intersectionHeight <= 0) return 0;
+
+  const originalArea = (oMaxLng - oMinLng) * (oMaxLat - oMinLat);
+  if (originalArea <= 0) return 1;
+
+  return (intersectionWidth * intersectionHeight) / originalArea;
+}
+
+const SEARCH_HERE_OVERLAP_THRESHOLD = 0.6;
+
 function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -210,8 +232,9 @@ function SearchContent() {
     center: [number, number];
     bounds: [number, number, number, number];
   } | null>(null);
-  // Suppresses the "Search in this area" button during programmatic map animations
-  const mapSettlingRef = useRef(false);
+  const searchedBoundsRef = useRef<[number, number, number, number] | null>(
+    null,
+  );
   // Stable refs so the viewport callback doesn't need to re-register on every render
   const restaurantsRef = useRef<Restaurant[]>([]);
   const submittedQueryRef = useRef(submittedQuery);
@@ -230,6 +253,7 @@ function SearchContent() {
   const [startY, setStartY] = useState(0);
   const [currentY, setCurrentY] = useState(0);
   const drawerRef = useRef<HTMLDivElement>(null);
+  const [mapBottomPaddingPx, setMapBottomPaddingPx] = useState(0);
 
   // Map filter keys to display labels
   const filterLabels: Record<string, string> = {
@@ -477,29 +501,19 @@ function SearchContent() {
     submittedQueryRef.current = submittedQuery;
   }, [submittedQuery]);
 
-  // Every time new results arrive, suppress the button for long enough to cover
-  // the fitBounds animation (1500ms) plus buffer, regardless of API latency.
-  useEffect(() => {
-    if (restaurants.length === 0 || !submittedQuery) return;
-    mapSettlingRef.current = true;
-    const t = setTimeout(() => {
-      mapSettlingRef.current = false;
-    }, 2500);
-    return () => clearTimeout(t);
-  }, [restaurants, submittedQuery]);
-
   const handleViewportChange = useCallback(
     (viewport: {
       center: [number, number];
       bounds: [number, number, number, number];
     }) => {
       setMapViewport(viewport);
-      if (
-        !mapSettlingRef.current &&
-        restaurantsRef.current.length > 0 &&
-        submittedQueryRef.current
-      ) {
-        setShowSearchHere(true);
+      if (restaurantsRef.current.length > 0 && submittedQueryRef.current) {
+        const searched = searchedBoundsRef.current;
+        setShowSearchHere(
+          !searched ||
+            boundsOverlapRatio(searched, viewport.bounds) <
+              SEARCH_HERE_OVERLAP_THRESHOLD,
+        );
       }
     },
     [],
@@ -721,10 +735,6 @@ function SearchContent() {
     setMapBounds(null);
     setShowSearchHere(false);
     setIsSearchInAreaMode(!!bboxOverride);
-    mapSettlingRef.current = true;
-    setTimeout(() => {
-      mapSettlingRef.current = false;
-    }, 2200);
 
     const parsedQuery = parseNaturalLanguageQuery(query);
     // Use explicit override (from handleUseMyLocation) or fall back to state
@@ -839,12 +849,14 @@ function SearchContent() {
           if (validCoords.length > 0) {
             const lngs = validCoords.map((r) => r.coordinates[0]);
             const lats = validCoords.map((r) => r.coordinates[1]);
-            setMapBounds([
+            const bounds: [number, number, number, number] = [
               Math.min(...lngs),
               Math.min(...lats),
               Math.max(...lngs),
               Math.max(...lats),
-            ]);
+            ];
+            setMapBounds(bounds);
+            searchedBoundsRef.current = bounds;
           }
         }
       }
@@ -920,6 +932,7 @@ function SearchContent() {
     const newCoords = { lat, lng };
     setLocationCoordinates(newCoords);
     setIsUsingDeviceLocation(false);
+    searchedBoundsRef.current = mapViewport.bounds;
     void performSearch(submittedQuery || searchQuery, newCoords, mapViewport.bounds);
   };
 
@@ -986,6 +999,28 @@ function SearchContent() {
     if (drawerPosition === "middle") return "top-[50vh]";
     return "top-[10vh]"; // expanded
   };
+
+  const getDrawerTopVh = () => {
+    if (drawerPosition === "collapsed") return 70;
+    if (drawerPosition === "middle") return 50;
+    return 10; // expanded
+  };
+
+  useEffect(() => {
+    if (!isMobile) {
+      setMapBottomPaddingPx(0);
+      return;
+    }
+
+    const updatePadding = () => {
+      const drawerHeightVh = 100 - getDrawerTopVh();
+      setMapBottomPaddingPx((drawerHeightVh / 100) * window.innerHeight);
+    };
+
+    updatePadding();
+    window.addEventListener("resize", updatePadding);
+    return () => window.removeEventListener("resize", updatePadding);
+  }, [isMobile, drawerPosition]);
 
   const markers = useMemo(
     () =>
@@ -1310,6 +1345,7 @@ function SearchContent() {
             <MapboxMap
               coordinates={mapCenter}
               fitBounds={mapBounds ?? undefined}
+              bottomPaddingPx={mapBottomPaddingPx}
               markers={markers}
               onMarkerClick={(id) => {
                 const restaurant = restaurants.find((r) => r.id === id);
@@ -1325,7 +1361,7 @@ function SearchContent() {
             />
 
             {showSearchHere && (
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+              <div className="absolute top-20 lg:top-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
                 <Button
                   onClick={handleSearchInArea}
                   className="pointer-events-auto bg-white text-slate-800 border border-slate-200 shadow-lg hover:bg-slate-50 rounded-full px-5 py-2 text-sm font-semibold flex items-center gap-2 transition-all"
