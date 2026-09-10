@@ -6,11 +6,20 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
+const PLACES_AUTOCOMPLETE_URL =
+  "https://places.googleapis.com/v1/places:autocomplete";
+
+/** Field mask limits payload to fields needed for legacy-compatible predictions. */
+const AUTOCOMPLETE_FIELD_MASK =
+  "suggestions.placePrediction.placeId,suggestions.placePrediction.text,suggestions.placePrediction.structuredFormat";
+
 interface AutocompleteRequest {
   input: string;
   location?: string;
   radius?: number;
-  types?: string;
+  sessionToken?: string;
+  languageCode?: string;
+  regionCode?: string;
 }
 
 interface GeocodeRequest {
@@ -19,6 +28,133 @@ interface GeocodeRequest {
 
 interface PlaceDetailsRequest {
   placeId: string;
+}
+
+interface LegacyAutocompletePrediction {
+  description: string;
+  place_id: string;
+  structured_formatting: {
+    main_text: string;
+    secondary_text: string;
+  };
+}
+
+interface NewPlacePrediction {
+  placeId?: string;
+  text?: { text?: string };
+  structuredFormat?: {
+    mainText?: { text?: string };
+    secondaryText?: { text?: string };
+  };
+}
+
+interface NewAutocompleteResponse {
+  suggestions?: Array<{
+    placePrediction?: NewPlacePrediction;
+  }>;
+}
+
+function parseLocationBias(location?: string, radius = 50000) {
+  if (!location) return undefined;
+
+  const [latStr, lngStr] = location.split(",").map((part) => part.trim());
+  const latitude = Number.parseFloat(latStr);
+  const longitude = Number.parseFloat(lngStr);
+
+  if (Number.isNaN(latitude) || Number.isNaN(longitude)) {
+    return undefined;
+  }
+
+  return {
+    circle: {
+      center: { latitude, longitude },
+      radius,
+    },
+  };
+}
+
+function mapToLegacyAutocompleteResponse(
+  data: NewAutocompleteResponse
+): { status: string; predictions: LegacyAutocompletePrediction[] } {
+  const predictions = (data.suggestions ?? [])
+    .filter((suggestion) => suggestion.placePrediction?.placeId)
+    .map((suggestion) => {
+      const prediction = suggestion.placePrediction!;
+      const mainText = prediction.structuredFormat?.mainText?.text ?? "";
+      const secondaryText = prediction.structuredFormat?.secondaryText?.text ?? "";
+      const description =
+        prediction.text?.text ??
+        [mainText, secondaryText].filter(Boolean).join(", ");
+
+      return {
+        description,
+        place_id: prediction.placeId!,
+        structured_formatting: {
+          main_text: mainText,
+          secondary_text: secondaryText,
+        },
+      };
+    });
+
+  return {
+    status: predictions.length > 0 ? "OK" : "ZERO_RESULTS",
+    predictions,
+  };
+}
+
+async function fetchAutocompleteNew(
+  apiKey: string,
+  request: AutocompleteRequest
+) {
+  const { input, location, radius = 50000, sessionToken, languageCode, regionCode } =
+    request;
+
+  const body: Record<string, unknown> = {
+    input,
+  };
+
+  const locationBias = parseLocationBias(location, radius);
+  if (locationBias) {
+    body.locationBias = locationBias;
+  }
+
+  if (sessionToken) {
+    body.sessionToken = sessionToken;
+  }
+
+  if (languageCode) {
+    body.languageCode = languageCode;
+  }
+
+  if (regionCode) {
+    body.regionCode = regionCode;
+  }
+
+  const response = await fetch(PLACES_AUTOCOMPLETE_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": apiKey,
+      "X-Goog-FieldMask": AUTOCOMPLETE_FIELD_MASK,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => ({}));
+    const message =
+      (errorBody as { error?: { message?: string } })?.error?.message ??
+      `Autocomplete request failed (${response.status})`;
+
+    return {
+      status: "REQUEST_DENIED",
+      error_message: message,
+      predictions: [] as LegacyAutocompletePrediction[],
+    };
+  }
+
+  const data = (await response.json()) as NewAutocompleteResponse;
+  return mapToLegacyAutocompleteResponse(data);
 }
 
 Deno.serve(async (req: Request) => {
@@ -38,11 +174,11 @@ Deno.serve(async (req: Request) => {
       throw new Error("GOOGLE_PLACES_API_KEY not configured");
     }
 
-    // Autocomplete endpoint
+    // Autocomplete endpoint (Places API New)
     if (action === "autocomplete") {
-      const { input, location, radius = 50000, types = "restaurant" }: AutocompleteRequest = await req.json();
+      const requestBody: AutocompleteRequest = await req.json();
 
-      if (!input) {
+      if (!requestBody.input?.trim()) {
         return new Response(
           JSON.stringify({ error: "Input is required" }),
           {
@@ -52,23 +188,17 @@ Deno.serve(async (req: Request) => {
         );
       }
 
-      // Build URL as a string to avoid URLSearchParams percent-encoding
-      // parentheses in collection types like (cities) and (regions)
-      let autocompleteUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&types=${types}&key=${GOOGLE_API_KEY}`;
-
-      if (location) {
-        autocompleteUrl += `&location=${encodeURIComponent(location)}&radius=${radius}`;
-      }
-
-      const response = await fetch(autocompleteUrl);
-      const data = await response.json();
+      const data = await fetchAutocompleteNew(GOOGLE_API_KEY, {
+        ...requestBody,
+        input: requestBody.input.trim(),
+      });
 
       return new Response(JSON.stringify(data), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Place Details endpoint
+    // Place Details endpoint (legacy — migrate to GET /v1/places/{placeId} separately)
     if (action === "details") {
       const { placeId }: PlaceDetailsRequest = await req.json();
 
@@ -100,9 +230,8 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // Photo endpoint
+    // Photo endpoint (legacy)
     if (action === "photo") {
-      const url = new URL(req.url);
       const photoReference = url.searchParams.get("photo_reference");
       const maxwidth = url.searchParams.get("maxwidth") || "800";
 
@@ -132,15 +261,15 @@ Deno.serve(async (req: Request) => {
             "Content-Type": response.headers.get("Content-Type") || "image/jpeg",
           },
         });
-      } else {
-        return new Response(
-          JSON.stringify({ error: "Failed to fetch photo" }),
-          {
-            status: response.status,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
       }
+
+      return new Response(
+        JSON.stringify({ error: "Failed to fetch photo" }),
+        {
+          status: response.status,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
 
     // Geocode endpoint
@@ -180,8 +309,10 @@ Deno.serve(async (req: Request) => {
     );
   } catch (error) {
     console.error("Error in google-places function:", error);
+    const message =
+      error instanceof Error ? error.message : "Unknown error in google-places";
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: message }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

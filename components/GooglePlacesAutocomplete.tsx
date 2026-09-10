@@ -40,6 +40,11 @@ export function GooglePlacesAutocomplete({
   const { toast } = useToast();
   const debounceTimer = useRef<NodeJS.Timeout>();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const sessionTokenRef = useRef(crypto.randomUUID());
+
+  const resetSessionToken = () => {
+    sessionTokenRef.current = crypto.randomUUID();
+  };
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -71,7 +76,10 @@ export function GooglePlacesAutocomplete({
             'Authorization': `Bearer ${supabaseAnonKey}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ input: searchInput }),
+          body: JSON.stringify({
+            input: searchInput,
+            sessionToken: sessionTokenRef.current,
+          }),
         }
       );
 
@@ -130,6 +138,7 @@ export function GooglePlacesAutocomplete({
 
       if (data.status === 'OK' && data.result) {
         onPlaceSelect(data.result);
+        resetSessionToken();
         toast({
           title: 'Restaurant Found',
           description: 'Form fields have been auto-filled',
