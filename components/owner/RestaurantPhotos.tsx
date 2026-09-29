@@ -55,14 +55,20 @@ export default function RestaurantPhotos({ restaurantId }: { restaurantId: strin
     let uploaded = 0;
 
     for (const file of Array.from(files)) {
-      if (!file.type.startsWith('image/') || file.size > MAX_FILE_SIZE) {
-        toast({ title: `Skipped ${file.name}`, description: 'Photos must be images under 10MB', variant: 'destructive' });
+      const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+      // Some browsers report an empty type for iPhone HEIC photos
+      const contentType = file.type || (ext === 'heic' || ext === 'heif' ? `image/${ext}` : '');
+      if (!contentType.startsWith('image/')) {
+        toast({ title: `Skipped ${file.name}`, description: 'That file isn\'t a photo', variant: 'destructive' });
+        continue;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        toast({ title: `Skipped ${file.name}`, description: 'Photos must be under 10MB', variant: 'destructive' });
         continue;
       }
 
-      const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
       const path = `${restaurantId}/${crypto.randomUUID()}.${ext}`;
-      const { error: uploadError } = await supabase.storage.from(BUCKET).upload(path, file, { contentType: file.type });
+      const { error: uploadError } = await supabase.storage.from(BUCKET).upload(path, file, { contentType });
       if (uploadError) {
         console.error('Photo upload error:', uploadError);
         toast({ title: `Couldn't upload ${file.name}`, description: uploadError.message, variant: 'destructive' });

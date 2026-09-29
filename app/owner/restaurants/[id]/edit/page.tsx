@@ -66,6 +66,7 @@ export interface RestaurantFormData {
   booking_url: string;
   opening_times: OpeningTimes;
   nugget_verified: boolean;
+  owner_verified: boolean;
   kids_menu: boolean;
   high_chairs: boolean;
   wheelchair_access: boolean;
@@ -122,6 +123,7 @@ const initialFormData: RestaurantFormData = {
   booking_url: "",
   opening_times: {},
   nugget_verified: false,
+  owner_verified: false,
   kids_menu: false,
   high_chairs: false,
   wheelchair_access: false,
@@ -240,6 +242,7 @@ export default function EditRestaurantPage() {
         booking_url: restaurant.booking_url || "",
         opening_times: restaurant.opening_times || {},
         nugget_verified: restaurant.nugget_verified || false,
+        owner_verified: restaurant.owner_verified || false,
         kids_menu: restaurant.kids_menu || false,
         high_chairs: restaurant.high_chairs || false,
         wheelchair_access: restaurant.wheelchair_access || false,

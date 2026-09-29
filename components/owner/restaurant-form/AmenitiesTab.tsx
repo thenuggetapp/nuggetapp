@@ -9,18 +9,16 @@ interface AmenitiesTabProps {
   setFormData: (data: any) => void;
 }
 
-const amenityGroups = [
+const amenityGroups: Array<{ title: string; note?: string; amenities: Array<{ key: string; label: string }> }> = [
   {
     title: 'Family & Kids',
     amenities: [
-      { key: 'nugget_verified', label: 'Nugget Verified' },
       { key: 'kids_menu', label: 'Kids Menu' },
       { key: 'high_chairs', label: 'High Chairs Available' },
       { key: 'kids_play_space', label: 'Kids Play Space' },
       { key: 'kids_coloring', label: 'Kids Coloring/Activities' },
       { key: 'kids_potty_toilet', label: 'Kids Potty/Toilet' },
       { key: 'free_kids_meal', label: 'Free Kids Meal' },
-      { key: 'one_pound_kids_meal', label: '£1 Kids Meal' },
       { key: 'games_available', label: 'Games Available' },
       { key: 'teen_favourite', label: 'Teen Favourite' },
     ],
@@ -28,8 +26,7 @@ const amenityGroups = [
   {
     title: 'Accessibility',
     amenities: [
-      { key: 'wheelchair_access', label: 'Wheelchair Access' },
-      { key: 'changing_table', label: 'Changing Table' },
+      { key: 'wheelchair_access', label: 'Wheelchair Access (includes accessible toilet)' },
       { key: 'baby_change_mens', label: "Baby Change (Men's)" },
       { key: 'baby_change_womens', label: "Baby Change (Women's)" },
       { key: 'baby_change_unisex', label: 'Baby Change (Unisex)' },
@@ -45,7 +42,7 @@ const amenityGroups = [
       { key: 'halal', label: 'Halal Options' },
       { key: 'kosher', label: 'Kosher Options' },
       { key: 'healthy_options', label: 'Healthy Options' },
-      { key: 'small_plates', label: 'Small Plates/Tapas' },
+      { key: 'small_plates', label: 'Small Plates / Shareables' },
     ],
   },
   {
@@ -63,14 +60,15 @@ const amenityGroups = [
   {
     title: 'Vibe',
     amenities: [
-      { key: 'buzzy', label: 'Buzzy Atmosphere' },
-      { key: 'relaxed', label: 'Relaxed' },
-      { key: 'posh', label: 'Upscale/Posh' },
-      { key: 'fun_quirky', label: 'Fun & Quirky' },
+      { key: 'buzzy', label: 'Buzzy Atmosphere (can get a bit loud)' },
+      { key: 'relaxed', label: 'Relaxed (a bit chill, not as loud)' },
+      { key: 'posh', label: 'Upscale / Posh (a bit fancy)' },
+      { key: 'fun_quirky', label: 'Fun / Quirky (live music, events, something silly or unique)' },
     ],
   },
   {
-    title: 'Location Features',
+    title: 'Location Features (within a 10 minute walk)',
+    note: '*Include what you can, The Nugget team can add more specifics too!',
     amenities: [
       { key: 'playground_nearby', label: 'Playground Nearby' },
       { key: 'tourist_attraction_nearby', label: 'Tourist Attraction Nearby' },
@@ -85,6 +83,24 @@ export default function AmenitiesTab({ formData, setFormData }: AmenitiesTabProp
 
   return (
     <div className="space-y-6">
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center space-x-3">
+            <Switch
+              id="owner_verified"
+              checked={formData.owner_verified || false}
+              onCheckedChange={(checked) => handleToggle('owner_verified', checked)}
+            />
+            <Label htmlFor="owner_verified" className="text-sm font-medium cursor-pointer">
+              Verified by {formData.name?.trim() || 'your restaurant'}
+            </Label>
+          </div>
+          <p className="text-sm text-slate-500 mt-2 ml-14">
+            Turn this on to confirm the details on your listing are accurate. Families will see a &ldquo;Verified by {formData.name?.trim() || 'your restaurant'}&rdquo; badge.
+          </p>
+        </CardContent>
+      </Card>
+
       <div className="mb-4">
         <h3 className="font-semibold text-slate-700">Restaurant Amenities</h3>
         <p className="text-sm text-slate-500">
@@ -96,6 +112,7 @@ export default function AmenitiesTab({ formData, setFormData }: AmenitiesTabProp
         <Card key={group.title}>
           <CardContent className="p-6">
             <h4 className="font-semibold text-slate-700 mb-4">{group.title}</h4>
+            {group.note && <p className="text-sm text-slate-500 -mt-2 mb-4">{group.note}</p>}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {group.amenities.map((amenity) => (
                 <div key={amenity.key} className="flex items-center space-x-3">

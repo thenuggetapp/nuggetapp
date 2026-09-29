@@ -239,7 +239,8 @@ export default function CouponsPage() {
       loadData();
     } catch (error) {
       console.error('Error saving offer:', error);
-      toast({ title: 'Error', description: 'Failed to save your offer', variant: 'destructive' });
+      const detail = (error as { message?: string })?.message;
+      toast({ title: "Couldn't save your offer", description: detail || 'Please try again', variant: 'destructive' });
     } finally {
       setSaving(false);
     }

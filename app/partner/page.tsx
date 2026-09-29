@@ -136,7 +136,9 @@ export default function RestaurantPartnerPage() {
               />
             </div>
             <h2 className="mt-6 text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900">
-              No long talks. No long contracts. The fastest way to reach families nearby.
+              No long talks. No long contracts.
+              <br />
+              The fastest way to reach families nearby.
             </h2>
           </div>
         </div>

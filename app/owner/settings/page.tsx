@@ -32,7 +32,6 @@ export default function SettingsPage() {
     email: userProfile?.email || '',
   });
   const [notifications, setNotifications] = useState({
-    coupon_redemptions: true,
     marketing_tips: false,
   });
 
@@ -132,24 +131,6 @@ export default function SettingsPage() {
               <CardDescription>Choose what updates you want to receive</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 border border-slate-200 rounded-lg">
-                <div className="flex-1">
-                  <Label htmlFor="coupon_redemptions" className="cursor-pointer font-medium">
-                    Offer Redemptions
-                  </Label>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Get notified when families use your offers
-                  </p>
-                </div>
-                <Switch
-                  id="coupon_redemptions"
-                  checked={notifications.coupon_redemptions}
-                  onCheckedChange={(checked) =>
-                    setNotifications({ ...notifications, coupon_redemptions: checked })
-                  }
-                />
-              </div>
-
               <div className="flex items-center justify-between p-4 border border-slate-200 rounded-lg">
                 <div className="flex-1">
                   <Label htmlFor="marketing_tips" className="cursor-pointer font-medium">
