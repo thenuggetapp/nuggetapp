@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Baby, Percent, PlusCircle, Trash2, Pause, Play, Edit, Clock, CalendarDays } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { DAYS, describeDays, describeTimes } from '@/lib/offers';
 
 type OfferType = 'kids_meal' | 'percentage';
 
@@ -46,16 +47,6 @@ const OFFERS: Record<OfferType, { title: string; description: string; icon: type
   },
 };
 
-// 0 = Sunday … 6 = Saturday, shown Monday first
-const DAYS = [
-  { value: 1, label: 'Mon' },
-  { value: 2, label: 'Tue' },
-  { value: 3, label: 'Wed' },
-  { value: 4, label: 'Thu' },
-  { value: 5, label: 'Fri' },
-  { value: 6, label: 'Sat' },
-  { value: 0, label: 'Sun' },
-];
 const ALL_DAYS = DAYS.map((d) => d.value);
 
 // Offers run until the owner pauses or deletes them
@@ -78,26 +69,6 @@ const emptyForm = (restaurantId: string): FormState => ({
   start_time: '11:00',
   end_time: '17:00',
 });
-
-function formatTime(t: string) {
-  const [h, m] = t.split(':').map(Number);
-  const suffix = h >= 12 ? 'pm' : 'am';
-  const hour = h % 12 || 12;
-  return m ? `${hour}:${String(m).padStart(2, '0')}${suffix}` : `${hour}${suffix}`;
-}
-
-function describeDays(days: number[] | null) {
-  if (!days || days.length === 0 || days.length === 7) return 'Every day';
-  const sorted = DAYS.filter((d) => days.includes(d.value));
-  if (sorted.length === 5 && !days.includes(0) && !days.includes(6)) return 'Weekdays';
-  if (sorted.length === 2 && days.includes(0) && days.includes(6)) return 'Weekends';
-  return sorted.map((d) => d.label).join(', ');
-}
-
-function describeTimes(start: string | null, end: string | null) {
-  if (!start || !end) return 'All day';
-  return `${formatTime(start)} – ${formatTime(end)}`;
-}
 
 function generateCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';

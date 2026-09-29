@@ -9,6 +9,7 @@ import { MapboxMap } from "@/components/MapboxMap";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { RestaurantOffers } from "@/components/RestaurantOffers";
 import { ImageCarousel } from "@/components/ImageCarousel";
 import { Restaurant } from "@/lib/dummy-restaurants";
 import { useAuth } from "@/contexts/AuthContext";
@@ -1035,6 +1036,8 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                         )}
                       </div>
                     </div>
+
+                    <RestaurantOffers restaurantId={restaurant.id} />
 
                     <div className="about-section space-y-3 lg:space-y-4">
                       <h2 className="section-title text-base lg:text-lg font-bold text-slate-900 mb-3 lg:mb-4">

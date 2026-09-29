@@ -411,7 +411,7 @@ export default function AddRestaurantPage() {
             </TabsList>
 
             <TabsContent value="basic" className="space-y-6">
-              <BasicInfoTab formData={formData} setFormData={setFormData} />
+              <BasicInfoTab formData={formData} setFormData={setFormData} showImageUpload={false} />
             </TabsContent>
 
             <TabsContent value="location" className="space-y-6">

@@ -53,6 +53,7 @@ export default function RestaurantPhotos({ restaurantId }: { restaurantId: strin
     if (!files || files.length === 0) return;
     setUploading(true);
     let uploaded = 0;
+    let firstUrl: string | null = null;
 
     for (const file of Array.from(files)) {
       const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
@@ -88,7 +89,13 @@ export default function RestaurantPhotos({ restaurantId }: { restaurantId: strin
         toast({ title: `Couldn't save ${file.name}`, description: insertError.message, variant: 'destructive' });
         continue;
       }
+      if (!firstUrl) firstUrl = publicUrl;
       uploaded++;
+    }
+
+    // Use the first photo as the listing's main image if it doesn't have one yet
+    if (firstUrl) {
+      await supabase.from('restaurants').update({ image_url: firstUrl }).eq('id', restaurantId).is('image_url', null);
     }
 
     setUploading(false);

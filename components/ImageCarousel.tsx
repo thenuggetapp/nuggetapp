@@ -64,6 +64,33 @@ export function ImageCarousel({
         }
       }
 
+      // Photos uploaded by the restaurant owner (owner portal)
+      if (restaurantId?.trim()) {
+        const { data: ownerPhotos, error: ownerPhotosError } = await supabase
+          .from('restaurant_gallery')
+          .select('id, image_url, display_order')
+          .eq('restaurant_id', restaurantId)
+          .order('display_order', { ascending: true });
+
+        if (ownerPhotosError) {
+          console.error('Error loading owner photos:', ownerPhotosError);
+        } else if (ownerPhotos && ownerPhotos.length > 0) {
+          const existing = new Set(base.map((b) => b.image_url));
+          base = [
+            ...base,
+            ...ownerPhotos
+              .filter((row) => !existing.has(row.image_url))
+              .map((row) => ({
+                id: `owner-${row.id}`,
+                image_url: row.image_url,
+                is_featured: false,
+                display_order: 500 + (row.display_order ?? 0),
+                attribution: null,
+              })),
+          ];
+        }
+      }
+
       const placeId = googlePlaceId?.trim();
       if (placeId) {
         const res = await fetch(
