@@ -12,6 +12,30 @@ import { ImagePlus, Loader2, Trash2 } from 'lucide-react';
 const BUCKET = 'restaurant-photos';
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
+const MAX_DIMENSION = 2048;
+
+// Shrinks big phone photos so pages load fast (still large enough for social media).
+// Returns the original file when it's already small or the browser can't decode it (e.g. HEIC).
+async function prepareForUpload(file: File): Promise<{ blob: Blob; ext: string; contentType: string } | null> {
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));
+    if (scale === 1 && file.size <= 2 * 1024 * 1024 && file.type === 'image/jpeg') {
+      bitmap.close();
+      return null;
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext('2d')?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.85));
+    return blob ? { blob, ext: 'jpg', contentType: 'image/jpeg' } : null;
+  } catch {
+    return null;
+  }
+}
+
 interface Photo {
   id: string;
   image_url: string;
@@ -63,13 +87,15 @@ export default function RestaurantPhotos({ restaurantId }: { restaurantId: strin
         toast({ title: `Skipped ${file.name}`, description: 'That file isn\'t a photo', variant: 'destructive' });
         continue;
       }
-      if (file.size > MAX_FILE_SIZE) {
+      const prepared = await prepareForUpload(file);
+      if ((prepared?.blob ?? file).size > MAX_FILE_SIZE) {
         toast({ title: `Skipped ${file.name}`, description: 'Photos must be under 10MB', variant: 'destructive' });
         continue;
       }
-
-      const path = `${restaurantId}/${crypto.randomUUID()}.${ext}`;
-      const { error: uploadError } = await supabase.storage.from(BUCKET).upload(path, file, { contentType });
+      const path = `${restaurantId}/${crypto.randomUUID()}.${prepared?.ext ?? ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from(BUCKET)
+        .upload(path, prepared?.blob ?? file, { contentType: prepared?.contentType ?? contentType });
       if (uploadError) {
         console.error('Photo upload error:', uploadError);
         toast({ title: `Couldn't upload ${file.name}`, description: uploadError.message, variant: 'destructive' });

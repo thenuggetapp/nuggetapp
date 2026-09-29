@@ -199,13 +199,11 @@ export function ImageCarousel({
 
   return (
     <div className="relative h-64 lg:h-80 w-full overflow-hidden flex-shrink-0 group">
-      <div className="relative w-full h-full">
-        <img
-          src={current.image_url}
-          alt={`${restaurantName} - Image ${currentIndex + 1}`}
-          className="w-full h-full object-cover"
-        />
-      </div>
+      <FittedImage
+        key={current.id}
+        src={current.image_url}
+        alt={`${restaurantName} - Image ${currentIndex + 1}`}
+      />
 
       {currentAttribution && (
         <div className="pointer-events-none absolute top-4 left-4 z-20 max-w-[min(100%,20rem)] rounded-md bg-black/60 px-3 py-2 text-sm text-white opacity-0 shadow-sm transition-opacity duration-200 group-hover:opacity-100">
@@ -261,6 +259,38 @@ export function ImageCarousel({
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+// Fills the frame edge to edge, except for photos much narrower than the frame
+// (e.g. portrait phone shots): those are shown whole over a blurred copy of themselves.
+function FittedImage({ src, alt }: { src: string; alt: string }) {
+  const [showWhole, setShowWhole] = useState(false);
+
+  return (
+    <div className="relative w-full h-full bg-slate-100">
+      {showWhole && (
+        <img
+          src={src}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-70"
+        />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        className={`relative w-full h-full ${showWhole ? 'object-contain' : 'object-cover'}`}
+        onLoad={(e) => {
+          const img = e.currentTarget;
+          const frame = img.parentElement;
+          if (!frame || !img.naturalWidth || !img.naturalHeight) return;
+          const imageRatio = img.naturalWidth / img.naturalHeight;
+          const frameRatio = frame.clientWidth / frame.clientHeight;
+          setShowWhole(imageRatio < frameRatio * 0.75);
+        }}
+      />
     </div>
   );
 }
