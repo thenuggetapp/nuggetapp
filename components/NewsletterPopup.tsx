@@ -146,11 +146,10 @@ export function NewsletterPopup() {
               <Mail className="h-6 w-6 text-[#8dbf65]" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-2 text-center">
-              Get our best dining picks
+              Where to eat with the kids (and actually enjoy it)
             </h3>
             <p className="text-slate-600 text-center mb-6">
-              Join the Nugget newsletter for family-friendly restaurant guides and tips.
-              We'll email you no more than twice a month — no spam, ever.
+              Family-friendly restaurant picks and tips, straight to your inbox.
             </p>
             <form onSubmit={handleSubmit} className="space-y-3">
               <input
@@ -178,15 +177,12 @@ export function NewsletterPopup() {
                 disabled={status === "submitting"}
                 className="w-full bg-[#8dbf65] hover:bg-[#7aad52] text-white"
               >
-                {status === "submitting" ? "Subscribing..." : "Subscribe"}
+                {status === "submitting" ? "Sending..." : "Send me the good spots"}
               </Button>
             </form>
-            <button
-              onClick={handleClose}
-              className="mt-3 w-full text-center text-sm text-slate-500 hover:text-slate-700"
-            >
-              No thanks
-            </button>
+            <p className="mt-3 text-center text-xs text-slate-500">
+              Two emails a month. Unsubscribe anytime.
+            </p>
           </>
         )}
       </div>
