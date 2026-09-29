@@ -7,6 +7,8 @@ import { Card, CardContent } from '@/components/ui/card';
 interface AmenitiesTabProps {
   formData: any;
   setFormData: (data: any) => void;
+  // Owners can mark their own listing "Verified by <restaurant>"; Nugget curators set "Nugget Verified"
+  variant?: 'owner' | 'curator';
 }
 
 const amenityGroups: Array<{ title: string; note?: string; amenities: Array<{ key: string; label: string }> }> = [
@@ -76,13 +78,29 @@ const amenityGroups: Array<{ title: string; note?: string; amenities: Array<{ ke
   },
 ];
 
-export default function AmenitiesTab({ formData, setFormData }: AmenitiesTabProps) {
+export default function AmenitiesTab({ formData, setFormData, variant = 'owner' }: AmenitiesTabProps) {
   const handleToggle = (key: string, value: boolean) => {
     setFormData({ ...formData, [key]: value });
   };
 
   return (
     <div className="space-y-6">
+      {variant === 'curator' ? (
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center space-x-3">
+            <Switch
+              id="nugget_verified"
+              checked={formData.nugget_verified || false}
+              onCheckedChange={(checked) => handleToggle('nugget_verified', checked)}
+            />
+            <Label htmlFor="nugget_verified" className="text-sm font-medium cursor-pointer">
+              Nugget Verified
+            </Label>
+          </div>
+        </CardContent>
+      </Card>
+      ) : (
       <Card>
         <CardContent className="p-6">
           <div className="flex items-center space-x-3">
@@ -100,6 +118,7 @@ export default function AmenitiesTab({ formData, setFormData }: AmenitiesTabProp
           </p>
         </CardContent>
       </Card>
+      )}
 
       <div className="mb-4">
         <h3 className="font-semibold text-slate-700">Restaurant Amenities</h3>
