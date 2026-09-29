@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { safeLocalStorage } from "@/lib/storage-utils";
 
 const STORAGE_KEY = "nugget_newsletter_popup";
-const SHOW_DELAY_MS = 5000;
+const SHOW_DELAY_MS = 3000;
 const MAX_SHOWS_PER_WINDOW = 2;
 const WINDOW_DAYS = 30;
 const WINDOW_MS = WINDOW_DAYS * 24 * 60 * 60 * 1000;
