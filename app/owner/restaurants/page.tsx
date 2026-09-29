@@ -29,8 +29,12 @@ import {
   MapPin,
   Heart,
   Filter,
+  Camera,
+  Ticket,
+  PartyPopper,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { getRestaurantDisplayImageUrl } from '@/lib/restaurant-image';
 
@@ -52,6 +56,8 @@ interface Restaurant {
 export default function MyRestaurantsPage() {
   const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const showWelcome = searchParams?.get('welcome') === 'true';
   const [loading, setLoading] = useState(true);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>([]);
@@ -294,18 +300,28 @@ export default function MyRestaurantsPage() {
   }
 
   return (
-    <div className="p-8 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-8 space-y-6">
+      {showWelcome && (
+        <div className="flex items-start gap-3 rounded-lg border border-green-200 bg-green-50 p-4">
+          <PartyPopper className="h-5 w-5 text-green-700 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-green-900">Welcome to Nugget!</p>
+            <p className="text-sm text-green-800">Your free account is ready. Add your restaurant to get started.</p>
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">My Restaurants</h1>
           <p className="text-slate-600 mt-2">
-            Manage your restaurant listings and track performance
+            Your free Nugget listings
           </p>
         </div>
         <Link href="/owner/restaurants/new">
           <Button className="bg-[#8dbf65] hover:bg-[#7aaa56]">
             <PlusCircle className="mr-2 h-5 w-5" />
-            Add Restaurant
+            Add a Restaurant
           </Button>
         </Link>
       </div>
@@ -353,10 +369,15 @@ export default function MyRestaurantsPage() {
             <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto">
               <Store className="h-10 w-10 text-slate-400" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900">No restaurants yet</h3>
+            <h3 className="text-xl font-semibold text-slate-900">Let's get you listed</h3>
             <p className="text-slate-600">
-              Get started by adding your first restaurant listing. It only takes a few minutes!
+              Free, no contract, and done in under 5 minutes.
             </p>
+            <ol className="text-left text-slate-700 space-y-2 py-2">
+              <li className="flex items-center gap-3"><Store className="h-5 w-5 text-[#8dbf65]" /> Add your restaurant details</li>
+              <li className="flex items-center gap-3"><Camera className="h-5 w-5 text-[#8dbf65]" /> Upload a few photos</li>
+              <li className="flex items-center gap-3"><Ticket className="h-5 w-5 text-[#8dbf65]" /> Pick a family offer</li>
+            </ol>
             <Link href="/owner/restaurants/new">
               <Button size="lg" className="bg-[#8dbf65] hover:bg-[#7aaa56]">
                 <PlusCircle className="mr-2 h-5 w-5" />
@@ -448,8 +469,13 @@ export default function MyRestaurantsPage() {
                     )}
                   </Button>
                   <Link href={`/owner/restaurants/${restaurant.id}/edit`}>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" aria-label="Edit restaurant">
                       <Edit className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link href={`/owner/restaurants/${restaurant.id}/edit#photos`}>
+                    <Button variant="outline" size="sm" aria-label="Photos">
+                      <Camera className="h-4 w-4" />
                     </Button>
                   </Link>
                   <Button
@@ -474,7 +500,7 @@ export default function MyRestaurantsPage() {
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete the restaurant
-              and all associated data including coupons and analytics.
+              and all associated data including photos and offers.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

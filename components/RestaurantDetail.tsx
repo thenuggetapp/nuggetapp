@@ -9,6 +9,7 @@ import { MapboxMap } from "@/components/MapboxMap";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { RestaurantOffers } from "@/components/RestaurantOffers";
 import { ImageCarousel } from "@/components/ImageCarousel";
 import { Restaurant } from "@/lib/dummy-restaurants";
 import { useAuth } from "@/contexts/AuthContext";
@@ -45,6 +46,7 @@ import {
   TrendingUp,
   Shield,
   ExternalLink,
+  CheckCircle2,
 } from "lucide-react";
 
 interface RestaurantDetailProps {
@@ -98,6 +100,7 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
       bookingUrl: data.booking_url,
       openingTimes: data.opening_times,
       nuggetVerified: data.nugget_verified,
+      ownerVerified: data.owner_verified,
       kidsMenu: data.kids_menu,
       highChairs: data.high_chairs,
       changingTable: data.changing_table,
@@ -530,6 +533,14 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                               <Shield className="h-3 w-3" />
                               <span className="text-xs font-medium">
                                 Nugget Verified
+                              </span>
+                            </Badge>
+                          )}
+                          {restaurant.ownerVerified && (
+                            <Badge className="bg-white text-[#5a8a3a] border border-[#8dbf65] hover:bg-white flex items-center gap-1 px-2 py-0.5">
+                              <CheckCircle2 className="h-3 w-3" />
+                              <span className="text-xs font-medium">
+                                Verified by {restaurant.name}
                               </span>
                             </Badge>
                           )}
@@ -1025,6 +1036,8 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                         )}
                       </div>
                     </div>
+
+                    <RestaurantOffers restaurantId={restaurant.id} />
 
                     <div className="about-section space-y-3 lg:space-y-4">
                       <h2 className="section-title text-base lg:text-lg font-bold text-slate-900 mb-3 lg:mb-4">
