@@ -10,11 +10,14 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { CalendarHeart, ChefHat, UtensilsCrossed, Sparkles, CheckCircle2, Loader2 } from 'lucide-react';
+import { CalendarHeart, ChefHat, UtensilsCrossed, Megaphone, Globe, Baby, Sparkles, CheckCircle2, Loader2 } from 'lucide-react';
 
 const REQUEST_TYPES = [
-  { value: 'event', label: 'Co-host a family event', description: 'Kids’ cooking classes, baby & me mornings, family nights', icon: CalendarHeart },
-  { value: 'kids_menu', label: 'Improve our kids’ menu', description: 'Ideas and feedback from parents, for every age', icon: UtensilsCrossed },
+  { value: 'event', label: 'Co-host a family event', description: 'Plan an event with Nugget Local Heroes, our city ambassadors: kids’ cooking classes, baby & me mornings, family nights', icon: CalendarHeart },
+  { value: 'family_menu', label: 'Kids’ & family menu', description: 'Review your current menu or create a new one, for every age', icon: UtensilsCrossed },
+  { value: 'marketing', label: 'Family marketing plan', description: 'Tailored recommendations to reach more local families', icon: Megaphone },
+  { value: 'website', label: 'Website', description: 'Build a new website or refresh the one you have', icon: Globe },
+  { value: 'amenities', label: 'Family-friendly equipment', description: 'Get help buying high chairs, baby change tables and more', icon: Baby },
   { value: 'chef_referral', label: 'Chef referral', description: 'Get introduced to chefs who love cooking for families', icon: ChefHat },
   { value: 'other', label: 'Something else', description: 'Tell us what would help and we’ll make it happen', icon: Sparkles },
 ];
