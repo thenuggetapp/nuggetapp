@@ -168,6 +168,32 @@ If you didn't request this email, you can safely ignore it.
   return { html, text };
 }
 
+export function getOwnerSignupConfirmationEmail(confirmationLink: string, userName?: string): { html: string; text: string } {
+  const greeting = userName ? `Hi ${userName},` : 'Hi there,';
+
+  const html = wrapInLayout(`
+    <h1>Welcome to Nugget, partner!</h1>
+    <p>${greeting}</p>
+    <p>Thanks for joining Nugget as a restaurant partner. Your listing is free, with no contract needed. Let's show local families that you're truly family-friendly, baby to grandparent.</p>
+    <p>Please click the button below to verify your email address and get started:</p>
+    <div class="button-container">
+      <a href="${confirmationLink}" class="button">Verify Email Address</a>
+    </div>
+    <p><strong>Getting listed takes under 5 minutes:</strong></p>
+    <p>1. Add your restaurant details<br />2. Upload a few photos<br />3. Pick a family offer</p>
+    <p>Want a hand with events, your kids' menu or anything else? Use Concierge in your owner dashboard and our team will help.</p>
+    <p class="small">Or copy and paste this link into your browser:</p>
+    <p class="small"><a href="${confirmationLink}" class="link">${confirmationLink}</a></p>
+    <div class="warning">
+      <p>This link will expire in 24 hours. If it expires, you can request a new verification email from the login page.</p>
+    </div>
+  `, 'Welcome to Nugget! Verify your email to list your restaurant.');
+
+  const text = `Welcome to Nugget, partner!\n\n${greeting}\n\nThanks for joining Nugget as a restaurant partner. Your listing is free, with no contract needed. Let's show local families that you're truly family-friendly, baby to grandparent.\n\nPlease click the link below to verify your email address and get started:\n\n${confirmationLink}\n\nGetting listed takes under 5 minutes:\n1. Add your restaurant details\n2. Upload a few photos\n3. Pick a family offer\n\nWant a hand with events, your kids' menu or anything else? Use Concierge in your owner dashboard and our team will help.\n\nThis link will expire in 24 hours.`;
+
+  return { html, text };
+}
+
 export function getPasswordResetEmail(resetLink: string, userName?: string): { html: string; text: string } {
   const greeting = userName ? `Hi ${userName},` : 'Hi there,';
 
@@ -281,7 +307,7 @@ You're receiving this email because an email change was requested for your accou
   return { html, text };
 }
 
-export type EmailType = 'signup' | 'password_reset' | 'magic_link' | 'email_change';
+export type EmailType = 'signup' | 'owner_signup' | 'password_reset' | 'magic_link' | 'email_change';
 
 export function getEmailTemplate(
   type: EmailType,
@@ -293,6 +319,11 @@ export function getEmailTemplate(
       return {
         ...getSignupConfirmationEmail(link, options?.userName),
         subject: 'Welcome to Nugget - Verify Your Email',
+      };
+    case 'owner_signup':
+      return {
+        ...getOwnerSignupConfirmationEmail(link, options?.userName),
+        subject: 'Welcome to Nugget - Verify Your Email to List Your Restaurant',
       };
     case 'password_reset':
       return {
