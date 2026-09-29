@@ -67,7 +67,7 @@ export interface RestaurantFormData {
   booking_url: string;
   opening_times: OpeningTimes;
   nugget_verified: boolean;
-  owner_verified: boolean;
+  owner_verified?: boolean;
   kids_menu: boolean;
   high_chairs: boolean;
   wheelchair_access: boolean;
