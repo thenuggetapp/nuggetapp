@@ -28,6 +28,7 @@ import {
 import BasicInfoTab from "@/components/owner/restaurant-form/BasicInfoTab";
 import LocationTab from "@/components/owner/restaurant-form/LocationTab";
 import OpeningHoursTab from "@/components/owner/restaurant-form/OpeningHoursTab";
+import RestaurantPhotos from "@/components/owner/RestaurantPhotos";
 import AmenitiesTab from "@/components/owner/restaurant-form/AmenitiesTab";
 
 interface DayHours {
@@ -478,6 +479,8 @@ export default function EditRestaurantPage() {
           </div>
         </CardContent>
       </Card>
+
+      <RestaurantPhotos restaurantId={restaurantId} />
 
       <AlertDialog
         open={validationDialogOpen}

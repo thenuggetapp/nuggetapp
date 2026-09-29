@@ -33,8 +33,6 @@ export default function SettingsPage() {
   });
   const [notifications, setNotifications] = useState({
     coupon_redemptions: true,
-    payment_reminders: true,
-    weekly_summary: true,
     marketing_tips: false,
   });
 
@@ -137,10 +135,10 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between p-4 border border-slate-200 rounded-lg">
                 <div className="flex-1">
                   <Label htmlFor="coupon_redemptions" className="cursor-pointer font-medium">
-                    Coupon Redemptions
+                    Offer Redemptions
                   </Label>
                   <p className="text-sm text-slate-600 mt-1">
-                    Get notified when customers use your coupons
+                    Get notified when families use your offers
                   </p>
                 </div>
                 <Switch
@@ -154,47 +152,11 @@ export default function SettingsPage() {
 
               <div className="flex items-center justify-between p-4 border border-slate-200 rounded-lg">
                 <div className="flex-1">
-                  <Label htmlFor="payment_reminders" className="cursor-pointer font-medium">
-                    Payment Reminders
-                  </Label>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Receive reminders about upcoming payments
-                  </p>
-                </div>
-                <Switch
-                  id="payment_reminders"
-                  checked={notifications.payment_reminders}
-                  onCheckedChange={(checked) =>
-                    setNotifications({ ...notifications, payment_reminders: checked })
-                  }
-                />
-              </div>
-
-              <div className="flex items-center justify-between p-4 border border-slate-200 rounded-lg">
-                <div className="flex-1">
-                  <Label htmlFor="weekly_summary" className="cursor-pointer font-medium">
-                    Weekly Summary
-                  </Label>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Get a weekly overview of your restaurant performance
-                  </p>
-                </div>
-                <Switch
-                  id="weekly_summary"
-                  checked={notifications.weekly_summary}
-                  onCheckedChange={(checked) =>
-                    setNotifications({ ...notifications, weekly_summary: checked })
-                  }
-                />
-              </div>
-
-              <div className="flex items-center justify-between p-4 border border-slate-200 rounded-lg">
-                <div className="flex-1">
                   <Label htmlFor="marketing_tips" className="cursor-pointer font-medium">
                     Marketing Tips
                   </Label>
                   <p className="text-sm text-slate-600 mt-1">
-                    Receive tips and best practices for growing your business
+                    Tips and ideas for welcoming more families
                   </p>
                 </div>
                 <Switch
@@ -248,7 +210,7 @@ export default function SettingsPage() {
                       <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                       <AlertDialogDescription>
                         This action cannot be undone. This will permanently delete your account,
-                        all your restaurants, coupons, and analytics data.
+                        all your restaurants, photos and offers.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

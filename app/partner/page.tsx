@@ -8,8 +8,6 @@ import {
   Users,
   TrendingUp,
   Camera,
-  BarChart3,
-  Target,
   CheckCircle2,
   ArrowRight,
   Star,
@@ -41,7 +39,9 @@ export default function RestaurantPartnerPage() {
               all in under 5 mins.
             </h1>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white mb-8 leading-relaxed drop-shadow-md">
-              Free listing. No contract needed. Show customers you're truly family-friendly, baby to grandparent.
+              Free listing. No contract needed.
+              <br />
+              Show customers you're truly family-friendly, baby to grandparent.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/owner/register" className="w-full sm:w-auto">
@@ -178,13 +178,13 @@ export default function RestaurantPartnerPage() {
               <Card className="border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                 <CardContent className="pt-6">
                   <div className="w-12 h-12 bg-[#8dbf65]/10 rounded-xl flex items-center justify-center mb-4">
-                    <BarChart3 className="h-6 w-6 text-[#8dbf65]" />
+                    <Heart className="h-6 w-6 text-[#8dbf65]" />
                   </div>
                   <h3 className="text-xl font-semibold text-slate-900 mb-2">
-                    Grow at your own pace
+                    Free, with a helping hand
                   </h3>
                   <p className="text-slate-600">
-                    Start with a free account, no credit card needed. Upgrade later for extras like featured listings or hosted events.
+                    Everything is free. Want more? Our Concierge team can help you co-host family events, refresh your kids' menu and more.
                   </p>
                 </CardContent>
               </Card>

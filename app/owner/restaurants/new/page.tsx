@@ -317,10 +317,10 @@ export default function AddRestaurantPage() {
         title: "Success",
         description: `Restaurant ${
           publish ? "published" : "saved as draft"
-        } successfully`,
+        }. Now add a few photos!`,
       });
 
-      router.push("/owner/restaurants");
+      router.push(`/owner/restaurants/${restaurant.id}/edit#photos`);
     } catch (error: any) {
       console.error("Error saving restaurant:", error);
 
