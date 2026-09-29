@@ -78,7 +78,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
-  const authorName = article.author?.full_name || article.author?.email?.split('@')[0] || 'The Nugget Team';
+  const authorName = article.author_name || article.author?.full_name || 'The Nugget Team';
   const publishedDate = article.published_at ? format(new Date(article.published_at), 'MMMM d, yyyy') : '';
   const cleanedContent = cleanArticleContent(article.content || '');
 
