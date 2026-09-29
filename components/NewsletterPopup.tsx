@@ -146,10 +146,14 @@ export function NewsletterPopup() {
               <Mail className="h-6 w-6 text-[#8dbf65]" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-2 text-center">
-              Where to eat with the kids (and actually enjoy it)
+              Where to eat with the kids
+              <br />
+              (and actually enjoy it)
             </h3>
             <p className="text-slate-600 text-center mb-6">
-              Family-friendly restaurant picks and tips, straight to your inbox.
+              Family-friendly restaurant picks and tips,
+              <br />
+              straight to your inbox.
             </p>
             <form onSubmit={handleSubmit} className="space-y-3">
               <input
