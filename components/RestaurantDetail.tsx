@@ -21,6 +21,7 @@ import {
   toAbsolutePublicImageUrl,
 } from "@/lib/restaurant-image";
 import { useRestaurantDetail } from "@/hooks/useRestaurants";
+import { trackEvent } from "@/lib/analytics";
 import {
   useUserBookmarks,
   useUserLikes,
@@ -993,6 +994,7 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                           >
                             <a
                               href={restaurant.bookingUrl}
+                              onClick={() => trackEvent("click_booking", { restaurant_id: restaurant.id, restaurant_name: restaurant.name, link_url: restaurant.bookingUrl })}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -1015,6 +1017,7 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                           >
                             <a
                               href={restaurant.websiteUrl}
+                              onClick={() => trackEvent("click_restaurant_website", { restaurant_id: restaurant.id, restaurant_name: restaurant.name, link_url: restaurant.websiteUrl })}
                               target="_blank"
                               rel="noopener noreferrer"
                               aria-label="Visit restaurant website"
@@ -1773,6 +1776,7 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
               >
                 <a
                   href={restaurant.bookingUrl}
+                  onClick={() => trackEvent("click_booking", { restaurant_id: restaurant.id, restaurant_name: restaurant.name, link_url: restaurant.bookingUrl })}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -1795,6 +1799,7 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
               >
                 <a
                   href={restaurant.websiteUrl}
+                  onClick={() => trackEvent("click_restaurant_website", { restaurant_id: restaurant.id, restaurant_name: restaurant.name, link_url: restaurant.websiteUrl })}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Visit restaurant website"
