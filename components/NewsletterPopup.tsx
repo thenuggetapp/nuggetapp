@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Mail, X } from "lucide-react";
+import { Check, Mail, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { safeLocalStorage } from "@/lib/storage-utils";
@@ -150,11 +150,21 @@ export function NewsletterPopup() {
               <br />
               (and actually enjoy it)
             </h3>
-            <p className="text-slate-600 text-center mb-6">
+            <p className="text-slate-600 text-center mb-4">
               Family-friendly restaurant picks and tips,
               <br />
               straight to your inbox.
             </p>
+            <ul className="mb-6 space-y-1.5">
+              <li className="flex items-center gap-2 text-sm text-slate-700">
+                <Check className="h-4 w-4 shrink-0 text-[#8dbf65]" />
+                Two emails a month with the best family spots
+              </li>
+              <li className="flex items-center gap-2 text-sm text-slate-700">
+                <Check className="h-4 w-4 shrink-0 text-[#8dbf65]" />
+                Free Nugget account to save your favorites
+              </li>
+            </ul>
             <form onSubmit={handleSubmit} className="space-y-3">
               <input
                 type="text"
@@ -184,8 +194,8 @@ export function NewsletterPopup() {
                 {status === "submitting" ? "Sending..." : "Send me the good spots"}
               </Button>
             </form>
-            <p className="mt-3 text-center text-xs text-slate-500">
-              Two emails a month. Unsubscribe anytime.
+            <p className="mt-3 text-center text-xs text-slate-500 italic">
+              Unsubscribe anytime.
             </p>
           </>
         )}
