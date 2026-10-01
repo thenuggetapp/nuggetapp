@@ -35,6 +35,7 @@ interface Article {
   title: string;
   slug: string;
   category: string | null;
+  author_name: string | null;
   published: boolean;
   published_at: string | null;
   created_at: string;
@@ -69,6 +70,7 @@ export default function ArticlesManagementPage() {
           title,
           slug,
           category,
+          author_name,
           published,
           published_at,
           created_at,
@@ -181,7 +183,7 @@ export default function ArticlesManagementPage() {
               </TableRow>
             ) : (
               filteredArticles.map((article) => {
-                const authorName = article.author?.full_name || article.author?.email?.split('@')[0] || 'Unknown';
+                const authorName = article.author_name || article.author?.full_name || 'Unknown';
 
                 return (
                   <TableRow key={article.id}>
