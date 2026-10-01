@@ -41,7 +41,6 @@ async function syncToOutseta(email: string): Promise<void> {
   const personPayload = {
     Email: email,
     OptInToEmailList: true,
-    SchemaLessData: { Source: 'Blog Newsletter Popup' },
   };
 
   try {
@@ -119,22 +118,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { error: upsertError } = await supabase
-      .from('newsletter_subscribers')
-      .upsert(
-        { email, status: 'subscribed', source: 'blog_popup', unsubscribed_at: null },
-        { onConflict: 'email' }
-      );
+    // Blog signups are Nugget signups — no separate subscriber list. This
+    // creates (or, for an existing account, just signs in) a real
+    // auth.users row via Supabase's passwordless OTP flow; the existing
+    // handle_new_user trigger then creates the matching user_profiles row,
+    // exactly as it does for a normal password signup.
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: true,
+        emailRedirectTo: `${request.nextUrl.origin}/blog`,
+        data: { full_name: '' },
+      },
+    });
 
-    if (upsertError) {
-      console.error('[Newsletter] Error saving subscriber:', upsertError);
+    if (otpError) {
+      console.error('[Newsletter] Error creating account:', otpError);
       return NextResponse.json({ error: 'Failed to subscribe' }, { status: 500 });
     }
 
     await syncToOutseta(email);
 
     return NextResponse.json(
-      { success: true, message: "You're subscribed!" },
+      { success: true, message: 'Check your email to confirm.' },
       { status: 200 }
     );
   } catch (error) {

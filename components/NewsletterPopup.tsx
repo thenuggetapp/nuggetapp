@@ -137,8 +137,8 @@ export function NewsletterPopup() {
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#8dbf65]/10">
               <Mail className="h-6 w-6 text-[#8dbf65]" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">You're subscribed!</h3>
-            <p className="text-slate-600">Look out for our next pick in your inbox.</p>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">Almost there!</h3>
+            <p className="text-slate-600">We sent you a link to confirm — check your inbox.</p>
           </div>
         ) : (
           <>
