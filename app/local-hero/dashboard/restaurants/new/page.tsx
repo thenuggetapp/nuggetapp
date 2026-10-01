@@ -171,6 +171,7 @@ export default function AddRestaurantPage() {
       const dataToSave = {
         ...formData,
         slug,
+        likes_count: 1,
         visible: publish,
         city: formData.city.trim() || null,
         country: formData.country.trim() || null,

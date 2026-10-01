@@ -100,6 +100,7 @@ export async function POST(request: Request) {
         name: restaurantData.name,
         slug: slug,
         cuisine: restaurantData.cuisine || null,
+        likes_count: 1,
         description: restaurantData.description || null,
         phone: restaurantData.phone || null,
         price_level: restaurantData.price_level || 2,
