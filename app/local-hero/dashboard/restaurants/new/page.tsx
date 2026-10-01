@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
@@ -27,6 +27,8 @@ import AmenitiesTab from '@/components/owner/restaurant-form/AmenitiesTab';
 import { RestaurantFormData } from '@/app/owner/restaurants/new/page';
 import { GooglePlacesAutocomplete } from '@/components/GooglePlacesAutocomplete';
 import { mapGooglePlaceToRestaurant } from '@/lib/google-places-mapper';
+import { readDraft, useDraftAutosave } from '@/hooks/useDraftAutosave';
+import { AutosaveIndicator, DraftRestoredBanner } from '@/components/DraftAutosaveStatus';
 
 const initialFormData: RestaurantFormData = {
   name: '',
@@ -96,6 +98,38 @@ export default function AddRestaurantPage() {
   const [activeTab, setActiveTab] = useState('basic');
   const [validationDialogOpen, setValidationDialogOpen] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [draftChecked, setDraftChecked] = useState(false);
+  const [restoredDraftAt, setRestoredDraftAt] = useState<number | null>(null);
+  // Bumped to remount the Google Places search box when the name is replaced wholesale
+  const [formVersion, setFormVersion] = useState(0);
+
+  const draftKey = user ? `nugget_local_hero_new_restaurant_draft_${user.id}` : null;
+
+  useEffect(() => {
+    if (!draftKey || draftChecked) return;
+    const draft = readDraft<RestaurantFormData>(draftKey);
+    if (draft) {
+      setFormData({ ...initialFormData, ...draft.data });
+      setRestoredDraftAt(draft.savedAt);
+      setFormVersion((v) => v + 1);
+    }
+    setDraftChecked(true);
+  }, [draftKey, draftChecked]);
+
+  const { lastSavedAt, clearDraft, discardDraft } = useDraftAutosave({
+    key: draftKey,
+    data: formData,
+    baseline: initialFormData,
+    enabled: draftChecked,
+  });
+
+  const handleStartOver = () => {
+    discardDraft();
+    setFormData(initialFormData);
+    setRestoredDraftAt(null);
+    setActiveTab('basic');
+    setFormVersion((v) => v + 1);
+  };
 
   const handlePlaceSelect = (placeData: any) => {
     const mappedData = mapGooglePlaceToRestaurant(placeData);
@@ -228,6 +262,8 @@ export default function AddRestaurantPage() {
 
       console.log('Ownership record created successfully');
 
+      clearDraft();
+
       await supabase
         .from('restaurant_analytics')
         .insert({
@@ -290,6 +326,14 @@ export default function AddRestaurantPage() {
 
         <div className="flex-1 overflow-auto">
           <div className="px-6 py-6">
+            {restoredDraftAt && (
+              <DraftRestoredBanner
+                savedAt={restoredDraftAt}
+                discardLabel="Start over"
+                onDiscard={handleStartOver}
+              />
+            )}
+
             <Card className="mb-6 bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -302,6 +346,7 @@ export default function AddRestaurantPage() {
               </CardHeader>
               <CardContent>
                 <GooglePlacesAutocomplete
+                  key={formVersion}
                   onPlaceSelect={handlePlaceSelect}
                   placeholder="Search for a restaurant..."
                   label="Restaurant Name"
@@ -365,6 +410,7 @@ export default function AddRestaurantPage() {
                     {saving ? 'Publishing...' : 'Publish Restaurant'}
                   </Button>
                 </div>
+                <AutosaveIndicator lastSavedAt={lastSavedAt} />
               </CardContent>
             </Card>
           </div>
