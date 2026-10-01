@@ -125,7 +125,7 @@ export default function RestaurantPartnerPage() {
         </div>
       </section>
 
-      <section className="pt-6 md:pt-8 pb-12 md:pb-16 bg-white">
+      <section className="pt-6 md:pt-8 pb-6 md:pb-8 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="rounded-lg overflow-hidden border border-slate-200 shadow-sm">
@@ -142,7 +142,7 @@ export default function RestaurantPartnerPage() {
         </div>
       </section>
 
-      <section className="py-12 md:py-16 bg-white">
+      <section className="pt-6 md:pt-8 pb-12 md:pb-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
 
