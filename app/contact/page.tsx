@@ -121,7 +121,7 @@ export default function ContactPage() {
             <div className="flex gap-4">
               <MapPin className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" aria-hidden="true" />
               <div>
-                <p className="text-slate-800 font-medium mb-1">
+                <p className="text-slate-800 mb-1">
                   <span className="font-semibold">Become a Local Hero</span> - Be your city's ambassador, connecting families, restaurants, and our platform. Pitch us your city!
                 </p>
                 <p className="text-sm text-slate-600 italic">*This is a commission-based role.</p>
@@ -131,7 +131,7 @@ export default function ContactPage() {
             <div className="flex gap-4">
               <Users className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" aria-hidden="true" />
               <div>
-                <p className="text-slate-800 font-medium mb-1">
+                <p className="text-slate-800 mb-1">
                   <span className="font-semibold">Join our Restaurant Advisory Group</span> - Guide how The Nugget supports restaurants and families alike. Share your operational insights, track trends, and highlight gaps and opportunities for The Nugget.
                 </p>
                 <p className="text-sm text-slate-600 italic">*1-2 hours per month for future equity</p>
@@ -141,7 +141,7 @@ export default function ContactPage() {
             <div className="flex gap-4">
               <Heart className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" aria-hidden="true" />
               <div>
-                <p className="text-slate-800 font-medium mb-1">
+                <p className="text-slate-800 mb-1">
                   <span className="font-semibold">Join as a Parent Advisor</span> - Share your family's lived experiences and needs so we can build The Nugget to work for more families like yours.
                 </p>
                 <p className="text-sm text-slate-600 italic">*1 hour/ month. This is a voluntary role with perks.</p>
@@ -151,7 +151,7 @@ export default function ContactPage() {
             <div className="flex gap-4">
               <Home className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" aria-hidden="true" />
               <div>
-                <p className="text-slate-800 font-medium">
+                <p className="text-slate-800">
                   <span className="font-semibold">Add a Favorite Restaurant</span> - Help other families discover welcoming places.
                 </p>
               </div>
@@ -160,7 +160,7 @@ export default function ContactPage() {
             <div className="flex gap-4">
               <Globe className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" aria-hidden="true" />
               <div>
-                <p className="text-slate-800 font-medium">
+                <p className="text-slate-800">
                   <span className="font-semibold">Request Your City</span> - Want The Nugget where you live? Let us know.
                 </p>
               </div>
@@ -169,7 +169,7 @@ export default function ContactPage() {
             <div className="flex gap-4">
               <Lightbulb className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" aria-hidden="true" />
               <div>
-                <p className="text-slate-800 font-medium">
+                <p className="text-slate-800">
                   <span className="font-semibold">Share Ideas & Feedback</span> - Big or small, your input makes The Nugget stronger.
                 </p>
               </div>
