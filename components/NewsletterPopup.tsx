@@ -162,7 +162,7 @@ export function NewsletterPopup() {
               </li>
               <li className="flex items-center gap-2 text-sm text-slate-700">
                 <Check className="h-4 w-4 shrink-0 text-[#8dbf65]" />
-                Free Nugget account to save your favorites
+                Unlock your free Nugget account…
               </li>
             </ul>
             <form onSubmit={handleSubmit} className="space-y-3">
