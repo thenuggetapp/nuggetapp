@@ -132,9 +132,9 @@ export default function ContactPage() {
               <Users className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" aria-hidden="true" />
               <div>
                 <p className="text-slate-800 font-medium mb-1">
-                  <span className="font-semibold">Join our Restaurant Advisory Group</span> - Guide how The Nugget supports restaurants and families alike.
+                  <span className="font-semibold">Join our Restaurant Advisory Group</span> - Guide how The Nugget supports restaurants and families alike. Share your operational insights, track trends, and highlight gaps and opportunities for The Nugget.
                 </p>
-                <p className="text-sm text-slate-600 italic">*4-6 hours/month with equity.</p>
+                <p className="text-sm text-slate-600 italic">*1-2 hours per month for future equity</p>
               </div>
             </div>
 
@@ -142,9 +142,9 @@ export default function ContactPage() {
               <Heart className="w-6 h-6 text-orange-500 flex-shrink-0 mt-1" aria-hidden="true" />
               <div>
                 <p className="text-slate-800 font-medium mb-1">
-                  <span className="font-semibold">Join as a Parent Advisor</span> - Share your family's lived experiences so we can build The Nugget to work for all families.
+                  <span className="font-semibold">Join as a Parent Advisor</span> - Share your family's lived experiences and needs so we can build The Nugget to work for more families like yours.
                 </p>
-                <p className="text-sm text-slate-600 italic">*This is a voluntary role with perks.</p>
+                <p className="text-sm text-slate-600 italic">*1 hour/ month. This is a voluntary role with perks.</p>
               </div>
             </div>
 
