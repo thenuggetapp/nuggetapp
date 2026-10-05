@@ -391,10 +391,6 @@ export default function OwnerRegisterPage() {
           </CardContent>
         </Card>
 
-        <p className="text-center text-xs text-slate-500 mt-6">
-          By creating an account, you acknowledge that Nugget will process your data in accordance
-          with our Privacy Policy
-        </p>
       </div>
     </div>
   );
