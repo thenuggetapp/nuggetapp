@@ -483,7 +483,7 @@ export default function EditRestaurantPage() {
               ) : autosaveStatus === "incomplete" ? (
                 <>
                   <AlertCircle className="h-3.5 w-3.5 text-amber-600" />
-                  Fill in name, cuisine, address, city and map location to save
+                  Fill in name, cuisine, address, city, and map location to save
                 </>
               ) : autosaveStatus === "error" ? (
                 <>

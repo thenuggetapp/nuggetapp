@@ -151,7 +151,7 @@ export default function RestaurantPhotos({ restaurantId }: { restaurantId: strin
       <CardHeader>
         <CardTitle>Photos</CardTitle>
         <CardDescription>
-          Show families your space, your food and your team. We'll feature them on your Nugget page and on Nugget's social media.
+          Show families your space, your food, and your team. We'll feature them on your Nugget page and on Nugget's social media.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

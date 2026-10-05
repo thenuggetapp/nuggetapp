@@ -174,7 +174,7 @@ export default function SettingsPage() {
                       <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                       <AlertDialogDescription>
                         This action cannot be undone. This will permanently delete your account,
-                        all your restaurants, photos and offers.
+                        all your restaurants, photos, and offers.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

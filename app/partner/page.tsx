@@ -186,7 +186,7 @@ export default function RestaurantPartnerPage() {
                     Free, with a helping hand
                   </h3>
                   <p className="text-slate-600">
-                    Everything is free. Want more? Our Concierge team can help you co-host family events, refresh your kids' menu and more.
+                    Everything is free. Want more? Our Concierge team can help you co-host family events, refresh your kids' menu, and more.
                   </p>
                 </CardContent>
               </Card>

@@ -460,7 +460,7 @@ export default function AddRestaurantPage() {
               ) : (
                 <>
                   <CheckCircle2 className="h-3.5 w-3.5 text-[#8dbf65]" />
-                  Progress saves automatically. Once name, cuisine, address and map location are in, it's saved to your account as a hidden draft.
+                  Progress saves automatically. Once name, cuisine, address, city, and map location are in, it's saved to your account as a hidden draft.
                 </>
               )}
             </p>
