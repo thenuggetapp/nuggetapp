@@ -376,7 +376,7 @@ export default function MyRestaurantsPage() {
             <ol className="text-left text-slate-700 space-y-2 py-2">
               <li className="flex items-center gap-3"><Store className="h-5 w-5 text-[#8dbf65]" /> Add your restaurant details</li>
               <li className="flex items-center gap-3"><Camera className="h-5 w-5 text-[#8dbf65]" /> Upload a few photos</li>
-              <li className="flex items-center gap-3"><Ticket className="h-5 w-5 text-[#8dbf65]" /> Pick a family offer</li>
+              <li className="flex items-center gap-3"><Ticket className="h-5 w-5 text-[#8dbf65]" /> <span>Pick a family offer – <em>optional</em></span></li>
             </ol>
             <Link href="/owner/restaurants/new">
               <Button size="lg" className="bg-[#8dbf65] hover:bg-[#7aaa56]">
