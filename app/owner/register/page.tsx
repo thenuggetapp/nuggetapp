@@ -13,6 +13,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Store, Mail, Lock, User, Building2, ArrowRight, AlertCircle, Loader2, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { setOwnerSignupIntent } from '@/lib/owner-signup-intent';
 
 export default function OwnerRegisterPage() {
   const router = useRouter();
@@ -50,6 +51,7 @@ export default function OwnerRegisterPage() {
 
   const handleGoogleSignUp = async () => {
     setGoogleLoading(true);
+    setOwnerSignupIntent();
     const { error } = await signInWithGoogle();
 
     if (error) {

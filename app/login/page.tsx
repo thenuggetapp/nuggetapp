@@ -13,6 +13,8 @@ import Link from 'next/link';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import { requestPasswordReset } from '@/lib/resend-email';
+import { supabase } from '@/lib/supabase/client';
+import { consumeOwnerSignupIntent } from '@/lib/owner-signup-intent';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -24,11 +26,13 @@ export default function LoginPage() {
   const [resetEmail, setResetEmail] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
   const [resetSent, setResetSent] = useState(false);
-  const { signIn, signInWithGoogle, userProfile, user, loading: authLoading } = useAuth();
+  const { signIn, signInWithGoogle, userProfile, user, loading: authLoading, refreshProfile } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const oauthTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const verifiedToastShownRef = useRef(false);
+  // Google sign-ups that started on /owner/register become owner accounts before redirecting
+  const [ownerClaim, setOwnerClaim] = useState<'idle' | 'claiming' | 'done'>('idle');
 
   // Check for redirect parameter and OAuth callback
   useEffect(() => {
@@ -80,6 +84,35 @@ export default function LoginPage() {
 
     // If we have both user and profile, redirect
     if (user && userProfile) {
+      if (ownerClaim === 'claiming') return;
+      if (ownerClaim === 'idle' && consumeOwnerSignupIntent()) {
+        setOwnerClaim('claiming');
+        (async () => {
+          try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const res = await fetch('/api/auth/claim-owner', {
+              method: 'POST',
+              headers: { Authorization: `Bearer ${session?.access_token ?? ''}` },
+            });
+            const result = await res.json().catch(() => ({}));
+            if (res.ok && result.role === 'owner') {
+              await supabase.auth.refreshSession();
+              await refreshProfile();
+              router.push(result.promoted ? '/owner/dashboard?welcome=true' : '/owner/dashboard');
+              return;
+            }
+            if (!res.ok) {
+              toast.error(result.error || 'We could not set up your restaurant owner account. Please contact us.');
+            }
+          } catch (err) {
+            console.error('[Login] Owner account setup failed:', err);
+            toast.error('We could not set up your restaurant owner account. Please contact us.');
+          }
+          setOwnerClaim('done');
+        })();
+        return;
+      }
+
       console.log('[Login] User authenticated, redirecting...');
       console.log('[Login] User role:', userProfile.role);
 
@@ -183,7 +216,7 @@ export default function LoginPage() {
         oauthTimeoutRef.current = null;
       }
     };
-  }, [user, userProfile, authLoading, router, redirectTo, googleLoading, searchParams]);
+  }, [user, userProfile, authLoading, router, redirectTo, googleLoading, searchParams, ownerClaim]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
