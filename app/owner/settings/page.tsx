@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,9 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { User, Lock, Bell, Trash2 } from 'lucide-react';
+import { User, Lock, Trash2 } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,12 +31,17 @@ export default function SettingsPage() {
     full_name: userProfile?.full_name || '',
     email: userProfile?.email || '',
   });
-  const [notifications, setNotifications] = useState({
-    coupon_redemptions: true,
-    payment_reminders: true,
-    weekly_summary: true,
-    marketing_tips: false,
-  });
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
+
+  useEffect(() => {
+    if (!userProfile) return;
+    supabase
+      .from('user_profiles')
+      .select('marketing_opt_in')
+      .eq('id', userProfile.id)
+      .maybeSingle()
+      .then(({ data }) => setMarketingOptIn(data?.marketing_opt_in === true));
+  }, [userProfile?.id]);
 
   const handleSaveProfile = async () => {
     if (!userProfile) return;
@@ -45,10 +50,19 @@ export default function SettingsPage() {
     try {
       const { error } = await supabase
         .from('user_profiles')
-        .update({ full_name: formData.full_name })
+        .update({ full_name: formData.full_name, marketing_opt_in: marketingOptIn })
         .eq('id', userProfile.id);
 
       if (error) throw error;
+
+      // Keep Outseta (name and email list membership) in step; doesn't block the save
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!session) return;
+        fetch('/api/outseta/sync', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        }).catch((err) => console.error('Outseta sync request failed:', err));
+      });
 
       toast({
         title: 'Success',
@@ -76,9 +90,8 @@ export default function SettingsPage() {
       </div>
 
       <Tabs defaultValue="account" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
         </TabsList>
 
@@ -93,7 +106,7 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="full_name">Full Name</Label>
+                <Label htmlFor="full_name">Name</Label>
                 <Input
                   id="full_name"
                   value={formData.full_name}
@@ -102,7 +115,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -113,101 +126,23 @@ export default function SettingsPage() {
                 <p className="text-xs text-slate-500">Email cannot be changed</p>
               </div>
 
+              <div className="flex items-start space-x-3 p-4 border border-slate-200 rounded-lg">
+                <Checkbox
+                  id="marketing_opt_in"
+                  checked={marketingOptIn}
+                  onCheckedChange={(checked) => setMarketingOptIn(checked === true)}
+                />
+                <Label htmlFor="marketing_opt_in" className="text-sm font-normal text-slate-700 cursor-pointer leading-relaxed">
+                  Send me marketing tips, feature updates, and ways to reach more families.
+                </Label>
+              </div>
+
               <Button
                 className="bg-[#8dbf65] hover:bg-[#7aaa56]"
                 onClick={handleSaveProfile}
                 disabled={loading}
               >
                 {loading ? 'Saving...' : 'Save Changes'}
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="notifications" className="space-y-6 mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                Notification Preferences
-              </CardTitle>
-              <CardDescription>Choose what updates you want to receive</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 border border-slate-200 rounded-lg">
-                <div className="flex-1">
-                  <Label htmlFor="coupon_redemptions" className="cursor-pointer font-medium">
-                    Coupon Redemptions
-                  </Label>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Get notified when customers use your coupons
-                  </p>
-                </div>
-                <Switch
-                  id="coupon_redemptions"
-                  checked={notifications.coupon_redemptions}
-                  onCheckedChange={(checked) =>
-                    setNotifications({ ...notifications, coupon_redemptions: checked })
-                  }
-                />
-              </div>
-
-              <div className="flex items-center justify-between p-4 border border-slate-200 rounded-lg">
-                <div className="flex-1">
-                  <Label htmlFor="payment_reminders" className="cursor-pointer font-medium">
-                    Payment Reminders
-                  </Label>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Receive reminders about upcoming payments
-                  </p>
-                </div>
-                <Switch
-                  id="payment_reminders"
-                  checked={notifications.payment_reminders}
-                  onCheckedChange={(checked) =>
-                    setNotifications({ ...notifications, payment_reminders: checked })
-                  }
-                />
-              </div>
-
-              <div className="flex items-center justify-between p-4 border border-slate-200 rounded-lg">
-                <div className="flex-1">
-                  <Label htmlFor="weekly_summary" className="cursor-pointer font-medium">
-                    Weekly Summary
-                  </Label>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Get a weekly overview of your restaurant performance
-                  </p>
-                </div>
-                <Switch
-                  id="weekly_summary"
-                  checked={notifications.weekly_summary}
-                  onCheckedChange={(checked) =>
-                    setNotifications({ ...notifications, weekly_summary: checked })
-                  }
-                />
-              </div>
-
-              <div className="flex items-center justify-between p-4 border border-slate-200 rounded-lg">
-                <div className="flex-1">
-                  <Label htmlFor="marketing_tips" className="cursor-pointer font-medium">
-                    Marketing Tips
-                  </Label>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Receive tips and best practices for growing your business
-                  </p>
-                </div>
-                <Switch
-                  id="marketing_tips"
-                  checked={notifications.marketing_tips}
-                  onCheckedChange={(checked) =>
-                    setNotifications({ ...notifications, marketing_tips: checked })
-                  }
-                />
-              </div>
-
-              <Button className="bg-[#8dbf65] hover:bg-[#7aaa56]">
-                Save Preferences
               </Button>
             </CardContent>
           </Card>
@@ -248,7 +183,7 @@ export default function SettingsPage() {
                       <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                       <AlertDialogDescription>
                         This action cannot be undone. This will permanently delete your account,
-                        all your restaurants, coupons, and analytics data.
+                        all your restaurants, photos, and offers.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

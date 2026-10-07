@@ -1364,16 +1364,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           );
         } else {
           const verificationLink = `${origin}/verify-email?token=${tokenResult.token}`;
-          const emailResponse = await fetch("/api/auth/send-email", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              type: "signup",
-              email: data.user.email,
-              link: verificationLink,
-              userName: fullName,
-            }),
-          });
+          const sendVerificationEmail = (type: "owner_signup" | "signup") =>
+            fetch("/api/auth/send-email", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                type,
+                email: data.user!.email,
+                link: verificationLink,
+                userName: fullName,
+              }),
+            });
+
+          let emailResponse = await sendVerificationEmail("owner_signup");
+          if (!emailResponse.ok) {
+            // Older send-auth-email deployments don't know "owner_signup"; still send a verification email
+            emailResponse = await sendVerificationEmail("signup");
+          }
 
           if (!emailResponse.ok) {
             console.error(

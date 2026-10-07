@@ -11,6 +11,8 @@ import { getRestaurantDisplayImageUrl } from '@/lib/restaurant-image';
 interface BasicInfoTabProps {
   formData: any;
   setFormData: (data: any) => void;
+  // Owners add photos in the Photos section of their restaurant instead
+  showImageUpload?: boolean;
 }
 
 const cuisineTypes = [
@@ -53,7 +55,7 @@ const cuisineTypes = [
   'Various',
 ];
 
-export default function BasicInfoTab({ formData, setFormData }: BasicInfoTabProps) {
+export default function BasicInfoTab({ formData, setFormData, showImageUpload = true }: BasicInfoTabProps) {
   const handleChange = (field: string, value: any) => {
     setFormData({ ...formData, [field]: value });
   };
@@ -176,7 +178,7 @@ export default function BasicInfoTab({ formData, setFormData }: BasicInfoTabProp
         </p>
       </div>
 
-      {formData.id ? (
+      {!showImageUpload ? null : formData.id ? (
         <MultiImageUpload
           restaurantId={formData.id}
           googlePlaceId={formData.google_place_id}
