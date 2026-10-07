@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import { requestPasswordReset } from '@/lib/resend-email';
+import { hasOwnerSignupIntent } from '@/lib/owner-signup-intent';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -80,6 +81,9 @@ export default function LoginPage() {
 
     // If we have both user and profile, redirect
     if (user && userProfile) {
+      // OwnerSignupClaimer (root layout) upgrades owner sign-ups and opens the owner dashboard
+      if (hasOwnerSignupIntent()) return;
+
       console.log('[Login] User authenticated, redirecting...');
       console.log('[Login] User role:', userProfile.role);
 
