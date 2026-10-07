@@ -86,6 +86,7 @@ import {
   LocalHeroOption,
 } from "@/components/LocalHeroAutocomplete";
 import { mapGooglePlaceToRestaurant } from "@/lib/google-places-mapper";
+import { getRegionsForCountry, isValidRegion } from "@/lib/regions";
 import { getRestaurantDisplayImageUrl } from "@/lib/restaurant-image";
 import { AdminSidebar } from "@/components/AdminSidebar";
 
@@ -114,6 +115,7 @@ interface Restaurant {
   price_level: number;
   address: string;
   city?: string;
+  state?: string | null;
   country?: string;
   phone?: string;
   description?: string;
@@ -172,6 +174,7 @@ const emptyRestaurant: Restaurant = {
   price_level: 2,
   address: "",
   city: "",
+  state: "",
   country: "",
   phone: "",
   description: "",
@@ -247,6 +250,7 @@ export default function AdminDashboard() {
     string | null
   >(null);
   const [formData, setFormData] = useState<Restaurant>(emptyRestaurant);
+  const adminRegionInfo = getRegionsForCountry(formData.country?.trim());
   const [selectedLocalHero, setSelectedLocalHero] =
     useState<LocalHeroOption | null>(null);
   const [localHeroTouched, setLocalHeroTouched] = useState(false);
@@ -446,6 +450,16 @@ export default function AdminDashboard() {
       return;
     }
 
+    const regionInfo = getRegionsForCountry(formData.country?.trim());
+    if (regionInfo && !isValidRegion(formData.country?.trim(), formData.state)) {
+      toast({
+        title: "Validation Error",
+        description: `Please select a ${regionInfo.label.toLowerCase()}`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (formData.latitude === 0 || formData.longitude === 0) {
       toast({
         title: "Validation Error",
@@ -475,6 +489,9 @@ export default function AdminDashboard() {
     const dataToSave = {
       ...formData,
       city: formData.city?.trim() || undefined,
+      state: isValidRegion(formData.country?.trim(), formData.state)
+        ? formData.state
+        : null,
       country: formData.country?.trim() || undefined,
       phone: formData.phone?.trim() || undefined,
       description: formData.description?.trim() || undefined,
@@ -1314,13 +1331,45 @@ export default function AdminDashboard() {
                       <Input
                         id="country"
                         value={formData.country || ""}
-                        onChange={(e) =>
-                          setFormData({ ...formData, country: e.target.value })
-                        }
+                        onChange={(e) => {
+                          const country = e.target.value;
+                          // A state from the old country doesn't belong to the new one
+                          const state = isValidRegion(country.trim(), formData.state)
+                            ? formData.state
+                            : "";
+                          setFormData({ ...formData, country, state });
+                        }}
                         placeholder="United Kingdom"
                       />
                     </div>
                   </div>
+
+                  {adminRegionInfo && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="state">{adminRegionInfo.label} *</Label>
+                        <Select
+                          value={formData.state || ""}
+                          onValueChange={(value) =>
+                            setFormData({ ...formData, state: value })
+                          }
+                        >
+                          <SelectTrigger id="state">
+                            <SelectValue
+                              placeholder={`Select ${adminRegionInfo.label.toLowerCase()}`}
+                            />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-[300px]">
+                            {adminRegionInfo.regions.map((region) => (
+                              <SelectItem key={region.code} value={region.code}>
+                                {region.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-3 gap-4">
                     <div className="space-y-2">

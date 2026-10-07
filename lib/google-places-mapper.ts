@@ -1,3 +1,4 @@
+import { isValidRegion } from '@/lib/regions';
 /**
  * Maps Google Places API data to restaurant form fields
  */
@@ -40,6 +41,8 @@ interface MappedRestaurantData {
   name: string;
   address: string;
   city: string;
+  /** State/province code (e.g. "IL") for countries in lib/regions; otherwise empty */
+  state: string;
   country: string;
   latitude: number;
   longitude: number;
@@ -75,6 +78,17 @@ function extractPostcode(addressComponents: GooglePlaceResult['address_component
     component.types.includes('postal_code')
   );
   return postcodeComponent?.long_name || '';
+}
+
+/**
+ * Extract state/province code (e.g. "IL", "ON", "NSW") from address components
+ */
+function extractState(addressComponents: GooglePlaceResult['address_components'], country: string): string {
+  const stateComponent = addressComponents.find((component) =>
+    component.types.includes('administrative_area_level_1')
+  );
+  const code = stateComponent?.short_name || '';
+  return isValidRegion(country, code) ? code : '';
 }
 
 /**
@@ -200,6 +214,7 @@ export function mapGooglePlaceToRestaurant(placeData: GooglePlaceResult): Mapped
   const city = extractCity(placeData.address_components);
   const postcode = extractPostcode(placeData.address_components);
   const country = extractCountry(placeData.address_components);
+  const state = extractState(placeData.address_components, country);
   const streetAddress = extractStreetAddress(
     placeData.formatted_address,
     city,
@@ -211,6 +226,7 @@ export function mapGooglePlaceToRestaurant(placeData: GooglePlaceResult): Mapped
     name: placeData.name,
     address: streetAddress,
     city,
+    state,
     country,
     latitude: placeData.geometry.location.lat,
     longitude: placeData.geometry.location.lng,
