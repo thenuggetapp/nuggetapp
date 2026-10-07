@@ -4,6 +4,7 @@ import { generateWebsiteStructuredData } from '@/lib/website-structured-data';
 import { SmartSearchSection } from '@/components/home/SmartSearchSection';
 import { RestaurantGrid } from '@/components/home/RestaurantGrid';
 import { CityBrowse } from '@/components/home/CityBrowse';
+import { HomeSurveyPopup } from '@/components/home/HomeSurveyPopup';
 import { createClient as createBrowserClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
@@ -126,6 +127,8 @@ export default async function Home() {
             title="Featured restaurants in London"
           />
         </main>
+
+        <HomeSurveyPopup />
     </div>
     </>
   );
