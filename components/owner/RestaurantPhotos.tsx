@@ -151,8 +151,20 @@ export default function RestaurantPhotos({ restaurantId }: { restaurantId: strin
       <CardHeader>
         <CardTitle>Photos</CardTitle>
         <CardDescription>
-          Show families your space, your food, and your team. We'll feature them on your Nugget page and on Nugget's social media.
+          Show families your space, your food, and what makes your restaurant special. Parents want to know what to expect
+          before they arrive, so the more real your photos, the better.
         </CardDescription>
+        <div className="text-sm text-slate-600 pt-2">
+          <p className="font-semibold text-slate-700">A few ideas:</p>
+          <ul className="list-disc pl-5 mt-1 space-y-1">
+            <li><strong>Your seating:</strong> indoor and outdoor areas, booths, big tables for groups</li>
+            <li><strong>Your food:</strong> signature dishes, the kids&apos; menu, anything colourful or fun to share</li>
+            <li><strong>Family touches:</strong> high chairs, booster seats, play corners, crayons, changing tables</li>
+            <li><strong>Getting in:</strong> your entrance, ramps, and room for prams or wheelchairs</li>
+            <li><strong>The setting:</strong> your view, terrace, garden, or nearby park</li>
+          </ul>
+          <p className="mt-3">We&apos;ll feature them on your Nugget page and on Nugget&apos;s social media, blog, and email.</p>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         {photos.length > 0 && (
@@ -176,7 +188,7 @@ export default function RestaurantPhotos({ restaurantId }: { restaurantId: strin
         <div className="flex items-start space-x-3 p-4 bg-slate-50 rounded-lg">
           <Checkbox id="photo_consent" checked={consent} onCheckedChange={(checked) => setConsent(checked === true)} />
           <Label htmlFor="photo_consent" className="text-sm font-normal text-slate-700 cursor-pointer leading-relaxed">
-            I own these photos (or have permission to share them), and Nugget can use them on my restaurant page and on Nugget's social media.
+            I own these photos (or have permission to share them), and Nugget can use them on my restaurant page and on Nugget's social media, blog, and email.
           </Label>
         </div>
 
