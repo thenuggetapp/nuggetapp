@@ -342,7 +342,7 @@ export default function AddRestaurantPage() {
                   </TabsContent>
 
                   <TabsContent value="amenities" className="space-y-6">
-                    <AmenitiesTab formData={formData} setFormData={setFormData} />
+                    <AmenitiesTab formData={formData} setFormData={setFormData} variant="curator" />
                   </TabsContent>
                 </Tabs>
 

@@ -180,7 +180,7 @@ export default function OwnerRegisterPage() {
           <CardHeader>
             <CardTitle>Create Your Owner Account</CardTitle>
             <CardDescription>
-              Get started with a free account and list your first restaurant
+              Free forever. List your restaurant in under 5 minutes.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -382,8 +382,8 @@ export default function OwnerRegisterPage() {
                     <div className="text-xs text-slate-600">Restaurant Page</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-[#8dbf65]">5</div>
-                    <div className="text-xs text-slate-600">Free Photos</div>
+                    <div className="text-2xl font-bold text-[#8dbf65]">No</div>
+                    <div className="text-xs text-slate-600">Contract Needed</div>
                   </div>
                 </div>
               </div>
@@ -391,10 +391,6 @@ export default function OwnerRegisterPage() {
           </CardContent>
         </Card>
 
-        <p className="text-center text-xs text-slate-500 mt-6">
-          By creating an account, you acknowledge that Nugget will process your data in accordance
-          with our Privacy Policy
-        </p>
       </div>
     </div>
   );
