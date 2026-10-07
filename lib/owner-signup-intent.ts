@@ -12,6 +12,16 @@ export function setOwnerSignupIntent() {
   }
 }
 
+/** True if a recent owner sign-up started in this browser (doesn't clear it). */
+export function hasOwnerSignupIntent(): boolean {
+  try {
+    const startedAt = Number(localStorage.getItem(KEY));
+    return Number.isFinite(startedAt) && startedAt > 0 && Date.now() - startedAt < MAX_AGE_MS;
+  } catch {
+    return false;
+  }
+}
+
 /** Returns true (once) if a recent owner sign-up started in this browser, then forgets it. */
 export function consumeOwnerSignupIntent(): boolean {
   try {
