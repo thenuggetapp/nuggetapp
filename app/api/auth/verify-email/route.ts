@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { syncOwnerToOutseta } from '@/lib/outseta';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -134,6 +135,11 @@ export async function GET(request: NextRequest) {
         console.error('[verify-email API] ⚠️ Failed to set app_metadata role:', roleMetaError);
       } else {
         console.log(`[verify-email API] ✅ Role set to '${requestedRole}'`);
+      }
+
+      if (requestedRole === 'owner' && !roleProfileError) {
+        const outsetaResult = await syncOwnerToOutseta(tokenData.user_id);
+        console.log('[verify-email API] Outseta sync:', outsetaResult.status, outsetaResult.message || '');
       }
     }
 

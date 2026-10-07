@@ -55,6 +55,15 @@ export default function SettingsPage() {
 
       if (error) throw error;
 
+      // Keep Outseta (name and email list membership) in step; doesn't block the save
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!session) return;
+        fetch('/api/outseta/sync', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        }).catch((err) => console.error('Outseta sync request failed:', err));
+      });
+
       toast({
         title: 'Success',
         description: 'Profile updated successfully',
