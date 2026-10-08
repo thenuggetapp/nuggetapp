@@ -29,7 +29,6 @@ const amenityGroups = [
     title: 'Accessibility',
     amenities: [
       { key: 'wheelchair_access', label: 'Wheelchair Access' },
-      { key: 'changing_table', label: 'Changing Table' },
       { key: 'baby_change_mens', label: "Baby Change (Men's)" },
       { key: 'baby_change_womens', label: "Baby Change (Women's)" },
       { key: 'baby_change_unisex', label: 'Baby Change (Unisex)' },

@@ -1730,24 +1730,6 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex items-center justify-between space-x-2 rounded-lg border p-3">
                         <Label
-                          htmlFor="changing_table"
-                          className="cursor-pointer"
-                        >
-                          Changing Table
-                        </Label>
-                        <Switch
-                          id="changing_table"
-                          checked={formData.changing_table}
-                          onCheckedChange={(checked) =>
-                            setFormData({
-                              ...formData,
-                              changing_table: checked,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="flex items-center justify-between space-x-2 rounded-lg border p-3">
-                        <Label
                           htmlFor="wheelchair_access"
                           className="cursor-pointer"
                         >
