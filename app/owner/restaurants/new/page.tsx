@@ -103,6 +103,7 @@ export interface RestaurantFormData {
   teen_favourite: boolean;
   tourist_attraction_nearby: boolean;
   visible: boolean;
+  unverified_fields?: string[];
 }
 
 const initialFormData: RestaurantFormData = {
@@ -159,6 +160,7 @@ const initialFormData: RestaurantFormData = {
   teen_favourite: false,
   tourist_attraction_nearby: false,
   visible: true,
+  unverified_fields: [],
 };
 
 export default function AddRestaurantPage() {

@@ -28,6 +28,7 @@ import {
   Loader2,
   Plus,
   RefreshCw,
+  CircleHelp,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -46,6 +47,7 @@ interface Restaurant {
   cuisine: string;
   visible: boolean;
   likes_count: number;
+  unverified_fields: string[] | null;
 }
 
 interface Stats {
@@ -109,7 +111,7 @@ export default function LocalHeroDashboard() {
       if (activeCities.length > 0) {
         const { data: cityRestaurants, error: cityRestaurantsError } = await supabase
           .from('restaurants')
-          .select('id, name, city, country, cuisine, visible, likes_count')
+          .select('id, name, city, country, cuisine, visible, likes_count, unverified_fields')
           .in('city', activeCities)
           .order('name');
 
@@ -120,7 +122,7 @@ export default function LocalHeroDashboard() {
       if (ownedRestaurantIds.length > 0) {
         const { data: ownedRestaurantsData, error: ownedRestaurantsError } = await supabase
           .from('restaurants')
-          .select('id, name, city, country, cuisine, visible, likes_count')
+          .select('id, name, city, country, cuisine, visible, likes_count, unverified_fields')
           .in('id', ownedRestaurantIds)
           .order('name');
 
@@ -339,6 +341,7 @@ export default function LocalHeroDashboard() {
                       <TableHead>Cuisine</TableHead>
                       <TableHead>Likes</TableHead>
                       <TableHead>Status</TableHead>
+                      <TableHead>Data Quality</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -370,6 +373,21 @@ export default function LocalHeroDashboard() {
                               </>
                             )}
                           </button>
+                        </TableCell>
+                        <TableCell>
+                          {restaurant.unverified_fields && restaurant.unverified_fields.length > 0 ? (
+                            <Link href={`/local-hero/dashboard/restaurants/${restaurant.id}?tab=amenities`}>
+                              <Badge className="bg-amber-100 text-amber-800 border border-amber-300 hover:bg-amber-200 cursor-pointer">
+                                <CircleHelp className="h-3.5 w-3.5 mr-1" />
+                                {restaurant.unverified_fields.length} to verify
+                              </Badge>
+                            </Link>
+                          ) : (
+                            <Badge variant="secondary" className="bg-green-50 text-green-700 border border-green-200">
+                              <CheckCircle className="h-3.5 w-3.5 mr-1" />
+                              Verified
+                            </Badge>
+                          )}
                         </TableCell>
                         <TableCell className="text-right">
                           <Link href={`/local-hero/dashboard/restaurants/${restaurant.id}`}>
