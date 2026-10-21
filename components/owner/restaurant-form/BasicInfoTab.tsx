@@ -28,6 +28,7 @@ const cuisineTypes = [
   'Diner',
   'European',
   'Filipino',
+  'Food Hall',
   'French',
   'German',
   'Greek',

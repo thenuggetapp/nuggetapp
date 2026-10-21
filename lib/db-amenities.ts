@@ -57,6 +57,7 @@ export const ALL_CUISINE_TYPES = [
   "Diner",
   "European",
   "Filipino",
+  "Food Hall",
   "French",
   "German",
   "Greek",
