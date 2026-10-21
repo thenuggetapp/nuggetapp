@@ -25,6 +25,7 @@ const cuisineTypes = [
   'Cafe',
   'Chinese',
   'Dessert',
+  'Diner',
   'European',
   'Filipino',
   'French',

@@ -54,6 +54,7 @@ export const ALL_CUISINE_TYPES = [
   "Cafe",
   "Chinese",
   "Dessert",
+  "Diner",
   "European",
   "Filipino",
   "French",
