@@ -29,6 +29,7 @@ import BasicInfoTab from "@/components/owner/restaurant-form/BasicInfoTab";
 import LocationTab from "@/components/owner/restaurant-form/LocationTab";
 import OpeningHoursTab from "@/components/owner/restaurant-form/OpeningHoursTab";
 import AmenitiesTab from "@/components/owner/restaurant-form/AmenitiesTab";
+import { getRegionsForCountry, isValidRegion } from "@/lib/regions";
 
 interface DayHours {
   open: string;
@@ -55,6 +56,7 @@ export interface RestaurantFormData {
   price_level: number;
   address: string;
   city: string;
+  state?: string;
   country: string;
   latitude: number;
   longitude: number;
@@ -111,6 +113,7 @@ const initialFormData: RestaurantFormData = {
   price_level: 2,
   address: "",
   city: "",
+  state: "",
   country: "United Kingdom",
   latitude: 0,
   longitude: 0,
@@ -229,6 +232,7 @@ export default function EditRestaurantPage() {
         price_level: restaurant.price_level || 2,
         address: restaurant.address || "",
         city: restaurant.city || "",
+        state: restaurant.state || "",
         country: restaurant.country || "United Kingdom",
         latitude: parseFloat(restaurant.latitude) || 0,
         longitude: parseFloat(restaurant.longitude) || 0,
@@ -304,6 +308,10 @@ export default function EditRestaurantPage() {
     if (!formData.city.trim()) {
       errors.push("City is required");
     }
+    const regionInfo = getRegionsForCountry(formData.country);
+    if (regionInfo && !isValidRegion(formData.country, formData.state)) {
+      errors.push(`${regionInfo.label} is required`);
+    }
     if (formData.latitude === 0 || formData.longitude === 0) {
       errors.push(
         "Please set the restaurant location on the map (Location tab)"
@@ -338,6 +346,7 @@ export default function EditRestaurantPage() {
         ...formData,
         visible: publish,
         city: formData.city.trim() || null,
+        state: isValidRegion(formData.country, formData.state) ? formData.state : null,
         country: formData.country.trim() || null,
         phone: formData.phone.trim() || null,
         description: formData.description.trim() || null,

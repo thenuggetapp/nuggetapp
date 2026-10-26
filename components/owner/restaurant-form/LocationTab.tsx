@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MapPin } from "lucide-react";
+import { getRegionsForCountry, isValidRegion } from "@/lib/regions";
 
 interface LocationTabProps {
   formData: any;
@@ -23,6 +24,14 @@ export default function LocationTab({
   const handleChange = (field: string, value: any) => {
     console.log(`🔄 LocationTab - Updating ${field}:`, value);
     setFormData({ ...formData, [field]: value });
+  };
+
+  const regionInfo = getRegionsForCountry(formData.country);
+
+  const handleCountryChange = (country: string) => {
+    // A state from the old country doesn't belong to the new one
+    const state = isValidRegion(country, formData.state) ? formData.state : "";
+    setFormData({ ...formData, country, state });
   };
 
   return (
@@ -60,7 +69,7 @@ export default function LocationTab({
           </Label>
           <Select
             value={formData.country}
-            onValueChange={(value) => handleChange("country", value)}
+            onValueChange={handleCountryChange}
           >
             <SelectTrigger id="country">
               <SelectValue placeholder="Select country" />
@@ -117,6 +126,31 @@ export default function LocationTab({
           </Select>
         </div>
       </div>
+
+      {regionInfo && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="state">
+              {regionInfo.label} <span className="text-red-500">*</span>
+            </Label>
+            <Select
+              value={formData.state || ""}
+              onValueChange={(value) => handleChange("state", value)}
+            >
+              <SelectTrigger id="state">
+                <SelectValue placeholder={`Select ${regionInfo.label.toLowerCase()}`} />
+              </SelectTrigger>
+              <SelectContent className="max-h-[300px]">
+                {regionInfo.regions.map((region) => (
+                  <SelectItem key={region.code} value={region.code}>
+                    {region.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      )}
 
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-slate-700">

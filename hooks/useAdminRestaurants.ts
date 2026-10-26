@@ -12,6 +12,7 @@ interface Restaurant {
   price_level: number;
   address: string;
   city?: string;
+  state?: string | null;
   country?: string;
   phone?: string;
   description?: string;
