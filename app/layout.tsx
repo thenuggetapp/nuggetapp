@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { SWRProvider } from '@/providers/SWRProvider';
 import { Toaster } from '@/components/ui/sonner';
+import { OwnerSignupClaimer } from '@/components/OwnerSignupClaimer';
 import { ConditionalFooter } from '@/components/ConditionalFooter';
 import { CookieConsent } from '@/components/CookieConsent';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
@@ -84,6 +85,7 @@ export default function RootLayout({
             {children}
             <ConditionalFooter />
             <Toaster />
+            <OwnerSignupClaimer />
             <CookieConsent />
           </SWRProvider>
         </AuthProvider>
