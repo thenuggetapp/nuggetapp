@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
@@ -21,6 +21,11 @@ import {
   toAbsolutePublicImageUrl,
 } from "@/lib/restaurant-image";
 import { useRestaurantDetail } from "@/hooks/useRestaurants";
+import {
+  trackRestaurantView,
+  trackRestaurantAction,
+  type RestaurantActionType,
+} from "@/lib/analytics";
 import {
   useUserBookmarks,
   useUserLikes,
@@ -147,6 +152,35 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
 
   const isLiked = restaurant ? likedIds.has(restaurant.id) : false;
   const isBookmarked = restaurant ? bookmarkedIds.has(restaurant.id) : false;
+
+  // Fire restaurant_view once per restaurant (SWR revalidation and Strict Mode
+  // re-runs must not double-count).
+  const trackedViewId = useRef<string | null>(null);
+  useEffect(() => {
+    if (!restaurant || trackedViewId.current === restaurant.id) return;
+    trackedViewId.current = restaurant.id;
+    trackRestaurantView({
+      restaurant_id: restaurant.id,
+      restaurant_name: restaurant.name,
+      city: restaurant.city ?? "",
+    });
+  }, [restaurant]);
+
+  const handleRestaurantAction = (
+    actionType: RestaurantActionType,
+    destinationUrl: string
+  ) => {
+    if (!restaurant) return;
+    trackRestaurantAction(
+      {
+        restaurant_id: restaurant.id,
+        restaurant_name: restaurant.name,
+        city: restaurant.city ?? "",
+      },
+      actionType,
+      destinationUrl
+    );
+  };
 
   // Removed: loadRestaurant, checkIfLiked, checkIfBookmarked, old toggleLike, old toggleBookmark
   // These are now handled by SWR hooks above
@@ -993,6 +1027,12 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                           >
                             <a
                               href={restaurant.bookingUrl}
+                              onClick={() =>
+                                handleRestaurantAction(
+                                  "reservation",
+                                  restaurant.bookingUrl!
+                                )
+                              }
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -1015,6 +1055,12 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
                           >
                             <a
                               href={restaurant.websiteUrl}
+                              onClick={() =>
+                                handleRestaurantAction(
+                                  "website",
+                                  restaurant.websiteUrl!
+                                )
+                              }
                               target="_blank"
                               rel="noopener noreferrer"
                               aria-label="Visit restaurant website"
@@ -1773,6 +1819,12 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
               >
                 <a
                   href={restaurant.bookingUrl}
+                  onClick={() =>
+                    handleRestaurantAction(
+                      "reservation",
+                      restaurant.bookingUrl!
+                    )
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -1795,6 +1847,9 @@ export default function RestaurantDetail({ slug }: RestaurantDetailProps) {
               >
                 <a
                   href={restaurant.websiteUrl}
+                  onClick={() =>
+                    handleRestaurantAction("website", restaurant.websiteUrl!)
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Visit restaurant website"
