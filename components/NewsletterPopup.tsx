@@ -46,6 +46,7 @@ function shouldShowPopup(state: PopupState): boolean {
 
 export function NewsletterPopup() {
   const [visible, setVisible] = useState(false);
+  const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState(""); // honeypot
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -81,6 +82,13 @@ export function NewsletterPopup() {
       return;
     }
 
+    const trimmedFirstName = firstName.trim();
+    if (!trimmedFirstName) {
+      setStatus("error");
+      setErrorMessage("Please enter your first name");
+      return;
+    }
+
     const trimmedEmail = email.trim();
     if (!EMAIL_REGEX.test(trimmedEmail)) {
       setStatus("error");
@@ -95,7 +103,7 @@ export function NewsletterPopup() {
       const response = await fetch("/api/newsletter/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: trimmedEmail, honeypot: website }),
+        body: JSON.stringify({ firstName: trimmedFirstName, email: trimmedEmail, honeypot: website }),
       });
 
       const result = await response.json();
@@ -174,6 +182,16 @@ export function NewsletterPopup() {
                 className="hidden"
                 tabIndex={-1}
                 autoComplete="off"
+              />
+              <Input
+                type="text"
+                placeholder="First name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                disabled={status === "submitting"}
+                autoComplete="given-name"
+                maxLength={100}
+                required
               />
               <Input
                 type="email"

@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 const MAX_EMAIL_LENGTH = 255;
+const MAX_FIRST_NAME_LENGTH = 100;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 interface NewsletterSignupData {
+  firstName?: string;
   email: string;
   honeypot?: string;
 }
@@ -23,7 +25,7 @@ function getClientIdentifier(request: NextRequest): string {
 // "signed up for the Nugget" People segment (segments are computed off
 // Person/Account data — there's no direct "add to segment" API). Never
 // throws — a down or unconfigured Outseta must not block the Supabase signup.
-async function syncToOutseta(email: string): Promise<void> {
+async function syncToOutseta(email: string, firstName: string): Promise<void> {
   const domain = process.env.OUTSETA_DOMAIN;
   const apiKey = process.env.OUTSETA_API_KEY;
   const apiSecret = process.env.OUTSETA_API_SECRET;
@@ -40,6 +42,7 @@ async function syncToOutseta(email: string): Promise<void> {
   const baseUrl = `https://${domain}.outseta.com/api/v1/crm/people`;
   const personPayload = {
     Email: email,
+    FirstName: firstName,
     OptInToEmailList: true,
   };
 
@@ -89,6 +92,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid submission' }, { status: 400 });
     }
 
+    const firstName = (body.firstName || '').trim();
+    if (!firstName || firstName.length > MAX_FIRST_NAME_LENGTH) {
+      return NextResponse.json(
+        { error: 'Please enter your first name' },
+        { status: 400 }
+      );
+    }
+
     const email = (body.email || '').trim().toLowerCase();
     if (!validateEmail(email)) {
       return NextResponse.json(
@@ -128,7 +139,7 @@ export async function POST(request: NextRequest) {
       options: {
         shouldCreateUser: true,
         emailRedirectTo: `${request.nextUrl.origin}/blog`,
-        data: { full_name: '' },
+        data: { full_name: firstName },
       },
     });
 
@@ -137,7 +148,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to subscribe' }, { status: 500 });
     }
 
-    await syncToOutseta(email);
+    await syncToOutseta(email, firstName);
 
     return NextResponse.json(
       { success: true, message: 'Check your email to confirm.' },
