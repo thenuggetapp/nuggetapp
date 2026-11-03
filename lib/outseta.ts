@@ -11,8 +11,8 @@ import { createClient } from '@supabase/supabase-js';
     owners who untick it are removed from that list.
 
   Needs these environment variables (server only):
-    OUTSETA_SUBDOMAIN            e.g. "thenugget" for thenugget.outseta.com
-    OUTSETA_API_KEY / OUTSETA_SECRET_KEY
+    OUTSETA_DOMAIN            e.g. "thenugget" for thenugget.outseta.com
+    OUTSETA_API_KEY / OUTSETA_API_SECRET
     OUTSETA_PARTNERS_LIST_UID    Uid of the "Restaurant partners" email list
   and the custom properties above created on Person in Outseta (CRM > Custom properties).
   When the Outseta variables are missing, syncing is skipped.
@@ -27,9 +27,9 @@ const OWNER_ROLE_LABEL = 'Restaurant partner';
 type SyncResult = { status: 'success' | 'failed' | 'skipped'; message?: string };
 
 function outsetaConfig() {
-  const subdomain = process.env.OUTSETA_SUBDOMAIN;
+  const subdomain = process.env.OUTSETA_DOMAIN;
   const apiKey = process.env.OUTSETA_API_KEY;
-  const secretKey = process.env.OUTSETA_SECRET_KEY;
+  const secretKey = process.env.OUTSETA_API_SECRET;
   if (!subdomain || !apiKey || !secretKey) return null;
   return {
     baseUrl: `https://${subdomain}.outseta.com/api/v1`,
