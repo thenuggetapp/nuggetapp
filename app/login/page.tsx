@@ -21,6 +21,7 @@ export default function LoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [redirectTo, setRedirectTo] = useState<string | null>(null);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [signInLinkLoading, setSignInLinkLoading] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
   const [resetSent, setResetSent] = useState(false);
@@ -240,6 +241,32 @@ export default function LoginPage() {
     setResetLoading(false);
   };
 
+  // For accounts without a password (e.g. blog sign-ups): email a one-time sign-in link
+  const handleSendSignInLink = async () => {
+    if (!email) {
+      toast.error('Enter your email address above first');
+      return;
+    }
+    setSignInLinkLoading(true);
+    try {
+      const res = await fetch('/api/auth/sign-in-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, next: redirectTo || '/' }),
+      });
+      const result = await res.json().catch(() => ({}));
+      if (res.ok) {
+        toast.success("If there's a Nugget account for that email, we've sent it a sign-in link.");
+      } else {
+        toast.error(result.error || 'Could not send a sign-in link');
+      }
+    } catch {
+      toast.error('Could not send a sign-in link');
+    } finally {
+      setSignInLinkLoading(false);
+    }
+  };
+
   const openForgotPassword = () => {
     setResetEmail(email);
     setResetSent(false);
@@ -385,6 +412,14 @@ export default function LoginPage() {
                   'Sign in'
                 )}
               </Button>
+              <button
+                type="button"
+                onClick={handleSendSignInLink}
+                disabled={signInLinkLoading || loading || googleLoading}
+                className="w-full text-sm text-slate-600 hover:text-slate-900 hover:underline disabled:opacity-50"
+              >
+                {signInLinkLoading ? 'Sending...' : 'No password? Email me a sign-in link instead'}
+              </button>
             </form>
 
             <p className="text-sm text-center text-slate-600 pt-4">
