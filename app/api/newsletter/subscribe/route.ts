@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { sendSignUpOrSignInEmail } from '@/lib/sign-in-link-email';
 
 const MAX_EMAIL_LENGTH = 255;
 const MAX_FIRST_NAME_LENGTH = 100;
@@ -129,22 +130,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Blog signups are Nugget signups — no separate subscriber list. This
-    // creates (or, for an existing account, just signs in) a real
-    // auth.users row via Supabase's passwordless OTP flow; the existing
-    // handle_new_user trigger then creates the matching user_profiles row,
-    // exactly as it does for a normal password signup.
-    const { error: otpError } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        shouldCreateUser: true,
-        emailRedirectTo: `${request.nextUrl.origin}/blog`,
-        data: { full_name: firstName },
-      },
-    });
-
-    if (otpError) {
-      console.error('[Newsletter] Error creating account:', otpError);
+    // Blog signups are Nugget signups — no separate subscriber list. This creates a passwordless
+    // account (or recognises an existing one) and sends our own welcome / sign-in email through
+    // Resend. The link confirms the email and signs them in; new accounts can then set a password.
+    try {
+      await sendSignUpOrSignInEmail({
+        email,
+        firstName,
+        origin: request.nextUrl.origin,
+        next: '/blog',
+      });
+    } catch (signupError) {
+      console.error('[Newsletter] Error creating account or sending email:', signupError);
       return NextResponse.json({ error: 'Failed to subscribe' }, { status: 500 });
     }
 
