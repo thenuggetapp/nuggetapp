@@ -30,6 +30,7 @@ import LocationTab from "@/components/owner/restaurant-form/LocationTab";
 import OpeningHoursTab from "@/components/owner/restaurant-form/OpeningHoursTab";
 import RestaurantPhotos from "@/components/owner/RestaurantPhotos";
 import AmenitiesTab from "@/components/owner/restaurant-form/AmenitiesTab";
+import { getRegionsForCountry, isValidRegion } from "@/lib/regions";
 
 interface DayHours {
   open: string;
@@ -56,6 +57,7 @@ export interface RestaurantFormData {
   price_level: number;
   address: string;
   city: string;
+  state?: string;
   country: string;
   latitude: number;
   longitude: number;
@@ -113,6 +115,7 @@ const initialFormData: RestaurantFormData = {
   price_level: 2,
   address: "",
   city: "",
+  state: "",
   country: "United Kingdom",
   latitude: 0,
   longitude: 0,
@@ -173,6 +176,7 @@ export default function EditRestaurantPage() {
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams?.get("tab") || "basic");
+  const [missingFields, setMissingFields] = useState<string[]>([]);
   const [autosaveStatus, setAutosaveStatus] = useState<"idle" | "pending" | "saving" | "saved" | "incomplete" | "error">("idle");
   const lastSavedRef = useRef<string | null>(null);
   const [validationDialogOpen, setValidationDialogOpen] = useState(false);
@@ -235,6 +239,7 @@ export default function EditRestaurantPage() {
         price_level: restaurant.price_level || 2,
         address: restaurant.address || "",
         city: restaurant.city || "",
+        state: restaurant.state || "",
         country: restaurant.country || "United Kingdom",
         latitude: parseFloat(restaurant.latitude) || 0,
         longitude: parseFloat(restaurant.longitude) || 0,
@@ -311,6 +316,10 @@ export default function EditRestaurantPage() {
     if (!formData.city.trim()) {
       errors.push("City is required");
     }
+    const regionInfo = getRegionsForCountry(formData.country);
+    if (regionInfo && !isValidRegion(formData.country, formData.state)) {
+      errors.push(`${regionInfo.label} is required`);
+    }
     if (formData.latitude === 0 || formData.longitude === 0) {
       errors.push(
         "Please set the restaurant location on the map (Location tab)"
@@ -325,6 +334,7 @@ export default function EditRestaurantPage() {
       ...formData,
       visible,
       city: formData.city.trim() || null,
+      state: isValidRegion(formData.country, formData.state) ? formData.state : null,
       country: formData.country.trim() || null,
       phone: formData.phone.trim() || null,
       description: formData.description.trim() || null,
@@ -351,7 +361,9 @@ export default function EditRestaurantPage() {
 
     setAutosaveStatus("pending");
     const timer = setTimeout(async () => {
-      if (validateForm().length > 0) {
+      const missing = validateForm();
+      if (missing.length > 0) {
+        setMissingFields(missing);
         setAutosaveStatus("incomplete");
         return;
       }
@@ -483,7 +495,7 @@ export default function EditRestaurantPage() {
               ) : autosaveStatus === "incomplete" ? (
                 <>
                   <AlertCircle className="h-3.5 w-3.5 text-amber-600" />
-                  Fill in name, cuisine, address, city, and map location to save
+                  Not saved yet: {missingFields.join("; ")}
                 </>
               ) : autosaveStatus === "error" ? (
                 <>

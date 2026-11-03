@@ -35,6 +35,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
     content: '',
     hero_image_url: '',
     category: '',
+    author_name: '',
     published: false,
     featured: false,
     meta_description: '',
@@ -68,6 +69,7 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
         content: data.content || '',
         hero_image_url: data.hero_image_url || '',
         category: data.category || '',
+        author_name: data.author_name || '',
         published: data.published || false,
         featured: data.featured || false,
         meta_description: data.meta_description || '',
@@ -234,6 +236,19 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
                 onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
                 placeholder="e.g., Chicago, New York, Tips"
               />
+            </div>
+
+            <div>
+              <Label htmlFor="author_name">Author</Label>
+              <Input
+                id="author_name"
+                value={formData.author_name}
+                onChange={(e) => setFormData(prev => ({ ...prev, author_name: e.target.value }))}
+                placeholder="e.g., Faith Lyons"
+              />
+              <p className="text-sm text-slate-500 mt-1">
+                Shown as the byline. Leave blank to fall back to your account name.
+              </p>
             </div>
 
             <div>
