@@ -102,6 +102,13 @@ export default function ArticlesManagementPage() {
 
       if (error) throw error;
 
+      const deleted = articles.find(a => a.id === articleToDelete);
+      await fetch('/api/revalidate-blog', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slug: deleted?.slug }),
+      }).catch(() => {});
+
       toast.success('Article deleted successfully');
       fetchArticles();
     } catch (error) {

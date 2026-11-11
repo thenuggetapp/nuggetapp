@@ -1,39 +1,51 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { MarketingHeader } from '@/components/MarketingHeader';
 import { NewsletterPopup } from '@/components/NewsletterPopup';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// Cached via ISR: the page is rendered once and re-served from the CDN, then
+// refreshed in the background every 5 minutes. Publishing/editing/deleting an
+// article also triggers an immediate refresh (see /api/revalidate-blog).
+export const revalidate = 300;
+
+// Only the fields the list actually renders. Avoids pulling every article's
+// full `content` body on each render.
+const LIST_FIELDS = `
+  id,
+  slug,
+  title,
+  excerpt,
+  category,
+  featured,
+  hero_image_url,
+  published_at,
+  author_name,
+  author:user_profiles(full_name)
+`;
 
 async function getArticles() {
-  try {
-    const supabase = createClient();
+  // Cookieless (anon) client: reading cookies() would force dynamic rendering
+  // and defeat caching. The articles are public (RLS: published = true).
+  const supabase = createAdminClient();
 
-    const { data: articles, error } = await supabase
-      .from('blog_articles')
-      .select(`
-        *,
-        author:user_profiles(
-          full_name,
-          email
-        )
-      `)
-      .eq('published', true)
-      .order('published_at', { ascending: false });
+  const { data: articles, error } = await supabase
+    .from('blog_articles')
+    .select(LIST_FIELDS)
+    .eq('published', true)
+    .order('published_at', { ascending: false });
 
-    if (error) {
-      console.error('Error fetching articles:', error);
-      return [];
-    }
-
-    return articles || [];
-  } catch (error) {
-    console.error('Error in getArticles:', error);
-    return [];
+  if (error) {
+    // Throw rather than return []: an empty list would be cached for 5 minutes
+    // and look like "no articles". Throwing shows app/blog/error.tsx on a cold
+    // render, and during a background revalidation Next keeps serving the last
+    // good page.
+    console.error('Error fetching articles:', error);
+    throw new Error('Failed to load blog articles');
   }
+
+  return articles ?? [];
 }
 
 export const metadata = {
