@@ -168,6 +168,12 @@ export async function middleware(request: NextRequest) {
     // In iframe mode, skip ALL server-side auth checks
     // Auth is handled purely client-side via AuthContext
     console.log("[Middleware] 🖼️ Iframe mode - allowing access, auth handled client-side");
+  } else if (path === "/blog") {
+    // /blog is a public, ISR-cached page with no per-user content. Skip the
+    // session refresh here: it can make a network call to Supabase (when the
+    // access token has expired) before the cached page is even served, and it
+    // would attach Set-Cookie to an otherwise cacheable response. The session
+    // is refreshed on the next request to any other page.
   } else {
     // For non-protected routes, just refresh session
     try {

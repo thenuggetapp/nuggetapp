@@ -146,6 +146,13 @@ export function ArticleForm({ articleId }: ArticleFormProps) {
         toast.success('Article created successfully');
       }
 
+      // Refresh the cached public blog right away (best-effort).
+      await fetch('/api/revalidate-blog', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slug: formData.slug }),
+      }).catch(() => {});
+
       router.push('/admin/articles');
       router.refresh();
     } catch (error: any) {
