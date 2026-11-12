@@ -19,6 +19,7 @@ import {
   DollarSign,
   UserCheck,
   UserCircle,
+  ClipboardList,
 } from "lucide-react";
 
 interface NavItem {
@@ -33,6 +34,7 @@ const navItems: NavItem[] = [
   { href: "/admin/suggestions", label: "Suggestions", icon: FileText },
   { href: "/admin/city-requests", label: "City Requests", icon: MapPin },
   { href: "/admin/contact-submissions", label: "Contact", icon: Mail },
+  { href: "/admin/survey-responses", label: "Survey", icon: ClipboardList },
   { href: "/admin/articles", label: "Articles", icon: FileText },
   { href: "/admin/applications", label: "Applications", icon: UserCircle },
   { href: "/admin/local-heroes", label: "Local Heroes", icon: TrendingUp },
