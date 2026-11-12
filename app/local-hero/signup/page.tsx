@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
+import { hasOwnerSignupIntent } from '@/lib/owner-signup-intent';
 
 export default function LocalHeroSignupPage() {
   const [email, setEmail] = useState('');
@@ -42,7 +43,8 @@ export default function LocalHeroSignupPage() {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    // Owner sign-ups are taken to the owner dashboard by OwnerSignupClaimer instead
+    if (user && !hasOwnerSignupIntent()) {
       router.push('/local-hero/dashboard');
     }
   }, [user, router]);
