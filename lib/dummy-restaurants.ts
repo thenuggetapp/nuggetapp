@@ -20,6 +20,7 @@ export interface Restaurant {
   bookingUrl?: string;
   openingTimes?: any;
   nuggetVerified: boolean;
+  ownerVerified?: boolean;
   kidsMenu: boolean;
   highChairs: boolean;
   changingTable: boolean;

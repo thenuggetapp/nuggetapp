@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, Eye, AlertCircle, Loader2 } from "lucide-react";
+import { ArrowLeft, Save, Eye, AlertCircle, Loader2, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import {
   AlertDialog,
@@ -28,6 +28,7 @@ import {
 import BasicInfoTab from "@/components/owner/restaurant-form/BasicInfoTab";
 import LocationTab from "@/components/owner/restaurant-form/LocationTab";
 import OpeningHoursTab from "@/components/owner/restaurant-form/OpeningHoursTab";
+import RestaurantPhotos from "@/components/owner/RestaurantPhotos";
 import AmenitiesTab from "@/components/owner/restaurant-form/AmenitiesTab";
 import { getRegionsForCountry, isValidRegion } from "@/lib/regions";
 
@@ -67,6 +68,7 @@ export interface RestaurantFormData {
   booking_url: string;
   opening_times: OpeningTimes;
   nugget_verified: boolean;
+  owner_verified: boolean;
   kids_menu: boolean;
   high_chairs: boolean;
   wheelchair_access: boolean;
@@ -124,6 +126,7 @@ const initialFormData: RestaurantFormData = {
   booking_url: "",
   opening_times: {},
   nugget_verified: false,
+  owner_verified: false,
   kids_menu: false,
   high_chairs: false,
   wheelchair_access: false,
@@ -171,7 +174,11 @@ export default function EditRestaurantPage() {
   const [formData, setFormData] = useState<RestaurantFormData>(initialFormData);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("basic");
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams?.get("tab") || "basic");
+  const [missingFields, setMissingFields] = useState<string[]>([]);
+  const [autosaveStatus, setAutosaveStatus] = useState<"idle" | "pending" | "saving" | "saved" | "incomplete" | "error">("idle");
+  const lastSavedRef = useRef<string | null>(null);
   const [validationDialogOpen, setValidationDialogOpen] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
@@ -243,6 +250,7 @@ export default function EditRestaurantPage() {
         booking_url: restaurant.booking_url || "",
         opening_times: restaurant.opening_times || {},
         nugget_verified: restaurant.nugget_verified || false,
+        owner_verified: restaurant.owner_verified || false,
         kids_menu: restaurant.kids_menu || false,
         high_chairs: restaurant.high_chairs || false,
         wheelchair_access: restaurant.wheelchair_access || false,
@@ -321,6 +329,71 @@ export default function EditRestaurantPage() {
     return errors;
   };
 
+  const buildDataToSave = (visible: boolean) => {
+    const dataToSave = {
+      ...formData,
+      visible,
+      city: formData.city.trim() || null,
+      state: isValidRegion(formData.country, formData.state) ? formData.state : null,
+      country: formData.country.trim() || null,
+      phone: formData.phone.trim() || null,
+      description: formData.description.trim() || null,
+      image_url: formData.image_url.trim() || null,
+      google_place_id: formData.google_place_id?.trim() || null,
+      website_url: formData.website_url.trim() || null,
+      google_maps_url: formData.google_maps_url.trim() || null,
+      booking_url: formData.booking_url.trim() || null,
+      updated_at: new Date().toISOString(),
+    };
+    delete (dataToSave as { slug?: string }).slug;
+    return dataToSave;
+  };
+
+  // Save changes to their account a moment after they stop typing, keeping Published/Hidden as is
+  useEffect(() => {
+    if (loading) return;
+    const snapshot = JSON.stringify(formData);
+    if (lastSavedRef.current === null) {
+      lastSavedRef.current = snapshot; // just loaded from the database
+      return;
+    }
+    if (snapshot === lastSavedRef.current) return;
+
+    setAutosaveStatus("pending");
+    const timer = setTimeout(async () => {
+      const missing = validateForm();
+      if (missing.length > 0) {
+        setMissingFields(missing);
+        setAutosaveStatus("incomplete");
+        return;
+      }
+      setAutosaveStatus("saving");
+      const { error } = await supabase
+        .from("restaurants")
+        .update(buildDataToSave(formData.visible))
+        .eq("id", restaurantId);
+      if (error) {
+        console.error("Autosave error:", error);
+        setAutosaveStatus("error");
+        return;
+      }
+      lastSavedRef.current = snapshot;
+      setAutosaveStatus("saved");
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [formData, loading]);
+
+  // Warn before leaving while a change hasn't been saved yet
+  useEffect(() => {
+    if (autosaveStatus !== "pending" && autosaveStatus !== "saving") return;
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [autosaveStatus]);
+
   const handleSave = async (publish: boolean) => {
     const errors = validateForm();
 
@@ -342,22 +415,8 @@ export default function EditRestaurantPage() {
     setSaving(true);
 
     try {
-      const dataToSave = {
-        ...formData,
-        visible: publish,
-        city: formData.city.trim() || null,
-        state: isValidRegion(formData.country, formData.state) ? formData.state : null,
-        country: formData.country.trim() || null,
-        phone: formData.phone.trim() || null,
-        description: formData.description.trim() || null,
-        image_url: formData.image_url.trim() || null,
-        google_place_id: formData.google_place_id?.trim() || null,
-        website_url: formData.website_url.trim() || null,
-        google_maps_url: formData.google_maps_url.trim() || null,
-        booking_url: formData.booking_url.trim() || null,
-        updated_at: new Date().toISOString(),
-      };
-      delete (dataToSave as { slug?: string }).slug;
+      // "Save Changes" keeps a published restaurant published; "Save & Publish" publishes it
+      const dataToSave = buildDataToSave(publish || formData.visible);
 
       const { error: updateError } = await supabase
         .from("restaurants")
@@ -368,6 +427,8 @@ export default function EditRestaurantPage() {
         console.error("Restaurant update error:", updateError);
         throw updateError;
       }
+      lastSavedRef.current = JSON.stringify(formData);
+      setAutosaveStatus("saved");
 
       toast({
         title: "Success",
@@ -425,6 +486,29 @@ export default function EditRestaurantPage() {
             <p className="text-slate-600 mt-1">
               Update your restaurant information
             </p>
+            <p className="text-sm text-slate-500 mt-1 flex items-center gap-1.5" aria-live="polite">
+              {autosaveStatus === "pending" || autosaveStatus === "saving" ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  Saving...
+                </>
+              ) : autosaveStatus === "incomplete" ? (
+                <>
+                  <AlertCircle className="h-3.5 w-3.5 text-amber-600" />
+                  Not saved yet: {missingFields.join("; ")}
+                </>
+              ) : autosaveStatus === "error" ? (
+                <>
+                  <AlertCircle className="h-3.5 w-3.5 text-red-600" />
+                  Couldn't save your latest changes. Click Save Changes to try again.
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="h-3.5 w-3.5 text-[#8dbf65]" />
+                  {formData.visible ? "Published" : "Hidden draft"} · changes save automatically
+                </>
+              )}
+            </p>
           </div>
         </div>
       </div>
@@ -450,7 +534,7 @@ export default function EditRestaurantPage() {
             </TabsList>
 
             <TabsContent value="basic" className="space-y-6">
-              <BasicInfoTab formData={formData} setFormData={setFormData} />
+              <BasicInfoTab formData={formData} setFormData={setFormData} showImageUpload={false} />
             </TabsContent>
 
             <TabsContent value="location" className="space-y-6">
@@ -487,6 +571,8 @@ export default function EditRestaurantPage() {
           </div>
         </CardContent>
       </Card>
+
+      <RestaurantPhotos restaurantId={restaurantId} />
 
       <AlertDialog
         open={validationDialogOpen}

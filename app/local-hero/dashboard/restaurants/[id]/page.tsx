@@ -340,6 +340,7 @@ export default function EditRestaurantPage() {
                     <AmenitiesTab
                       formData={formData}
                       setFormData={setFormData}
+                      variant="curator"
                     />
                   </TabsContent>
                 </Tabs>

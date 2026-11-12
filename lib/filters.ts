@@ -133,12 +133,12 @@ export const FILTERS: FilterDefinition[] = [
     category: "Dietary",
     image: "/kosher copy.png",
   },
-  {
-    key: "onePoundKidsMeal",
-    label: "£1 Kids Meal",
-    category: "Deals",
-    image: "/placeholder.png", // PLACEHOLDER IMAGE
-  },
+  // {
+  //   key: "onePoundKidsMeal",
+  //   label: "£1 Kids Meal",
+  //   category: "Deals",
+  //   image: "/placeholder.png", // PLACEHOLDER IMAGE
+  // },
   {
     key: "outdoorSeating",
     label: "Outdoor Seating",

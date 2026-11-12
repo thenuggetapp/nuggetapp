@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
-import { Home, Search, Menu, User, Settings, Bookmark, LogOut, Store, BarChart3, CreditCard, Megaphone, Tag, Shield, TrendingUp, Crown } from 'lucide-react';
+import { Home, Search, Menu, User, Settings, Bookmark, LogOut, Store, Tag, Shield, TrendingUp, Crown, PlusCircle, HeartHandshake } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,45 +56,33 @@ export function Sidebar({ onAddClick }: SidebarProps = {}) {
               Restaurant Owner
             </DropdownMenuLabel>
             <DropdownMenuItem asChild>
-              <Link href="/owner/dashboard" className="flex items-center cursor-pointer">
-                <Store className="mr-2 h-4 w-4" />
-                <span>Owner Dashboard</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
               <Link href="/owner/restaurants" className="flex items-center cursor-pointer">
-                <Settings className="mr-2 h-4 w-4" />
+                <Store className="mr-2 h-4 w-4" />
                 <span>My Restaurants</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/owner/analytics" className="flex items-center cursor-pointer">
-                <BarChart3 className="mr-2 h-4 w-4" />
-                <span>Analytics</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/owner/marketing" className="flex items-center cursor-pointer">
-                <Megaphone className="mr-2 h-4 w-4" />
-                <span>Marketing</span>
+              <Link href="/owner/restaurants/new" className="flex items-center cursor-pointer">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                <span>Add a Restaurant</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/owner/coupons" className="flex items-center cursor-pointer">
                 <Tag className="mr-2 h-4 w-4" />
-                <span>Coupons</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/owner/billing" className="flex items-center cursor-pointer">
-                <CreditCard className="mr-2 h-4 w-4" />
-                <span>Billing</span>
+                <span>Coupons & Deals</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/owner/settings" className="flex items-center cursor-pointer">
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/owner/concierge" className="flex items-center cursor-pointer">
+                <HeartHandshake className="mr-2 h-4 w-4" />
+                <span>Concierge</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase/client";
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, Eye, AlertCircle } from "lucide-react";
+import { ArrowLeft, Save, Eye, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import {
   AlertDialog,
@@ -69,6 +69,7 @@ export interface RestaurantFormData {
   booking_url: string;
   opening_times: OpeningTimes;
   nugget_verified: boolean;
+  owner_verified?: boolean;
   kids_menu: boolean;
   high_chairs: boolean;
   wheelchair_access: boolean;
@@ -126,6 +127,7 @@ const initialFormData: RestaurantFormData = {
   booking_url: "",
   opening_times: {},
   nugget_verified: false,
+  owner_verified: false,
   kids_menu: false,
   high_chairs: false,
   wheelchair_access: false,
@@ -173,6 +175,72 @@ export default function AddRestaurantPage() {
   const [activeTab, setActiveTab] = useState("basic");
   const [validationDialogOpen, setValidationDialogOpen] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [restoredDraft, setRestoredDraft] = useState(false);
+  const [draftLoaded, setDraftLoaded] = useState(false);
+  const [formKey, setFormKey] = useState(0);
+  const creatingRef = useRef(false);
+
+  const draftKey = user ? `nugget-owner-new-restaurant:${user.id}` : null;
+
+  // Bring back anything they were typing before they closed the page
+  useEffect(() => {
+    if (!draftKey || draftLoaded) return;
+    try {
+      const saved = localStorage.getItem(draftKey);
+      if (saved) {
+        setFormData({ ...initialFormData, ...JSON.parse(saved) });
+        setRestoredDraft(true);
+        setFormKey((k) => k + 1);
+      }
+    } catch {
+      // Storage unavailable (private mode etc.) - nothing to restore
+    }
+    setDraftLoaded(true);
+  }, [draftKey, draftLoaded]);
+
+  // Keep a copy on this device as they type
+  useEffect(() => {
+    if (!draftKey || !draftLoaded) return;
+    const timer = setTimeout(() => {
+      try {
+        if (JSON.stringify(formData) === JSON.stringify(initialFormData)) {
+          localStorage.removeItem(draftKey);
+        } else {
+          localStorage.setItem(draftKey, JSON.stringify(formData));
+        }
+      } catch {
+        // Storage unavailable - autosave to the account below still works
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [formData, draftKey, draftLoaded]);
+
+  // Once the required basics are in, save a hidden draft to their account.
+  // Only one attempt per version of the form, so a failure doesn't retry in a loop.
+  const lastAutoAttemptRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!draftLoaded || saving || validateForm().length > 0) return;
+    const snapshot = JSON.stringify(formData);
+    if (snapshot === lastAutoAttemptRef.current) return;
+    const timer = setTimeout(() => {
+      lastAutoAttemptRef.current = snapshot;
+      handleSave(false, true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [formData, draftLoaded, saving]);
+
+  const startOver = () => {
+    if (draftKey) {
+      try {
+        localStorage.removeItem(draftKey);
+      } catch {
+        // ignore
+      }
+    }
+    setFormData(initialFormData);
+    setRestoredDraft(false);
+    setFormKey((k) => k + 1);
+  };
 
   const handlePlaceSelect = (placeData: any) => {
     const mappedData = mapGooglePlaceToRestaurant(placeData);
@@ -211,7 +279,9 @@ export default function AddRestaurantPage() {
     return errors;
   };
 
-  const handleSave = async (publish: boolean) => {
+  // auto = saved in the background as a hidden draft; the owner carries on editing
+  const handleSave = async (publish: boolean, auto = false) => {
+    if (creatingRef.current) return;
     console.log("handleSave called with publish:", publish);
     console.log("Current user:", user);
     console.log("Form data:", formData);
@@ -220,6 +290,7 @@ export default function AddRestaurantPage() {
     console.log("Validation errors:", errors);
 
     if (errors.length > 0) {
+      if (auto) return;
       setValidationErrors(errors);
       setValidationDialogOpen(true);
       return;
@@ -235,6 +306,7 @@ export default function AddRestaurantPage() {
       return;
     }
 
+    creatingRef.current = true;
     setSaving(true);
     console.log("Starting save process...");
 
@@ -321,14 +393,31 @@ export default function AddRestaurantPage() {
 
       console.log("Restaurant saved successfully, redirecting...");
 
+      if (draftKey) {
+        try {
+          localStorage.removeItem(draftKey);
+        } catch {
+          // ignore
+        }
+      }
+
+      if (auto) {
+        toast({
+          title: "Draft saved",
+          description: "Your restaurant is saved to your account as a hidden draft. Keep going!",
+        });
+        router.replace(`/owner/restaurants/${restaurant.id}/edit?tab=${activeTab}`);
+        return;
+      }
+
       toast({
         title: "Success",
         description: `Restaurant ${
           publish ? "published" : "saved as draft"
-        } successfully`,
+        }. Now add a few photos!`,
       });
 
-      router.push("/owner/restaurants");
+      router.push(`/owner/restaurants/${restaurant.id}/edit#photos`);
     } catch (error: any) {
       console.error("Error saving restaurant:", error);
 
@@ -349,6 +438,7 @@ export default function AddRestaurantPage() {
         variant: "destructive",
       });
     } finally {
+      creatingRef.current = false;
       setSaving(false);
     }
   };
@@ -369,9 +459,31 @@ export default function AddRestaurantPage() {
             <p className="text-slate-600 mt-1">
               Fill in the details to list your restaurant
             </p>
+            <p className="text-sm text-slate-500 mt-1 flex items-center gap-1.5">
+              {saving ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  Saving draft...
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="h-3.5 w-3.5 text-[#8dbf65]" />
+                  Progress saves automatically. Once name, cuisine, address, city, state (US, Canada, and Australia), and map location are in, it's saved to your account as a hidden draft.
+                </>
+              )}
+            </p>
           </div>
         </div>
       </div>
+
+      {restoredDraft && (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-green-200 bg-green-50 p-4">
+          <p className="text-sm text-green-900">We brought back the restaurant you were adding.</p>
+          <Button variant="outline" size="sm" onClick={startOver}>
+            Start over
+          </Button>
+        </div>
+      )}
 
       <Card className="mb-6 bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200">
         <CardHeader>
@@ -385,6 +497,7 @@ export default function AddRestaurantPage() {
         </CardHeader>
         <CardContent>
           <GooglePlacesAutocomplete
+            key={formKey}
             onPlaceSelect={handlePlaceSelect}
             placeholder="Search for your restaurant..."
             label="Restaurant Name"
@@ -405,6 +518,7 @@ export default function AddRestaurantPage() {
         </CardHeader>
         <CardContent>
           <Tabs
+            key={formKey}
             value={activeTab}
             onValueChange={setActiveTab}
             className="w-full"
@@ -417,7 +531,7 @@ export default function AddRestaurantPage() {
             </TabsList>
 
             <TabsContent value="basic" className="space-y-6">
-              <BasicInfoTab formData={formData} setFormData={setFormData} />
+              <BasicInfoTab formData={formData} setFormData={setFormData} showImageUpload={false} />
             </TabsContent>
 
             <TabsContent value="location" className="space-y-6">

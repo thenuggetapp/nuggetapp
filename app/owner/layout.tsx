@@ -4,14 +4,11 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import {
-  LayoutDashboard,
   Store,
   PlusCircle,
   Ticket,
-  TrendingUp,
-  BarChart3,
-  CreditCard,
   Settings,
+  HeartHandshake,
   LogOut,
   Menu,
   X,
@@ -82,15 +79,17 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
   }
 
   const navigation = [
-    { name: 'Dashboard', href: '/owner/dashboard', icon: LayoutDashboard },
     { name: 'My Restaurants', href: '/owner/restaurants', icon: Store },
-    { name: 'Add Restaurant', href: '/owner/restaurants/new', icon: PlusCircle },
+    { name: 'Add a Restaurant', href: '/owner/restaurants/new', icon: PlusCircle },
     { name: 'Coupons & Deals', href: '/owner/coupons', icon: Ticket },
-    { name: 'Marketing', href: '/owner/marketing', icon: TrendingUp },
-    { name: 'Analytics', href: '/owner/analytics', icon: BarChart3 },
-    { name: 'Billing', href: '/owner/billing', icon: CreditCard },
     { name: 'Settings', href: '/owner/settings', icon: Settings },
+    { name: 'Concierge', href: '/owner/concierge', icon: HeartHandshake },
   ];
+
+  // Longest matching href wins, so "Add a Restaurant" doesn't also light up "My Restaurants"
+  const activeHref = navigation
+    .filter((item) => pathname === item.href || pathname?.startsWith(item.href + '/'))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
@@ -118,7 +117,7 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
             <div className="flex items-center justify-between">
               {sidebarExpanded ? (
                 <>
-                  <Link href="/owner/dashboard" className="flex items-center gap-2">
+                  <Link href="/owner/restaurants" className="flex items-center gap-2">
                     <img
                       src="/nugget_name_only_logo_01.png"
                       alt="Nugget"
@@ -164,7 +163,7 @@ export default function OwnerLayout({ children }: { children: React.ReactNode })
           <div className="flex-1 overflow-y-auto p-3" tabIndex={0} id="navigation" role="navigation" aria-label="Main navigation">
             <nav className="space-y-1">
               {navigation.map((item) => {
-                const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
+                const isActive = item.href === activeHref;
                 const Icon = item.icon;
                 return (
                   <Link

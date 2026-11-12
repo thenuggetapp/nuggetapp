@@ -1779,24 +1779,6 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex items-center justify-between space-x-2 rounded-lg border p-3">
                         <Label
-                          htmlFor="changing_table"
-                          className="cursor-pointer"
-                        >
-                          Changing Table
-                        </Label>
-                        <Switch
-                          id="changing_table"
-                          checked={formData.changing_table}
-                          onCheckedChange={(checked) =>
-                            setFormData({
-                              ...formData,
-                              changing_table: checked,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="flex items-center justify-between space-x-2 rounded-lg border p-3">
-                        <Label
                           htmlFor="wheelchair_access"
                           className="cursor-pointer"
                         >
@@ -2067,24 +2049,6 @@ export default function AdminDashboard() {
                             setFormData({
                               ...formData,
                               free_kids_meal: checked,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="flex items-center justify-between space-x-2 rounded-lg border p-3">
-                        <Label
-                          htmlFor="one_pound_kids_meal"
-                          className="cursor-pointer"
-                        >
-                          £1 Kids Meal
-                        </Label>
-                        <Switch
-                          id="one_pound_kids_meal"
-                          checked={formData.one_pound_kids_meal}
-                          onCheckedChange={(checked) =>
-                            setFormData({
-                              ...formData,
-                              one_pound_kids_meal: checked,
                             })
                           }
                         />

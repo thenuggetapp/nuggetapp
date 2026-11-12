@@ -28,6 +28,14 @@ const nextConfig = {
     }
     return config;
   },
+  async redirects() {
+    // Owner portal is free: billing, pricing and analytics pages were removed
+    return [
+      { source: "/owner/billing", destination: "/owner/restaurants", permanent: false },
+      { source: "/owner/analytics", destination: "/owner/restaurants", permanent: false },
+      { source: "/owner/marketing", destination: "/owner/concierge", permanent: false },
+    ];
+  },
   async headers() {
     return [
       {
