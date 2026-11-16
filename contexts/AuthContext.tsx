@@ -13,6 +13,7 @@ import {
 } from "@/lib/types/roles";
 import { getRolePermissions, RolePermissions } from "@/lib/permissions";
 import { safeLocalStorage, logStorageEnvironment } from "@/lib/storage-utils";
+import { trackSignUp } from "@/lib/analytics";
 
 export type { UserRole };
 
@@ -1712,6 +1713,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await loadUserProfile(user.id, undefined, { force: true });
     }
   };
+
+  // GA4 sign_up for brand-new Google accounts. Google sign-in and sign-up are the
+  // same OAuth flow, so we can't tell them apart at click time; instead, a user
+  // whose account was created moments before this sign-in is new. (Email
+  // sign-ups are tracked on the signup page when the account is created.)
+  useEffect(() => {
+    if (!user || user.app_metadata?.provider !== "google") return;
+
+    const createdAt = Date.parse(user.created_at);
+    const lastSignInAt = Date.parse(user.last_sign_in_at ?? "");
+    if (Number.isNaN(createdAt) || Number.isNaN(lastSignInAt)) return;
+    if (lastSignInAt - createdAt > 60_000) return; // returning user
+
+    const storageKey = `nugget_ga_signup_${user.id}`;
+    if (safeLocalStorage.getItem(storageKey)) return; // already counted
+    safeLocalStorage.setItem(storageKey, "1");
+    trackSignUp("google");
+  }, [user]);
 
   // Removed getAssignedCities, hasCustomerPro, hasOwnerPro
   // These are now handled by separate lazy-loading hooks

@@ -78,8 +78,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <GoogleAnalytics />
         <AuthProvider>
+          <GoogleAnalytics />
           <SWRProvider>
             {children}
             <ConditionalFooter />

@@ -13,6 +13,7 @@ import { Loader2, Mail, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 import Script from 'next/script';
 import { supabase } from '@/lib/supabase/client';
+import { trackSignUp } from '@/lib/analytics';
 
 declare global {
   interface Window {
@@ -152,6 +153,9 @@ export default function SignupPage() {
       router.push('/login');
       return;
     }
+
+    // Account created (verification email is on its way) - count the sign-up.
+    trackSignUp('email');
 
     console.log('[Signup] Signup successful, checking for session...');
     console.log('[Signup] Has session:', !!data?.session);
