@@ -27,6 +27,7 @@ import AmenitiesTab from '@/components/owner/restaurant-form/AmenitiesTab';
 import { RestaurantFormData } from '@/app/owner/restaurants/new/page';
 import { GooglePlacesAutocomplete } from '@/components/GooglePlacesAutocomplete';
 import { mapGooglePlaceToRestaurant } from '@/lib/google-places-mapper';
+import { getRegionsForCountry, isValidRegion } from '@/lib/regions';
 
 const initialFormData: RestaurantFormData = {
   name: '',
@@ -36,6 +37,7 @@ const initialFormData: RestaurantFormData = {
   price_level: 2,
   address: '',
   city: '',
+  state: '',
   country: 'United Kingdom',
   latitude: 0,
   longitude: 0,
@@ -121,6 +123,10 @@ export default function AddRestaurantPage() {
     if (!formData.city.trim()) {
       errors.push('City is required');
     }
+    const regionInfo = getRegionsForCountry(formData.country);
+    if (regionInfo && !isValidRegion(formData.country, formData.state)) {
+      errors.push(`${regionInfo.label} is required`);
+    }
     if (formData.latitude === 0 || formData.longitude === 0) {
       errors.push('Please set the restaurant location on the map (Location tab)');
     }
@@ -173,6 +179,7 @@ export default function AddRestaurantPage() {
         slug,
         visible: publish,
         city: formData.city.trim() || null,
+        state: isValidRegion(formData.country, formData.state) ? formData.state : null,
         country: formData.country.trim() || null,
         phone: formData.phone.trim() || null,
         description: formData.description.trim() || null,

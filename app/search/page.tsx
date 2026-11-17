@@ -36,6 +36,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Restaurant } from "@/lib/dummy-restaurants";
 import { getRestaurantDisplayImageUrlOrFallback } from "@/lib/restaurant-image";
 import { supabase } from "@/lib/supabase/client";
+import { trackEvent } from "@/lib/analytics";
 import {
   Search,
   MapPin,
@@ -292,6 +293,14 @@ function SearchContent() {
       }
     }
   }, [hoveredRestaurantId]);
+
+  // Record each submitted search keyword in Google Analytics
+  const submittedQuery = searchParams.get("q")?.trim();
+  useEffect(() => {
+    if (submittedQuery) {
+      trackEvent("search", { search_term: submittedQuery });
+    }
+  }, [submittedQuery]);
 
   // Reset to page 1 when search query or filters change
   useEffect(() => {
