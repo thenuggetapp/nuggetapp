@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { MarketingHeader } from '@/components/MarketingHeader';
+import { NewsletterPopup } from '@/components/NewsletterPopup';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
@@ -48,6 +49,7 @@ export default async function BlogPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <MarketingHeader />
+      <NewsletterPopup />
 
       <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
         {/* Header */}
