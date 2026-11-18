@@ -31,6 +31,11 @@ import LocationTab from "@/components/owner/restaurant-form/LocationTab";
 import OpeningHoursTab from "@/components/owner/restaurant-form/OpeningHoursTab";
 import AmenitiesTab from "@/components/owner/restaurant-form/AmenitiesTab";
 import { RestaurantFormData } from "@/app/owner/restaurants/new/page";
+import { readDraft, useDraftAutosave } from "@/hooks/useDraftAutosave";
+import {
+  AutosaveIndicator,
+  DraftRestoredBanner,
+} from "@/components/DraftAutosaveStatus";
 import { getRegionsForCountry, isValidRegion } from "@/lib/regions";
 
 export default function EditRestaurantPage() {
@@ -48,6 +53,26 @@ export default function EditRestaurantPage() {
   const [activeTab, setActiveTab] = useState("basic");
   const [validationDialogOpen, setValidationDialogOpen] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  // Restaurant as last loaded from the database; the autosave baseline
+  const [savedData, setSavedData] = useState<RestaurantFormData | null>(null);
+  const [restoredDraftAt, setRestoredDraftAt] = useState<number | null>(null);
+
+  const draftKey = user
+    ? `nugget_local_hero_edit_restaurant_draft_${user.id}_${restaurantId}`
+    : null;
+
+  const { lastSavedAt, clearDraft, discardDraft } = useDraftAutosave({
+    key: draftKey,
+    data: formData,
+    baseline: savedData,
+    enabled: savedData !== null,
+  });
+
+  const handleDiscardChanges = () => {
+    discardDraft();
+    setFormData(savedData);
+    setRestoredDraftAt(null);
+  };
 
   useEffect(() => {
     if (isAuthorized) {
@@ -77,7 +102,7 @@ export default function EditRestaurantPage() {
         return;
       }
 
-      setFormData({
+      const loaded: RestaurantFormData = {
         id: restaurant.id,
         name: restaurant.name || "",
         cuisine: restaurant.cuisine || "",
@@ -134,7 +159,16 @@ export default function EditRestaurantPage() {
         tourist_attraction_nearby:
           restaurant.tourist_attraction_nearby || false,
         visible: restaurant.visible || false,
-      });
+      };
+
+      const draft = draftKey ? readDraft<RestaurantFormData>(draftKey) : null;
+      if (draft && JSON.stringify(draft.data) !== JSON.stringify(loaded)) {
+        setFormData({ ...loaded, ...draft.data, id: loaded.id });
+        setRestoredDraftAt(draft.savedAt);
+      } else {
+        setFormData(loaded);
+      }
+      setSavedData(loaded);
     } catch (error: any) {
       console.error("Error loading restaurant:", error);
       toast({
@@ -235,6 +269,8 @@ export default function EditRestaurantPage() {
         throw updateError;
       }
 
+      clearDraft();
+
       toast({
         title: "Success",
         description: `Restaurant ${
@@ -297,6 +333,14 @@ export default function EditRestaurantPage() {
 
         <div className="flex-1 overflow-auto">
           <div className="px-6 py-6">
+            {restoredDraftAt && (
+              <DraftRestoredBanner
+                savedAt={restoredDraftAt}
+                discardLabel="Discard changes"
+                onDiscard={handleDiscardChanges}
+              />
+            )}
+
             <Card>
               <CardHeader>
                 <CardTitle>Restaurant Information</CardTitle>
@@ -363,6 +407,7 @@ export default function EditRestaurantPage() {
                     {saving ? "Publishing..." : "Publish Restaurant"}
                   </Button>
                 </div>
+                <AutosaveIndicator lastSavedAt={lastSavedAt} />
               </CardContent>
             </Card>
           </div>
